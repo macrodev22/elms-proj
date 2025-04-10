@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'employee',
     'hr',
     'leave',
+    'company',
 ]
 
 MIDDLEWARE = [
