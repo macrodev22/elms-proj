@@ -40,8 +40,12 @@ class User(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='users', null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='employees', null=True, blank=True)
+    middle_name = models.CharField(max_length=255, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['date_of_birth', 'role', 'company']
 
     objects = UserManager()
+
+    def __str__(self):
+        return f"{self.email} - {self.company.name}"
