@@ -2,7 +2,7 @@ from django.db import models
 from company.models import Company
 from core.models import User
 
-LEAVE_STATUS_CHOICES = (('APPR', 'Approved'), ('RJCT', 'Rejected'), ('PNDG', 'Pending'))
+LEAVE_STATUS_CHOICES = (('APPR', 'Approved'), ('DCLN', 'Declined'), ('PNDG', 'Pending'), ('CXLD', 'Cancelled'))
 LEAVE_PROCESS_ACTION_CHOICES = (('SEND', 'Sent to Supervisor'), ('CLSD', 'Closed'))
 
 # Create your models here.
