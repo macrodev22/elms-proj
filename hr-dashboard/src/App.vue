@@ -1,9 +1,42 @@
 <script setup>
+import { ref } from 'vue';
 import NavButton from './components/NavButton.vue';
 import Button from './components/Button.vue';
-import { ChevronDownIcon, PlusIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon } from '@heroicons/vue/24/outline';
 import Card from './components/Card.vue';
 import LeaveStat from './components/LeaveStat.vue';
+import ForwardButton from './components/ForwardButton.vue';
+import Profile from './components/Profile.vue';
+import EmployeeAvailability from './components/EmployeeAvailability.vue';
+import PublicHolidayList from './components/PublicHolidayList.vue';
+import LeaveHistory from './components/LeaveHistory.vue';
+
+const leaveStatsContainer = ref(null)
+const employeeAvailabilityContainer = ref(null)
+
+const rightScroll = (container) => {
+  // console.log('scrolling ', container)
+
+  const width = container.clientWidth
+  const maxLeftScroll = container.scrollWidth - width
+  if (container.scrollLeft >= maxLeftScroll) {
+    container.scrollLeft = 0
+  } else
+    container.scrollBy({
+      left: width - 20,
+      behavior: 'smooth'
+    })
+}
+
+const holidays = [
+  { 'name': 'Holy Thursday', type: 'Optional', date: '17/04/2025' },
+  { 'name': 'Good Friday', type: 'Public Holiday', date: '18/04/2025' },
+  { 'name': 'Easter Sunday', type: 'Public Holiday', date: '20/04/2025' },
+  { 'name': 'Easter Monday', type: 'Public Holiday', date: '21/04/2025' },
+  { 'name': 'Labour day', type: 'Public Holiday', date: '01/05/2025' },
+
+]
+
 </script>
 
 <template>
@@ -17,20 +50,8 @@ import LeaveStat from './components/LeaveStat.vue';
         <NavButton label="Reports" href="#" />
       </div>
       <div>
-        <div class="bg-gray-100 p-0.5 rounded-full flex gap-1.5 items-center">
-          <div class="flex items-center gap-1">
-            <div class="p-1 ml-1">
-              <ChevronDownIcon class="size-6" />
-            </div>
-            <div class="flex flex-col">
-              <p class="font-bold text-sm">Ivan Sempebwa</p>
-              <p class="text-xs">ivan@gmail.com</p>
-            </div>
-          </div>
-          <img class="w-12 h-12 object-cover rounded-full"
-            src="https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?s=612x612&w=0&k=20&c=8ssXDNTp1XAPan8Bg6mJRwG7EXHshFO5o0v9SIj96nY="
-            alt="profile photo">
-        </div>
+        <Profile name="Ivan Sempebwa" email="ivan@gmail.com"
+          photo="https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?s=612x612&w=0&k=20&c=8ssXDNTp1XAPan8Bg6mJRwG7EXHshFO5o0v9SIj96nY=" />
       </div>
     </div>
   </div>
@@ -40,21 +61,67 @@ import LeaveStat from './components/LeaveStat.vue';
       </Button></h2>
   </div>
   <main class="px-12 top-[-2rem] relative">
-    <div class="flex gap-4">
-      <Card class="md:w-3/5 flex gap-6 overflow-x-hidden">
-        <LeaveStat type="annual" count="2" total="18" />
-        <LeaveStat type="sick" count="3" total="18" />
-        <LeaveStat type="personal" count="1" total="18" />
-        <LeaveStat type="special" count="10" total="18" />
-        <LeaveStat type="short" count="5" total="18" />
-        <LeaveStat type="annual" count="2" total="18" />
+    <div class="flex gap-8 mb-8 h-52">
+      <Card class="relative md:w-3/5">
+        <div class="flex gap-6 overflow-x-auto scroll-smooth scroll-hide" ref="leaveStatsContainer">
+          <LeaveStat type="annual" :count="2" :total="18" />
+          <LeaveStat type="sick" :count="3" :total="18" />
+          <LeaveStat type="personal" :count="1" :total="18" />
+          <LeaveStat type="special" :count="17" :total="18" />
+          <LeaveStat type="short" :count="5" :total="18" />
+          <LeaveStat type="annual" :count="2" :total="18" />
 
+        </div>
+        <ForwardButton @click="rightScroll(leaveStatsContainer)"
+          class="absolute right-0 top-[50%] translate-x-[50%] translate-y-[-50%] z-10" />
       </Card>
+      <Card class="flex-1 overflow-y-hidden">
+        <h4 class="font-xl mb-2">Upcoming public holidays</h4>
+        <PublicHolidayList :holidays="holidays" />
+      </Card>
+    </div>
+    <div class="flex gap-8 mb-8">
+      <div class="relative md:w-3/5">
+        <Card>
+          <h4 class="mb-4">Team availability</h4>
+          <div class="flex gap-4 overflow-x-auto scroll-smooth scroll-hide" ref="employeeAvailabilityContainer">
+            <EmployeeAvailability name="Micheal B. Jordan"
+              photo="https://t3.ftcdn.net/jpg/03/62/40/80/360_F_362408093_AlwyWJQbyc6edRlXGaGz3xquwzLGXhkX.jpg" />
+            <EmployeeAvailability name="Arthur Ssenabulya" status="sick" />
+            <EmployeeAvailability name="Namukasa Ritah" status="personal" />
+            <EmployeeAvailability name="Tiffy L. Tiffany" status="available" />
+            <EmployeeAvailability name="Irwin Sempebwa" status="short" />
+            <EmployeeAvailability name="Isaac Mutebi" status="study" />
+
+          </div>
+        </Card>
+        <ForwardButton @click="rightScroll(employeeAvailabilityContainer)"
+          class="absolute right-0 top-[50%] translate-x-[50%] translate-y-[-50%] z-10" />
+      </div>
       <Card class="flex-1">
-        <h4 class="font-xl">Upcoming public holidays</h4>
+        <h4>Quick links</h4>
+      </Card>
+    </div>
+    <div class="flex gap-8">
+      <Card class=" md:w-3/5">
+        <h4 class="mb-2">Leave history</h4>
+        <LeaveHistory />
       </Card>
     </div>
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.scroll-hide {
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+  /* WebKit browsers */
+}
+</style>

@@ -6,7 +6,7 @@ const { href, label } = defineProps({
 </script>
 <template>
     <a :href="href"
-        class="text-xl flex h-full items-center border-b-3 border-b-transparent hover:border-b-green-700 hover:border-b-3">
+        class="text-xl flex h-full items-center px-2 border-b-3 border-b-transparent hover:border-b-green-700 hover:border-b-3">
         {{ label }}
     </a>
 </template>
