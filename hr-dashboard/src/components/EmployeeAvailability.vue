@@ -5,7 +5,7 @@ const { status, name, photo } = defineProps({
     photo: { type: String, default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCw6RV343VjEiadcJNk0mbq_2dzMeizoL96g&s" }
 })
 
-const capitalize = (str) => str[0].toUpperCase() + str.slice(1).toLowerCase()
+const capitalize = (str) => str[0] ? str[0].toUpperCase() + str.slice(1).toLowerCase() : null
 
 const colors = {
     "annual": "#AD7EE9",
@@ -16,6 +16,8 @@ const colors = {
     "study": "#6497E3",
     "available": "#32A74E",
 }
+
+const statusText = (status) => status.toLowerCase() == 'available' ? 'Available' : capitalize(status) + ' leave'
 
 const borderColor = colors[status.toLowerCase()] || colors['available']
 </script>
@@ -30,7 +32,7 @@ const borderColor = colors[status.toLowerCase()] || colors['available']
         </div>
         <div class="flex-1 flex flex-col justify-center gap-1.5">
             <p class="text-sm font-bold">{{ name }}</p>
-            <p class="text-sm text-gray-400">{{ capitalize(status) }}</p>
+            <p class="text-sm text-gray-400">{{ statusText(status) }}</p>
         </div>
     </div>
 </template>

@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import time
 
 # Create your models here.
 class Company(models.Model):
@@ -10,6 +11,8 @@ class Company(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     num_employees = models.IntegerField(null=True, blank=True)
+    work_start_time = models.TimeField(null=True, blank=True, default=time(8,30))
+    work_end_time = models.TimeField(null=True, blank=True, default=time(5,30))
 
     def __str__(self):
         return f"{self.name}"

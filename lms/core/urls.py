@@ -1,10 +1,10 @@
 from django.urls import path
 from django.views.generic import TemplateView
-from .views import home,hr_dashboard,employee_dashboard
+from .views import home,hr_dashboard,employee_dashboard,login
 
 urlpatterns = [
     path('', home),
-    path('login', TemplateView.as_view(template_name="login.html")),
+    path('login', login),
     path('start', TemplateView.as_view(template_name="get_started.html")),
     path('hr', hr_dashboard),
     path('employee', employee_dashboard)
