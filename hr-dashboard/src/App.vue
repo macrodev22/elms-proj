@@ -59,7 +59,7 @@ const employeeAvailability = [
   <div class="bg-green-100 py-2 px-12">
     <div class="flex justify-between items-center">
       <div class="h-12"><img src="/favicon.svg" alt="Logo" class="h-full"></div>
-      <div class="flex gap-6.5 items-stretch self-stretch">
+      <div class="flex gap-6.5 items-stretch self-stretch my-[-8px]">
         <NavButton label="Home" href="#" />
         <NavButton label="Action" href="#" />
         <NavButton label="Leave" href="#" />
