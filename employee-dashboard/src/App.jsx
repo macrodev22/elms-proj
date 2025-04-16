@@ -4,6 +4,8 @@ import './App.css'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import NavButton from './components/NavButton'
 import ProfilePicture from './components/ProfilePicture'
+import Card from './components/Card'
+import LeavePattern from './components/LeavePattern'
 
 function App() {
 
@@ -34,6 +36,26 @@ function App() {
       </div>
     </div>
 
+    <div className="relative mt-[-80px] px-12 grid grid-cols-[1fr_2fr] gap-6">
+      <div className="flex flex-col gap-6">
+        <Card isDark={true} className="basis-[220px]" >
+          <h4 className="text-2xl">Retrospective</h4>
+        </Card>
+        <Card>
+          <h4 className="text-2xl">Public holidays</h4>
+        </Card>
+      </div>
+      {/* main  */}
+      <div className='grid grid-cols-2 gap-6'>
+        <LeavePattern className="col-span-2" />
+        <Card>
+          <h4 className='text-2xl'>Requests</h4>
+        </Card>
+        <Card>
+          <h4 className='text-2xl'>Leave stats</h4>
+        </Card>
+      </div>
+    </div>
     </>
   )
 }

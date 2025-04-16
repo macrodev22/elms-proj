@@ -32,6 +32,9 @@ class UserManager(BaseUserManager):
 
 USER_ROLE_CHOICES = (('HR', 'Human Resource'), ('EM', 'Employee'), ('ADMIN', 'Admin'))
 
+def default_contact():
+    return { "mobile":"", "work": "" }
+
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
@@ -41,6 +44,9 @@ class User(AbstractUser):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='users', null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='employees', null=True, blank=True)
     middle_name = models.CharField(max_length=255, null=True, blank=True)
+    supervised_by = models.ForeignKey('core.User', on_delete=models.PROTECT, related_name="subordinates", null=True, blank=True)
+    contact = models.JSONField(null=True, blank=True, default=default_contact)
+    gender = models.CharField(choices=(('M', 'Male'), ('F', 'Female')))
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['date_of_birth', 'role', 'company']
@@ -48,4 +54,5 @@ class User(AbstractUser):
     objects = UserManager()
 
     def __str__(self):
-        return f"{self.email} - {self.company.name}"
+        company_name = self.company.name if self.company else "(No company)"
+        return f"{self.email} - {company_name}"
