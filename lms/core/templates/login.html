@@ -2,14 +2,26 @@
 <div class="login-container">
   <h3 class="content-heading">User Login</h3>
   <form class="form" action="/login" method="post">
-    {% csrf_token %}
+    {% csrf_token %} {% if errors %}
+    <div class="errors">
+      {% for error in errors %}
+      <div class="error">{{ error}}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
     <div class="input-group">
       <label>Email or username</label>
-      <input type="text" placeholder="Email or username" />
+      <input
+        type="text"
+        name="email"
+        placeholder="Email or username"
+        value="{{ request.POST.email|default:'' }}"
+        required
+      />
     </div>
     <div class="input-group">
       <label>Password</label>
-      <input type="password" placeholder="Password" />
+      <input type="password" name="password" placeholder="Password" required />
     </div>
     <div>
       <button class="btn btn-primary">Login</button>

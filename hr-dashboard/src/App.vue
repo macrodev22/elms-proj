@@ -53,6 +53,31 @@ const employeeAvailability = [
   { name: 'Isaac Mutebi', status: 'study', },
 ]
 
+const user = {
+  id: 2,
+  last_login: null,
+  is_superuser: false,
+  first_name: "Ivan",
+  last_name: "Sempebwa",
+  is_staff: false,
+  is_active: true,
+  date_joined: "2025-04-11T15:01:19Z",
+  email: "ivan@gmail.com",
+  role: "EM",
+  profile_picture: "https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?s=612x612&w=0&k=20&c=8ssXDNTp1XAPan8Bg6mJRwG7EXHshFO5o0v9SIj96nY=",
+  date_of_birth: null,
+  middle_name: null,
+  contact: {
+    mobile: "256770123456",
+    work: "256414452645/3"
+  },
+  gender: "M",
+  company: 2,
+  department: 3,
+  supervised_by: 6
+}
+
+
 </script>
 
 <template>
@@ -66,8 +91,7 @@ const employeeAvailability = [
         <NavButton label="Reports" href="#" />
       </div>
       <div>
-        <Profile name="Ivan Sempebwa" email="ivan@gmail.com"
-          photo="https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?s=612x612&w=0&k=20&c=8ssXDNTp1XAPan8Bg6mJRwG7EXHshFO5o0v9SIj96nY=" />
+        <Profile :user="user" />
       </div>
     </div>
   </div>
