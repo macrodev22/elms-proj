@@ -1,12 +1,15 @@
 <script setup>
-const { href, label } = defineProps({
+import { RouterLink } from 'vue-router';
+
+const { href, label, active } = defineProps({
     href: String,
-    label: String
+    label: String,
+    active: { type: Boolean, default: false }
 })
 </script>
 <template>
-    <a :href="href"
-        class="text-xl flex h-full items-center px-2 border-b-3 border-b-transparent hover:border-b-green-700 hover:border-b-3">
+    <RouterLink :to="href" class="text-xl flex h-full items-center px-2 border-b-3 hover:border-b-green-600"
+        :class="[active ? 'border-b-green-700' : 'border-b-transparent']">
         {{ label }}
-    </a>
+    </RouterLink>
 </template>
