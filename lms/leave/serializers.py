@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer 
-from .models import LeaveRequest,LeaveProcess
+from .models import LeaveRequest,LeaveProcess,LeaveType
 
 class LeaveRequestSerializer(ModelSerializer):
     class Meta:
@@ -11,4 +11,7 @@ class LeaveProcessSerializer(ModelSerializer):
         model = LeaveProcess 
         fields = '__all__'
 
-        
+class LeaveTypeSerializer(ModelSerializer):
+    class Meta:
+        model = LeaveType
+        fields = '__all__'

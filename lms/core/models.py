@@ -47,6 +47,7 @@ class User(AbstractUser):
     supervised_by = models.ForeignKey('core.User', on_delete=models.PROTECT, related_name="subordinates", null=True, blank=True)
     contact = models.JSONField(null=True, blank=True, default=default_contact)
     gender = models.CharField(choices=(('M', 'Male'), ('F', 'Female')))
+    designation = models.CharField(max_length=255, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['date_of_birth', 'role', 'company']

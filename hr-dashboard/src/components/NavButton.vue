@@ -2,7 +2,7 @@
 import { RouterLink } from 'vue-router';
 
 const { href, label, active } = defineProps({
-    href: String,
+    href: String | Object,
     label: String,
     active: { type: Boolean, default: false }
 })
