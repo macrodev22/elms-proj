@@ -8,12 +8,13 @@ const LeaveRequestItem = (props) => {
         return '3 Days'
     }
     return (
-        <div className="bg-gray-100 rounded-md p-2 text-xl flex mb-2">
-            <span>{ request.type.name }</span>
-            <span>{ formatDateRange(request) }</span>
-            <span>{ duration(request) }</span>
-            <span>{ request.reason }</span>
-            <span>{ request.status }</span>
+        <div className="bg-gray-100 rounded-md p-2 text-base flex mb-2">
+            <span className="flex-[3] truncate">{ request.type.name }</span>
+            <span className="flex-[3] truncate">{ formatDateRange(request) }</span>
+            <span className="flex-[1.5]">{ duration(request) }</span>
+            <span className="flex-[3] truncate">{ request.reason }</span>
+            <span className="flex-[2]">{ request.status }</span>
+            <div className="w-32"></div>
         </div>
     )
 }

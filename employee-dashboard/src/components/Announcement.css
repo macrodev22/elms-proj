@@ -1,0 +1,11 @@
+.announcement::before {
+    position: absolute;
+    content: '';
+    top: 10px;
+    left: -14px;
+    width: 10px;
+    height: 10px;
+    background-color: #6497E3;
+    border-radius: 50%;
+    transform: translateY(50%);
+}
