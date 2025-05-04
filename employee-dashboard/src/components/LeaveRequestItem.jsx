@@ -30,7 +30,7 @@ const LeaveRequestItem = (props) => {
             <span className="flex-[3] truncate">{ formatDateRange(request) }</span>
             <span className="flex-[1.5]">{ duration(request) }</span>
             <span className="flex-[3] truncate">{ request.reason }</span>
-            <span className="flex-[2]">{ request.status }</span>
+            <span className="flex-[2]"><StatusChip status={request.status_display} /></span>
             <div className="flex gap-2">
                 <LeaveClosedChip isClosed={request.closed} />
                 <IconButton type="delete" />
