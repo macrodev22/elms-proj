@@ -23,6 +23,12 @@ const announcements = [
     { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-15' },
 ]
 
+// const data = {
+//     "total_leave_days": 21,
+//     "days_used": 2,
+//     "days_pending_approval": 19
+// }
+
 const Index = () => {
     return (
         <>

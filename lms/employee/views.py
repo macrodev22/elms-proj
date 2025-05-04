@@ -33,3 +33,19 @@ class LeaveRequestsAPIView(APIView):
             leave_request.save()
 
         return Response(leave_request.data)
+
+
+class LeaveStatsAPIView(APIView):
+    authentication_classes = [JWTAuth]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user 
+
+        used_leave = LeaveRequest.objects.filter(requested_by=user.id, closed=True).all()
+        serializer = LeaveRequestSerializerEmp(used_leave, many=True)
+        return Response({
+            "total_leave_days": 21,
+            "days_used": 2,
+            "days_pending_approval": 19
+        })
