@@ -41,10 +41,106 @@ export const useStore = defineStore('store', {
             { name: 'Isaac Mutebi', status: 'study', },
           ],
           leaveHistory: [
-            { type: 'Annual leave', dates: '5th May - 10th May', duration: '6 Days', reason: 'Going for vaccation', status: 'Approved' },
-            { type: 'Personal leave', dates: '15th May - 20th May', duration: '6 Days', reason: 'Going for vaccation', status: 'Cancelled' },
-            { type: 'Sick leave', dates: '4th May - 6th May', duration: '6 Days', reason: 'Going for vaccation', status: 'Pending' },
-            { type: 'Sabatical leave', dates: '1st May - 11th May', duration: '6 Days', reason: 'Going for vaccation', status: 'Rejected' },
+            {
+              id: 1,
+              type: {
+                  "id": 7,
+                  "name": "Sabbatical Leave",
+                  "description": "Extended periods off for personal projects, research, or study"
+              },
+              status_display: "Pending",
+              requested_at: "2025-04-16T17:06:35.338636Z",
+              start_time: "2025-04-23T17:05:45Z",
+              end_time: "2025-04-27T18:00:00Z",
+              status: "PNDG",
+              reason: "Going for vaccation",
+              closed: false,
+              company: 2,
+              requested_by: 4
+          },{
+            id: 2,
+            type: {
+                "id": 7,
+                "name": "Sabbatical Leave",
+                "description": "Extended periods off for personal projects, research, or study"
+            },
+            status_display: "Approved",
+            requested_at: "2025-04-16T17:06:35.338636Z",
+            start_time: "2025-04-23T17:05:45Z",
+            end_time: "2025-04-27T18:00:00Z",
+            status: "APPR",
+            reason: "Study is kawa",
+            closed: false,
+            company: 2,
+            requested_by: 4
+        },{
+          id: 3,
+          type: {
+              "id": 7,
+              "name": "Sabbatical Leave",
+              "description": "Extended periods off for personal projects, research, or study"
+          },
+          status_display: "Declined",
+          requested_at: "2025-04-16T17:06:35.338636Z",
+          start_time: "2025-04-23T17:05:45Z",
+          end_time: "2025-04-27T18:00:00Z",
+          status: "DCLN",
+          reason: "Study is kawa",
+          closed: false,
+          company: 2,
+          requested_by: 4
+          },
+          {
+            "id": 3,
+            "type": {
+                "id": 1,
+                "name": "Annual Leave (Holiday Entitlement)",
+                "description": "A set amount of time off that employees are legally entitled to for vacations or personal relaxation"
+            },
+            "status_display": "Pending",
+            "requested_at": "2025-05-03T17:32:51.747074Z",
+            "start_time": "2025-05-18T00:00:00Z",
+            "end_time": "2025-05-22T00:00:00Z",
+            "status": "PNDG",
+            "reason": "To catch some fresh air",
+            "closed": false,
+            "company": 2,
+            "requested_by": 6
+        },
+        {
+            "id": 4,
+            "type": {
+                "id": 4,
+                "name": "Personal Leave",
+                "description": "Used for personal reasons such as family events or appointments"
+            },
+            "status_display": "Pending",
+            "requested_at": "2025-05-03T17:33:39.662125Z",
+            "start_time": "2025-05-18T00:00:00Z",
+            "end_time": "2025-05-24T00:00:00Z",
+            "status": "PNDG",
+            "reason": "To catch some fresh air",
+            "closed": false,
+            "company": 2,
+            "requested_by": 6
+        },
+        {
+            "id": 5,
+            "type": {
+                "id": 3,
+                "name": "Maternity Leave",
+                "description": "Leave for new mothers, often including both prenatal and postnatal periods"
+            },
+            "status_display": "Pending",
+            "requested_at": "2025-05-03T17:35:14.907066Z",
+            "start_time": "2025-06-17T00:00:00Z",
+            "end_time": "2025-06-30T00:00:00Z",
+            "status": "PNDG",
+            "reason": "To catch some fresh air",
+            "closed": false,
+            "company": 2,
+            "requested_by": 6
+        },
           ],
           leaveStats: [
             {type: 'annual', count: 2, total: 18 },

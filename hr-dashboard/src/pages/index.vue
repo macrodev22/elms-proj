@@ -35,13 +35,15 @@
                 <QuickLink label="Request leave" to="#" />
                 <QuickLink label="Leave balance" to="#" />
             </Card>
+            <Card class="mt-6">
+                <h2 class="font-bold text-xl ">Birthdays</h2>
+            </Card>
         </div>
     </div>
     <div class="flex gap-8">
         <Card class=" md:w-3/5">
             <h4 class="mb-2 text-2xl">Leave history</h4>
-            <LeaveHistory v-for="leave in store.leaveHistory" :key="leave.dates" :type="leave.type" :dates="leave.dates"
-                :duration="leave.duration" :reason="leave.reason" :status="leave.status" />
+            <LeaveHistory v-for="leave in store.leaveHistory" :key="leave.id" :leave="leave" />
         </Card>
     </div>
 </template>

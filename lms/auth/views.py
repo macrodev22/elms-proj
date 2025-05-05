@@ -1,6 +1,6 @@
 import datetime
 from django.shortcuts import render
-from rest_framework import exceptions,status
+from rest_framework import exceptions,status,parsers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -41,7 +41,7 @@ class LoginAPIView(APIView):
           response.data = {
               "message": "success",
               "token": token,
-              "data": UserSerializer(user).data
+              "data": UserSerializer(user, context={'request': request}).data
               }
           response.set_cookie("token", token, httponly=True, expires=datetime.datetime.now()+datetime.timedelta(minutes=45))
           return response
@@ -62,11 +62,12 @@ class AuthenticatedUserAPIView(APIView):
 
     def get(self, request):
         
-        return Response(UserSerializer(request.user).data)
+        return Response(UserSerializer(request.user, context={'request': request}).data)
     
 class ProfileAPIView(APIView):
     authentication_classes = [JWTAuth]
     permission_classes = [IsAuthenticated]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
     def post(self, request):
         user:User = request.user
@@ -75,10 +76,21 @@ class ProfileAPIView(APIView):
         
 
         data = { 
-            "user": UserSerializer(user).data,
+            "user": UserSerializer(user, context={'request': request}).data,
             "company": CompanySerializer(user.company).data,
             "supervisor": UserSerializer(user.supervised_by).data,
             "subordinates": UserSerializer(user.subordinates, many=True).data,
             "leave_requests": leave_requests_serializer.data,
          }
         return Response(data)
+    
+    def patch(self, request):
+        user:User = request.user
+        data = request.data
+
+        serializer = UserSerializer(user, data=data, partial=True, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

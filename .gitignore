@@ -1,3 +1,4 @@
 pyenv/
 lms/db.sqlite3
 lms/profile_pictures/
+lms/media/
