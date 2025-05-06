@@ -26,11 +26,11 @@ export const useStore = defineStore('store', {
             supervised_by: 6
           } },
           holidays: [
-            { 'name': 'Holy Thursday', type: 'Optional', date: '17/04/2025' },
-            { 'name': 'Good Friday', type: 'Public Holiday', date: '18/04/2025' },
-            { 'name': 'Easter Sunday', type: 'Public Holiday', date: '20/04/2025' },
-            { 'name': 'Easter Monday', type: 'Public Holiday', date: '21/04/2025' },
-            { 'name': 'Labour day', type: 'Public Holiday', date: '01/05/2025' },
+            { 'name': 'Holy Thursday', type: 'Optional', date: '2025-04-17' },
+            { 'name': 'Good Friday', type: 'Public Holiday', date: '2025-04-18' },
+            { 'name': 'Easter Sunday', type: 'Public Holiday', date: '2025-04-20' },
+            { 'name': 'Easter Monday', type: 'Public Holiday', date: '2025-04-21' },
+            { 'name': 'Labour day', type: 'Public Holiday', date: '2025-05-01' },
           ],
           employeeAvailability: [
             { name: 'Micheal B. Jordan', photo: 'https://t3.ftcdn.net/jpg/03/62/40/80/360_F_362408093_AlwyWJQbyc6edRlXGaGz3xquwzLGXhkX.jpg' },
@@ -66,11 +66,11 @@ export const useStore = defineStore('store', {
             },
             status_display: "Approved",
             requested_at: "2025-04-16T17:06:35.338636Z",
-            start_time: "2025-04-23T17:05:45Z",
-            end_time: "2025-04-27T18:00:00Z",
+            start_time: "2025-05-23T17:05:45Z",
+            end_time: "2025-06-12T18:00:00Z",
             status: "APPR",
-            reason: "Study is kawa",
-            closed: false,
+            reason: "Studying swaswa is kawa",
+            closed: true,
             company: 2,
             requested_by: 4
         },{
@@ -86,12 +86,12 @@ export const useStore = defineStore('store', {
           end_time: "2025-04-27T18:00:00Z",
           status: "DCLN",
           reason: "Study is kawa",
-          closed: false,
+          closed: true,
           company: 2,
           requested_by: 4
           },
           {
-            "id": 3,
+            "id": 4,
             "type": {
                 "id": 1,
                 "name": "Annual Leave (Holiday Entitlement)",
@@ -108,36 +108,36 @@ export const useStore = defineStore('store', {
             "requested_by": 6
         },
         {
-            "id": 4,
+            "id": 5,
             "type": {
                 "id": 4,
                 "name": "Personal Leave",
                 "description": "Used for personal reasons such as family events or appointments"
             },
-            "status_display": "Pending",
+            "status_display": "Approved",
             "requested_at": "2025-05-03T17:33:39.662125Z",
             "start_time": "2025-05-18T00:00:00Z",
             "end_time": "2025-05-24T00:00:00Z",
-            "status": "PNDG",
+            "status": "APPR",
             "reason": "To catch some fresh air",
-            "closed": false,
+            "closed": true,
             "company": 2,
             "requested_by": 6
         },
         {
-            "id": 5,
+            "id": 6,
             "type": {
                 "id": 3,
                 "name": "Maternity Leave",
                 "description": "Leave for new mothers, often including both prenatal and postnatal periods"
             },
-            "status_display": "Pending",
+            "status_display": "Declined",
             "requested_at": "2025-05-03T17:35:14.907066Z",
             "start_time": "2025-06-17T00:00:00Z",
             "end_time": "2025-06-30T00:00:00Z",
-            "status": "PNDG",
+            "status": "DCLN",
             "reason": "To catch some fresh air",
-            "closed": false,
+            "closed": true,
             "company": 2,
             "requested_by": 6
         },

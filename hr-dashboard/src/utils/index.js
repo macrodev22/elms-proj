@@ -18,7 +18,7 @@ export const formatDate = (dateStr, withDay = false) => {
         }
     }
 
-    return `${withDay ? days[weekDay] + ', ' : ''}${day}${suffix(day)} ${months[month]} ${year}`
+    return `${withDay ? days[weekDay] + ', ' : ''}${day}<sup>${suffix(day)}</sup> ${months[month]} ${year}`
 }
 
 export const getDurationLabel = (startDate, endDate) => {

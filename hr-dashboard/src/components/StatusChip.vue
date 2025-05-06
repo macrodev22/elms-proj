@@ -6,7 +6,7 @@ const { status } = defineProps({
 const colors = {
     'approved': '#D5F4DC',
     'pending': '#E3E3E3',
-    'rejected': '#F3E6D6',
+    'declined': '#F3E6D6',
     'cancelled': '#F4D5D5'
 }
 </script>

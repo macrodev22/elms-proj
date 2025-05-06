@@ -11,12 +11,13 @@ const { leave } = defineProps({
 </script>
 
 <template>
-    <div class="bg-gray-100 flex justify-between items-center gap-2.5 mb-2 p-2 rounded-md text-sm font-bold">
-        <div>{{ leave.type.name }}</div>
-        <div>{{ `${formatDate(leave.start_time)} - ${formatDate(leave.end_time)}` }}</div>
-        <div>{{ getDurationLabel(leave.start_time, leave.end_time) }}</div>
-        <div class="font-normal">{{ leave.reason }}</div>
-        <StatusChip :status="leave.status_display" />
+    <div class="bg-gray-100 flex justify-between items-center gap-2.5 mb-2 p-2 rounded-md text-xs font-bold">
+        <div class="flex-2 truncate">{{ leave.type.name }}</div>
+        <div class="flex-3 font-normal" v-html="`${formatDate(leave.start_time)} - ${formatDate(leave.end_time)}`">
+        </div>
+        <div class="flex-1">{{ getDurationLabel(leave.start_time, leave.end_time) }}</div>
+        <div class="font-normal flex-2">{{ leave.reason }}</div>
+        <StatusChip :status="leave.status_display" class="flex-[1]" />
         <div>
             <EllipsisVerticalIcon class="size-6" />
         </div>

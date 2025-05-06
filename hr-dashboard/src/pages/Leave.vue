@@ -1,9 +1,8 @@
 <template>
 
     <Card>
-        <h2 class="font-bold text-xl mb-3">Leave requests</h2>
-        <LeaveItem v-for="leave in store.leaveHistory" :key="leave.dates + leave.reason" :dates="leave.dates"
-            :duration="leave.duration" :reason="leave.reason" :status="leave.status" :type="leave.type" />
+        <h2 class="font-bold text-xl mb-3 border-b-gray-50 border-b-2">Leave requests</h2>
+        <LeaveItem v-for="leave in store.leaveHistory" :key="leave.id" :leave="leave" />
     </Card>
 
 </template>

@@ -1,12 +1,33 @@
 <script setup>
+import { formatDate, getDurationLabel } from '../utils';
 import StatusChip from './StatusChip.vue';
+import { CheckCircleIcon, EllipsisHorizontalCircleIcon } from '@heroicons/vue/24/outline';
+
+const { leave } = defineProps({
+    leave: Object,
+})
 </script>
 <template>
-    <div class="bg-gray-100 rounded-md flex justify-between text-lg font-light p-2 mb-4">
-        <p>Annual leave</p>
-        <p>18th May 2025 - 20th May 2025</p>
-        <p>3 Days</p>
-        <p>Going for vacation</p>
-        <StatusChip status="Pending" />
+    <div class="bg-gray-100 rounded-md flex gap-2 justify-between items-center text-base font-normal p-2 mb-4">
+        <p class="flex-[1.5] truncate font-semibold">{{ leave.type.name }}</p>
+        <p class="flex-3" v-html="`${formatDate(leave.start_time)} - ${formatDate(leave.end_time)}`"></p>
+        <p class="flex-1 font-semibold">{{ getDurationLabel(leave.start_time, leave.end_time) }}</p>
+        <p class="flex-3">{{ leave.reason }}</p>
+        <StatusChip :status="leave.status_display" class="flex-1" />
+        <div class="flex gap-1 flex-3 justify-center text-xs">
+            <button :disabled="leave.closed"
+                class="bg-green-500 hover:bg-green-600 rounded-md py-2 px-2.5 text-white cursor-pointer disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed disabled:border-green-500 disabled:border-1">Aprrove</button>
+            <button :disabled="leave.closed"
+                class="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">Ask
+                Supervisor</button>
+            <button :disabled="leave.closed ? true : false"
+                class="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">Decline
+            </button>
+        </div>
+        <div class="rounded-md border-1 flex items-center justify-center p-1"
+            :class="!leave.closed ? 'border-gray-500 cursor-wait' : 'border-green-500 cursor-pointer'">
+            <CheckCircleIcon v-if="leave.closed" class="size-7 stroke-green-500" />
+            <EllipsisHorizontalCircleIcon v-if="!leave.closed" class="stroke-gray-500 size-7" />
+        </div>
     </div>
 </template>
