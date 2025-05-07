@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render
+from django.conf import settings
 from rest_framework import exceptions,status,parsers
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,6 +10,7 @@ from leave.serializers import LeaveRequestSerializer,LeaveProcessSerializer
 from core.models import User
 from .authentication import JWTAuth
 
+TOKEN_LIFESPAN = settings.AUTH_TOKEN_LIFESPAN
 
 # Create your views here.
 # Auth Views
@@ -41,9 +42,9 @@ class LoginAPIView(APIView):
           response.data = {
               "message": "success",
               "token": token,
-              "data": UserSerializer(user, context={'request': request}).data
+              "user": UserSerializer(user, context={'request': request}).data
               }
-          response.set_cookie("token", token, httponly=True, expires=datetime.datetime.now()+datetime.timedelta(minutes=45))
+          response.set_cookie("token", token, httponly=True, expires=datetime.datetime.now()+datetime.timedelta(minutes=TOKEN_LIFESPAN))
           return response
 
 class LogoutAPIView(APIView):
@@ -61,8 +62,12 @@ class AuthenticatedUserAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        
-        return Response(UserSerializer(request.user, context={'request': request}).data)
+        token = request.COOKIES.get('token')
+
+        return Response({
+            'user': UserSerializer(request.user, context={'request': request}).data,
+            'token': token
+            })
     
 class ProfileAPIView(APIView):
     authentication_classes = [JWTAuth]

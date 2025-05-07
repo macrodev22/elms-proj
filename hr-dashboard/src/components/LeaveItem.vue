@@ -6,13 +6,18 @@ import { CheckCircleIcon, EllipsisHorizontalCircleIcon } from '@heroicons/vue/24
 const { leave } = defineProps({
     leave: Object,
 })
+
+const emit = defineEmits(['select'])
+
 </script>
 <template>
     <div class="bg-gray-100 rounded-md flex gap-2 justify-between items-center text-base font-normal p-2 mb-4">
         <p class="flex-[1.5] truncate font-semibold">{{ leave.type.name }}</p>
         <p class="flex-3" v-html="`${formatDate(leave.start_time)} - ${formatDate(leave.end_time)}`"></p>
         <p class="flex-1 font-semibold">{{ getDurationLabel(leave.start_time, leave.end_time) }}</p>
-        <p class="flex-3">{{ leave.reason }}</p>
+        <p class="flex-3 truncate"
+            v-html="`<span class='text-gray-600 text-sm'>(${leave.requested_by.first_name || leave.requested_by.email})</span> ${leave.reason}`">
+        </p>
         <StatusChip :status="leave.status_display" class="flex-1" />
         <div class="flex gap-1 flex-3 justify-center text-xs">
             <button :disabled="leave.closed"
@@ -24,8 +29,8 @@ const { leave } = defineProps({
                 class="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">Decline
             </button>
         </div>
-        <div class="rounded-md border-1 flex items-center justify-center p-1"
-            :class="!leave.closed ? 'border-gray-500 cursor-wait' : 'border-green-500 cursor-pointer'">
+        <div @click="emit('select', leave)" class="rounded-md border-1 flex items-center justify-center p-1"
+            :class="!leave.closed ? 'border-gray-500 cursor-wait hover:bg-gray-600' : 'border-green-500 cursor-pointer hover:bg-green-700'">
             <CheckCircleIcon v-if="leave.closed" class="size-7 stroke-green-500" />
             <EllipsisHorizontalCircleIcon v-if="!leave.closed" class="stroke-gray-500 size-7" />
         </div>

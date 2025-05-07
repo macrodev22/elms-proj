@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*', '10.0.2.2', 'localhost', '127.0.0.1']
 
+# Token lifetim
+AUTH_TOKEN_LIFESPAN = 60 #minutes
 
 # Application definition
 

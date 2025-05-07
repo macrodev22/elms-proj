@@ -1,8 +1,10 @@
 <script setup>
-import { reactive, ref } from 'vue';
-import { client } from '../services/client'
+import { reactive, ref, onBeforeMount } from 'vue';
+import { client, getCompanyDepartments } from '../services/client'
+import { toast } from 'vue3-toastify';
 import Modal from './Modal.vue';
 import FormField from './FormField.vue';
+import DropDownField from './DropDownField.vue';
 import profilePhotoGeneric from '../assets/generic_profile_photo.jpg';
 
 
@@ -17,13 +19,33 @@ const formFields = reactive({
     middle_name: "",
     last_name: "",
     email: "",
+    role: "",
+    gender: "",
     profile_picture: null,
     date_of_birth: null,
-    company: 2,
-    department: 3,
+    department: null,
     password: "defaultpassword"
 })
 
+const roles = [
+    { value: 'EM', label: 'Employee' },
+    { value: 'HR', label: 'Human Resource' },
+]
+
+const genders = [
+    { value: 'F', label: 'Female' },
+    { value: 'M', label: 'Male' },
+]
+
+const departments = ref([])
+
+onBeforeMount(() => {
+    getCompanyDepartments().then(res => {
+        departments.value = res.data
+    })
+})
+
+const form = ref(null)
 const profileImg = ref(null)
 const photoInput = ref(null)
 
@@ -38,21 +60,48 @@ const onPhotoChange = () => {
     fr.readAsDataURL(file)
 }
 
+const resetForm = () => {
+    formFields.first_name = ""
+    formFields.middle_name = ""
+    formFields.last_name = ""
+    formFields.email = ""
+    formFields.department = null
+    formFields.gender = ""
+    formFields.profile_picture = null
+    formFields.role = ""
+    formFields.date_of_birth = null
+    formFields.password = "defaultpassword"
+}
+
 const saveEmployee = () => {
-    client.post('/hr/create-employee')
-        .then(res => console.log(res))
-        .catch(e => console.error(e))
+    // Build form data
+    const formData = new FormData(form.value)
+
+    client.postForm('/hr/create-employee', formData)
+        .then(res => {
+            console.log(res)
+            toast.success('Saved employee successfully')
+
+            resetForm()
+
+        })
+        .catch(e => {
+            console.error(e)
+            toast.error(`Error saving employee!\n${e.message}`, {
+                position: toast.POSITION.BOTTOM_CENTER,
+            })
+        })
 }
 
 </script>
 
 <template>
     <Modal title="Add an Employee" :show="show" @close-modal="emit('close-modal')">
-        <form method="post" @submit.prevent="saveEmployee">
-            <FormField name="first_name" label="First name" v-model:model-value="formFields.first_name" />
-            <FormField name="middle_name" label="Middle name" v-model:model-value="formFields.middle_name" />
-            <FormField name="last_name" label="Last name" v-model:model-value="formFields.last_name" />
-            <FormField name="email" label="Email" type="email" v-bind:model-value="formFields.email" />
+        <form method="post" ref="form" @submit.prevent="saveEmployee" enctype="multipart/form-data">
+            <FormField name="first_name" label="First name" v-model="formFields.first_name" />
+            <FormField name="middle_name" label="Middle name" :required="false" v-model="formFields.middle_name" />
+            <FormField name="last_name" label="Last name" v-model="formFields.last_name" />
+            <FormField name="email" label="Email" type="email" v-model="formFields.email" />
             <div class="flex gap-8 items-center mb-4">
                 <div class="flex flex-col">
                     <label for="date_of_birth" class="mb-1.5">Date of Birth</label>
@@ -70,14 +119,19 @@ const saveEmployee = () => {
                             Profile
                             Photo</span>
                     </label>
-                    <input type="file" ref="photoInput" @change="onPhotoChange" id="profile_picture"
+                    <input type="file" ref="photoInput" @change="onPhotoChange" accept="image/*" id="profile_picture"
                         name="profile_picture" class="hidden">
 
                 </div>
             </div>
 
-            <FormField name="department" label="Department" />
-            <FormField name="password" label="password" v-model:model-value="formFields.password" />
+            <div class="flex gap-4">
+                <DropDownField name="department" label="Department" v-model="formFields.department"
+                    :options="departments.map(d => ({ value: d.id, label: d.name }))" />
+                <DropDownField label="Role" name="role" :options="roles" v-model="formFields.role" />
+                <DropDownField label="Gender" name="gender" :options="genders" v-model="formFields.gender" />
+            </div>
+            <FormField name="password" label="password" v-model="formFields.password" />
             <div class="flex mb-6 mt-2">
                 <button
                     class="rounded-md bg-green-500 px-12 py-2 text-white cursor-pointer hover:bg-green-600">Save</button>

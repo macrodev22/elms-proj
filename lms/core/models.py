@@ -37,7 +37,7 @@ def default_contact():
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=False, null=False)
     role = models.CharField(max_length=20, choices=USER_ROLE_CHOICES)
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)

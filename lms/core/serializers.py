@@ -1,15 +1,18 @@
 from rest_framework.serializers import ModelSerializer,SerializerMethodField
+from rest_framework import serializers
 
 from core.models import User
 
 class UserSerializer(ModelSerializer):
 
     profile_picture_url = SerializerMethodField()
+    role_display = serializers.CharField(source='get_role_display', read_only=True)
+    gender_display = serializers.CharField(source='get_gender_display', read_only=True)
 
     class Meta:
         model = User
         exclude = ['groups', 'user_permissions']
-        read_only_fields = ['email']
+        # read_only_fields = ['email']
         extra_kwargs = {
             "password": { 'write_only': True }
         }

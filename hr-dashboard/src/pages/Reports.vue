@@ -1,23 +1,32 @@
 <script setup>
+import { ref, onBeforeMount } from 'vue';
+import { client } from '../services/client';
 import ReportCard from '../components/ReportCard.vue';
 import ReportStatChip from '../components/ReportStatChip.vue';
 import contactTrace from '../assets/contact_trace.svg'
 import leaveReport from '../assets/leave_report.svg'
 
-const report = {
-    overview: {
-        total_employees: 11,
-        employees_on_leave: 3,
-        leave_days_used: 45,
-        days_left: 186
-    },
-    weekly_employee_details: {
-        birthdays: 1,
-        pending_leave: 2,
-        days_used: 1,
-        days_left: 4
-    }
-}
+const overview = ref({
+    total_employees: 0,
+    employees_on_leave: 0,
+    used_leave_days: 0,
+    remaining_leave_days: 0
+})
+
+const weekly_employee_details = ref({
+    birthdays: 1,
+    pending_leave: 2,
+    days_used: 1,
+    days_left: 4
+})
+
+onBeforeMount(() => {
+    client.get('/hr/report/leave-overview')
+        .then(res => {
+            overview.value = res.data
+        })
+})
+
 </script>
 <template>
     <div class="grid grid-cols-2 grid-rows-2 gap-6">
@@ -30,19 +39,19 @@ const report = {
 
         <ReportCard title="Overview">
             <div class="grid grid-cols-2 gap-x-4 gap-y-8">
-                <ReportStatChip item="Number of employees" :count="report.overview.total_employees" />
-                <ReportStatChip item="Employees on leave" :count="report.overview.employees_on_leave" />
-                <ReportStatChip item="Leave days used" :count="report.overview.leave_days_used" />
-                <ReportStatChip item="Days left" :count="report.overview.days_left" />
+                <ReportStatChip item="Number of employees" :count="overview.total_employees" />
+                <ReportStatChip item="Employees on leave" :count="overview.employees_on_leave" />
+                <ReportStatChip item="Leave days used" :count="overview.used_leave_days" />
+                <ReportStatChip item="Days left" :count="overview.remaining_leave_days" />
             </div>
         </ReportCard>
 
         <ReportCard title="Employee details">
             <div class="grid grid-cols-2 grid-rows-2 gap-x-4 gap-y-8">
-                <ReportStatChip item="Birthdays" :count="report.weekly_employee_details.birthdays" />
-                <ReportStatChip item="Pending leave" :count="report.weekly_employee_details.pending_leave" />
-                <ReportStatChip item="Leave days used" :count="report.weekly_employee_details.days_used" />
-                <ReportStatChip item="Days left" :count="report.weekly_employee_details.days_left" />
+                <ReportStatChip item="Birthdays" :count="weekly_employee_details.birthdays" />
+                <ReportStatChip item="Pending leave" :count="weekly_employee_details.pending_leave" />
+                <ReportStatChip item="Leave days used" :count="weekly_employee_details.days_used" />
+                <ReportStatChip item="Days left" :count="weekly_employee_details.days_left" />
             </div>
         </ReportCard>
 

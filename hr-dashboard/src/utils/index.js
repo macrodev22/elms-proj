@@ -1,4 +1,4 @@
-export const formatDate = (dateStr, withDay = false) => {
+export const formatDate = (dateStr, withDay = false, html = true) => {
     const date = new Date(dateStr)
     const weekDay = date.getDay()
     const day = date.getDate()
@@ -18,7 +18,9 @@ export const formatDate = (dateStr, withDay = false) => {
         }
     }
 
-    return `${withDay ? days[weekDay] + ', ' : ''}${day}<sup>${suffix(day)}</sup> ${months[month]} ${year}`
+    if(html)
+        return `${withDay ? days[weekDay] : ''} ${day}<sup>${suffix(day)}</sup> ${months[month]} ${year}`
+    return `${withDay ? days[weekDay] : ''} ${day}${suffix(day)} ${months[month]} ${year}`
 }
 
 export const getDurationLabel = (startDate, endDate) => {
@@ -32,4 +34,58 @@ export const getDurationLabel = (startDate, endDate) => {
     const diffWeeks = diffDays/7
 
     return `${diffDays} Days`
+}
+
+export const dateToCalendarFormat = (dateStr) => {
+// "2025-04-23T17:05:45Z" to the format '2025-04-23 17:05'
+    const pad = n => n.toString().padStart(2, '0')
+
+    const date = new Date(dateStr)
+    const year = date.getFullYear()
+    const month = pad(date.getMonth() + 1)
+    const day = pad(date.getDate())
+    const hours = pad(date.getUTCHours())
+    const mins = pad(date.getMinutes())
+
+    return `${year}-${month}-${day} ${hours}:${mins}`
+}
+
+export const formatName = (user) => {
+    if (!user) return ''
+    const names = [user.first_name, user.middle_name, user.last_name]
+    if (names.every(n => !n)) {
+        return 'Hello'
+    }
+    if (names.every(n => n)) {
+        return `${names[0]} ${names[1].slice(0, 1)}. ${names[2]}`
+    }
+    if (names.some(n => !n)) {
+        return names.reduce((p, c) => c ? `${p} ${c}` : p, '').slice(1).trim()
+    }
+}
+
+export const formatPhoto = (p) => p ? p : "https://wallpapers.com/images/hd/generic-male-avatar-icon-piiktqtfffyzulft.jpg"
+
+export const cleanUserData = (user) => {
+    const isObject = val => val && typeof val === 'object' && !Array.isArray(val);
+
+    const clean = obj => {
+        return Object.entries(obj).reduce((acc, [key, value]) => {
+            if (
+                value === null ||
+                value === '' ||
+                value === undefined ||
+                (isObject(value) && Object.keys(clean(value)).length === 0)
+            ) {
+                // Skip this key
+                return acc;
+            }
+
+            // Recurse if it's an object
+            acc[key] = isObject(value) ? clean(value) : value;
+            return acc;
+        }, {});
+    };
+
+    return clean(user);
 }

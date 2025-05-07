@@ -1,30 +1,38 @@
 import { defineStore } from "pinia";
+import { client } from "../services/client";
 
 export const useStore = defineStore('store', {
     state: () => ({
-        auth: { user: {
-            id: 2,
+        auth: { 
+          user: {
+            id: null,
+            profile_picture_url: null,
+            role_display: "",
+            gender_display: "Female",
             last_login: null,
             is_superuser: false,
-            first_name: "Ivan",
-            last_name: "Sempebwa",
+            first_name: "",
+            last_name: "",
             is_staff: false,
             is_active: true,
-            date_joined: "2025-04-11T15:01:19Z",
-            email: "ivan@gmail.com",
-            role: "EM",
-            profile_picture: "https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?s=612x612&w=0&k=20&c=8ssXDNTp1XAPan8Bg6mJRwG7EXHshFO5o0v9SIj96nY=",
+            date_joined: "",
+            email: "",
+            role: "",
+            profile_picture: null,
             date_of_birth: null,
-            middle_name: null,
+            middle_name: "",
             contact: {
-              mobile: "256770123456",
-              work: "256414452645/3"
+                "mobile": "",
+                "work": ""
             },
-            gender: "M",
-            company: 2,
-            department: 3,
-            supervised_by: 6
-          } },
+            gender: "",
+            designation: null,
+            company: null,
+            department: null,
+            supervised_by: null
+        },
+          token: null,
+         },
           holidays: [
             { 'name': 'Holy Thursday', type: 'Optional', date: '2025-04-17' },
             { 'name': 'Good Friday', type: 'Public Holiday', date: '2025-04-18' },
@@ -40,121 +48,35 @@ export const useStore = defineStore('store', {
             { name: 'Irwin Sempebwa', status: 'short', },
             { name: 'Isaac Mutebi', status: 'study', },
           ],
-          leaveHistory: [
-            {
-              id: 1,
-              type: {
-                  "id": 7,
-                  "name": "Sabbatical Leave",
-                  "description": "Extended periods off for personal projects, research, or study"
-              },
-              status_display: "Pending",
-              requested_at: "2025-04-16T17:06:35.338636Z",
-              start_time: "2025-04-23T17:05:45Z",
-              end_time: "2025-04-27T18:00:00Z",
-              status: "PNDG",
-              reason: "Going for vaccation",
-              closed: false,
-              company: 2,
-              requested_by: 4
-          },{
-            id: 2,
-            type: {
-                "id": 7,
-                "name": "Sabbatical Leave",
-                "description": "Extended periods off for personal projects, research, or study"
-            },
-            status_display: "Approved",
-            requested_at: "2025-04-16T17:06:35.338636Z",
-            start_time: "2025-05-23T17:05:45Z",
-            end_time: "2025-06-12T18:00:00Z",
-            status: "APPR",
-            reason: "Studying swaswa is kawa",
-            closed: true,
-            company: 2,
-            requested_by: 4
-        },{
-          id: 3,
-          type: {
-              "id": 7,
-              "name": "Sabbatical Leave",
-              "description": "Extended periods off for personal projects, research, or study"
-          },
-          status_display: "Declined",
-          requested_at: "2025-04-16T17:06:35.338636Z",
-          start_time: "2025-04-23T17:05:45Z",
-          end_time: "2025-04-27T18:00:00Z",
-          status: "DCLN",
-          reason: "Study is kawa",
-          closed: true,
-          company: 2,
-          requested_by: 4
-          },
-          {
-            "id": 4,
-            "type": {
-                "id": 1,
-                "name": "Annual Leave (Holiday Entitlement)",
-                "description": "A set amount of time off that employees are legally entitled to for vacations or personal relaxation"
-            },
-            "status_display": "Pending",
-            "requested_at": "2025-05-03T17:32:51.747074Z",
-            "start_time": "2025-05-18T00:00:00Z",
-            "end_time": "2025-05-22T00:00:00Z",
-            "status": "PNDG",
-            "reason": "To catch some fresh air",
-            "closed": false,
-            "company": 2,
-            "requested_by": 6
-        },
-        {
-            "id": 5,
-            "type": {
-                "id": 4,
-                "name": "Personal Leave",
-                "description": "Used for personal reasons such as family events or appointments"
-            },
-            "status_display": "Approved",
-            "requested_at": "2025-05-03T17:33:39.662125Z",
-            "start_time": "2025-05-18T00:00:00Z",
-            "end_time": "2025-05-24T00:00:00Z",
-            "status": "APPR",
-            "reason": "To catch some fresh air",
-            "closed": true,
-            "company": 2,
-            "requested_by": 6
-        },
-        {
-            "id": 6,
-            "type": {
-                "id": 3,
-                "name": "Maternity Leave",
-                "description": "Leave for new mothers, often including both prenatal and postnatal periods"
-            },
-            "status_display": "Declined",
-            "requested_at": "2025-05-03T17:35:14.907066Z",
-            "start_time": "2025-06-17T00:00:00Z",
-            "end_time": "2025-06-30T00:00:00Z",
-            "status": "DCLN",
-            "reason": "To catch some fresh air",
-            "closed": true,
-            "company": 2,
-            "requested_by": 6
-        },
-          ],
-          leaveStats: [
-            {type: 'annual', count: 2, total: 18 },
-            {type: 'sick', count: 4, total: 18 },
-            {type: 'personal', count: 7, total: 18 },
-            {type: 'special', count: 12, total: 18 },
-            {type: 'short', count: 5, total: 18 },
-            {type: 'annual', count: 2, total: 18 },
-          ],
+          leaveHistory: [],
+          leaveStats: [],
     }),
     getters: {
 
     },
     actions: {
-
+      async setUser()  {
+        try{
+          const {data} = await client.get('/auth/user')
+          this.auth.user = data.user 
+          this.auth.token = data.token
+          return data
+        } catch(e) {
+          throw e
+        }
+      },
+      setLeaveStats() {
+        client.get('/hr/report/leave-type-stats')
+        .then(({data}) => {
+          this.leaveStats = data.map(l => ({
+            type: l.type.toLowerCase(),
+            count: l.request_count,
+            total: l.total_requests
+          }))
+        })
+        .catch(e => {
+          console.error('Error getting leave stats', e)
+        })
+      }
     }      
 })

@@ -1,11 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import { useStore } from './store';
+import { client } from './services/client';
+import { toast } from 'vue3-toastify';
 import NavButton from './components/NavButton.vue';
 import Button from './components/Button.vue';
 import { PlusIcon } from '@heroicons/vue/24/outline';
 import Profile from './components/Profile.vue';
 import AddEmployeeModal from './components/AddEmployeeModal.vue';
+import LoginModal from './components/LoginModal.vue';
 
 import { RouterView, useRoute } from 'vue-router';
 
@@ -13,12 +16,36 @@ const store = useStore()
 const route = useRoute()
 
 const showAddEmployeeModal = ref(false)
+const showLoginModal = ref(false)
+
+onBeforeMount(() => {
+  client.get('/auth/user')
+    .then(res => {
+      // console.log(res)
+      const { user, token } = res.data
+
+      store.auth.user = user
+      store.auth.token = token
+      client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+      // Other resources
+      store.setLeaveStats()
+      client.get('/hr/leave').then(res => {
+        store.leaveHistory = res.data
+      })
+    }).catch(e => {
+      console.error(e)
+      toast.error(`Not logged in\n${e.message}`, { position: toast.POSITION.TOP_CENTER })
+      showLoginModal.value = true
+    })
+})
 
 </script>
 
 <template>
   <div class="bg-green-100 py-2 px-12 relative">
     <AddEmployeeModal :show="showAddEmployeeModal" @close-modal="showAddEmployeeModal = false" />
+    <LoginModal :show="showLoginModal" @close-modal="showLoginModal = false" />
     <div class="flex justify-between items-center">
       <div class="h-12"><img src="/favicon.svg" alt="Logo" class="h-full"></div>
       <div class="flex gap-6.5 items-stretch self-stretch my-[-8px]">
