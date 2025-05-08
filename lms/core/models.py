@@ -56,4 +56,5 @@ class User(AbstractUser):
 
     def __str__(self):
         company_name = self.company.name if self.company else "(No company)"
-        return f"{self.email} - {company_name}"
+        role = self.role if self.role else 'n/a'
+        return f"{self.email} - {company_name} ({role})"

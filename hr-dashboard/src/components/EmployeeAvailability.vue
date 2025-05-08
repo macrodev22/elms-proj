@@ -1,25 +1,16 @@
 <script setup>
+import { getColor } from '../utils'
+
 const { status, name, photo } = defineProps({
     status: { type: String, default: 'available' },
     name: String,
     photo: { type: String, default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCw6RV343VjEiadcJNk0mbq_2dzMeizoL96g&s" }
 })
 
-const capitalize = (str) => str[0] ? str[0].toUpperCase() + str.slice(1).toLowerCase() : null
 
-const colors = {
-    "annual": "#AD7EE9",
-    "special": "#6497E3",
-    "personal": "#E76CC1",
-    "sick": "#EAA750",
-    "short": "#E76CC1",
-    "study": "#6497E3",
-    "available": "#32A74E",
-}
+const statusText = (status) => status.toLowerCase() == 'available' ? 'Available' : status
 
-const statusText = (status) => status.toLowerCase() == 'available' ? 'Available' : capitalize(status) + ' leave'
-
-const borderColor = colors[status.toLowerCase()] || colors['available']
+const borderColor = getColor(status) || "#32A74E"
 </script>
 <template>
     <div class="flex gap-2.5 w-[190px]" style="flex: 0 0 auto">

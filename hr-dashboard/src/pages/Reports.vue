@@ -1,17 +1,16 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
 import { client } from '../services/client';
+import { useStore } from '../store';
 import ReportCard from '../components/ReportCard.vue';
 import ReportStatChip from '../components/ReportStatChip.vue';
 import contactTrace from '../assets/contact_trace.svg'
 import leaveReport from '../assets/leave_report.svg'
+import EmployeeFullReportModal from '../components/EmployeeFullReportModal.vue';
 
-const overview = ref({
-    total_employees: 0,
-    employees_on_leave: 0,
-    used_leave_days: 0,
-    remaining_leave_days: 0
-})
+const store = useStore()
+
+const showEmployeeReport = ref(false)
 
 const weekly_employee_details = ref({
     birthdays: 1,
@@ -21,10 +20,7 @@ const weekly_employee_details = ref({
 })
 
 onBeforeMount(() => {
-    client.get('/hr/report/leave-overview')
-        .then(res => {
-            overview.value = res.data
-        })
+    store.setEmployeeOverview()
 })
 
 </script>
@@ -37,12 +33,12 @@ onBeforeMount(() => {
             </div>
         </ReportCard>
 
-        <ReportCard title="Overview">
+        <ReportCard title="Overview" @btn-click="showEmployeeReport = true">
             <div class="grid grid-cols-2 gap-x-4 gap-y-8">
-                <ReportStatChip item="Number of employees" :count="overview.total_employees" />
-                <ReportStatChip item="Employees on leave" :count="overview.employees_on_leave" />
-                <ReportStatChip item="Leave days used" :count="overview.used_leave_days" />
-                <ReportStatChip item="Days left" :count="overview.remaining_leave_days" />
+                <ReportStatChip item="Number of employees" :count="store.employeeOverview.total_employees" />
+                <ReportStatChip item="Employees on leave" :count="store.employeeOverview.employees_on_leave" />
+                <ReportStatChip item="Used leave days" :count="store.employeeOverview.used_leave_days" />
+                <ReportStatChip item="Unused leave days" :count="store.employeeOverview.remaining_leave_days" />
             </div>
         </ReportCard>
 
@@ -61,5 +57,6 @@ onBeforeMount(() => {
                 <p class="text-gray-500">View leave entitlements, approvals and remaining leave</p>
             </div>
         </ReportCard>
+        <EmployeeFullReportModal :show="showEmployeeReport" @close-modal="showEmployeeReport = false" />
     </div>
 </template>

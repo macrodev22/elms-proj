@@ -30,7 +30,7 @@ const login = () => {
             // console.log(res)
 
             //Other resources
-            store.setLeaveStats()
+            store.setResources()
 
             toast.success(`User logged in`)
             emit('close-modal')

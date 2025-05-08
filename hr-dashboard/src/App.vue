@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, watch } from 'vue';
 import { useStore } from './store';
 import { client } from './services/client';
 import { toast } from 'vue3-toastify';
@@ -28,16 +28,19 @@ onBeforeMount(() => {
       store.auth.token = token
       client.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-      // Other resources
-      store.setLeaveStats()
-      client.get('/hr/leave').then(res => {
-        store.leaveHistory = res.data
-      })
+
     }).catch(e => {
       console.error(e)
       toast.error(`Not logged in\n${e.message}`, { position: toast.POSITION.TOP_CENTER })
       showLoginModal.value = true
     })
+})
+
+watch(() => store.auth.user, (newUser) => {
+  if (newUser) {
+    // Other resources
+    store.setResources()
+  }
 })
 
 </script>

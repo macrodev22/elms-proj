@@ -1,14 +1,16 @@
 <script setup>
+import { getColor } from '../utils'
 const capitalize = (str) => str[0].toUpperCase() + str.slice(1).toLowerCase()
 
-const colors = {
-    "annual": "#AD7EE9",
-    "special": "#6497E3",
-    "personal": "#E76CC1",
-    "sick": "#EAA750",
-    "short": "#E76CC1",
-    "study": "#6497E3"
-}
+// const colors = {
+//     "annual": "#AD7EE9",
+//     "special": "#6497E3",
+//     "personal": "#E76CC1",
+//     "sick": "#EAA750",
+//     "short": "#E76CC1",
+//     "study": "#6497E3"
+// }
+
 
 const { type, subtitle, count, total } = defineProps({
     type: String,
@@ -17,8 +19,8 @@ const { type, subtitle, count, total } = defineProps({
     total: Number,
 })
 
-const progress = Math.min(count / total, 1)
-const progressColor = colors[type.toLowerCase()] || "#AD7EE9"
+const progress = Math.min(count / total, 1) || 0.01
+const progressColor = getColor(type) || "#AD7EE9"
 
 const radius = 58
 const circumfrence = 2 * Math.PI * radius
@@ -41,7 +43,7 @@ const offset = circumfrence * (1 - progress)
                 <p><span class="text-3xl text-black">{{ count }}</span> /{{ total }}</p>
             </div>
         </div>
-        <p class="text-sm">{{ capitalize(type) }} leave</p>
+        <p class="text-sm truncate">{{ capitalize(type) }}</p>
     </div>
 </template>
 

@@ -25,7 +25,7 @@ const showDropDown = ref(false)
                 <p class="text-xs">{{ user?.email }}</p>
             </div>
         </div>
-        <img class="w-12 h-12 object-cover rounded-full" :src="formatPhoto(user?.profile_picture || null)"
-            alt="profile photo">
+        <img class="w-12 h-12 object-cover rounded-full"
+            :src="formatPhoto(user?.profile_picture || null, user?.gender || null)" alt="profile photo">
     </div>
 </template>

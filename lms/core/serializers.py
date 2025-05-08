@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer,SerializerMethodField
 from rest_framework import serializers
 
 from core.models import User
+from company.serializers import CompanySerializer
 
 class UserSerializer(ModelSerializer):
 
@@ -11,11 +12,13 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ['groups', 'user_permissions']
+        exclude = ['groups', 'user_permissions', 'is_superuser', 'is_staff', 'last_login']
         # read_only_fields = ['email']
         extra_kwargs = {
             "password": { 'write_only': True }
         }
+    
+    company = CompanySerializer(read_only=True)
     
     # User registration
     def create(self, validated_data):

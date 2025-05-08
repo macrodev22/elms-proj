@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { client } from "../services/client";
+import { formatName, formatPhoto } from "../utils";
 
 export const useStore = defineStore('store', {
     state: () => ({
@@ -40,16 +41,15 @@ export const useStore = defineStore('store', {
             { 'name': 'Easter Monday', type: 'Public Holiday', date: '2025-04-21' },
             { 'name': 'Labour day', type: 'Public Holiday', date: '2025-05-01' },
           ],
-          employeeAvailability: [
-            { name: 'Micheal B. Jordan', photo: 'https://t3.ftcdn.net/jpg/03/62/40/80/360_F_362408093_AlwyWJQbyc6edRlXGaGz3xquwzLGXhkX.jpg' },
-            { name: 'Arthur Ssenabulya', status: 'sick', photo: 'https://www.shutterstock.com/image-photo/happy-african-american-young-businessman-600nw-1470743381.jpg' },
-            { name: 'Namukasa Ritah', status: 'personal', photo: 'https://media.istockphoto.com/id/1488358643/photo/happy-business-portrait-of-black-woman-planning-company-project-goals-and-startup-management.jpg?s=612x612&w=0&k=20&c=hLU-H57nz5HYQkCwqjesjfWtvJEmrBvJ0hGNjc_hAIg=' },
-            { name: 'Tiffy L. Tiffany', status: 'available', photo: 'https://www.shutterstock.com/image-photo/happy-attractive-african-business-leader-600nw-2451794349.jpg' },
-            { name: 'Irwin Sempebwa', status: 'short', },
-            { name: 'Isaac Mutebi', status: 'study', },
-          ],
+          employeeAvailability: [],
           leaveHistory: [],
           leaveStats: [],
+          employeeOverview: {
+            total_employees: 0,
+            employees_on_leave: 0,
+            used_leave_days: 0,
+            remaining_leave_days: 0
+        },
     }),
     getters: {
 
@@ -60,6 +60,9 @@ export const useStore = defineStore('store', {
           const {data} = await client.get('/auth/user')
           this.auth.user = data.user 
           this.auth.token = data.token
+
+          client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
           return data
         } catch(e) {
           throw e
@@ -68,15 +71,45 @@ export const useStore = defineStore('store', {
       setLeaveStats() {
         client.get('/hr/report/leave-type-stats')
         .then(({data}) => {
-          this.leaveStats = data.map(l => ({
-            type: l.type.toLowerCase(),
-            count: l.request_count,
-            total: l.total_requests
-          }))
+          this.leaveStats = data.sort((a,b) => b.request_count - a.request_count)
         })
         .catch(e => {
           console.error('Error getting leave stats', e)
         })
-      }
+      },
+      async setLeaveHistory() {
+        try {
+          const { data } = await client.get('/hr/leave')
+          this.leaveHistory = data
+          return data
+        } catch(e) {
+          throw e
+        }
+      },
+      setTeamAvailability() {
+        client.get('/hr/report/team-availability')
+        .then(({ data }) => {
+          this.employeeAvailability = data.map(ar => ({
+            id: ar.employee.id,
+            name: formatName(ar.employee),
+            status: ar.leave_type || 'Available',
+            photo: formatPhoto(ar.employee.profile_picture_url, ar.employee.gender),
+          }))
+        })
+        .catch(e => {
+          console.error('team availability', e)
+        })
+      },
+      setEmployeeOverview() {
+        client.get('/hr/report/leave-overview')
+        .then(res => {
+            this.employeeOverview = res.data
+        })
+      },
+      setResources () {
+        this.setLeaveStats()
+        this.setTeamAvailability()
+        this.setLeaveHistory()
+      },
     }      
 })

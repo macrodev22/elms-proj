@@ -1,13 +1,14 @@
 <script setup>
-import { ref, onBeforeMount, reactive, watch, toRaw } from 'vue';
+import { ref, reactive, watch, toRaw } from 'vue';
 import { useStore } from '../store';
 import { client, getCompanyDepartments } from '../services/client';
-import { cleanUserData } from '../utils';
 import { toast } from 'vue3-toastify';
 import profilePhotoGeneric from '../assets/generic_profile_photo.jpg'
 import Modal from './Modal.vue';
 import FormField from './FormField.vue';
 import DropDownField from './DropDownField.vue';
+import SpinnerButton from './SpinnerButton.vue';
+import { ArrowPathIcon } from '@heroicons/vue/24/outline';
 
 const store = useStore()
 
@@ -33,7 +34,6 @@ const formFields = reactive({
     gender: "",
     designation: null,
     department: "",
-    supervised_by: null,
     password: 'defaultpassword'
 })
 
@@ -48,7 +48,13 @@ watch(() => show, (val) => {
         formFields.designation = user.designation
         formFields.date_of_birth = user.date_of_birth
         formFields.contact = user.contact
+
+        getCompanyDepartments().then(res => {
+            departments.value = res.data
+        })
     }
+
+
 })
 
 const roles = [
@@ -63,15 +69,11 @@ const genders = [
 
 const departments = ref([])
 
-onBeforeMount(() => {
-    getCompanyDepartments().then(res => {
-        departments.value = res.data
-    })
-})
-
 const form = ref(null)
 const profileImg = ref(null)
 const photoInput = ref(null)
+
+const isLoading = ref(false)
 
 const initialDisplayedProfileImage = ref('')
 
@@ -103,9 +105,22 @@ const onPhotoChange = () => {
     fr.readAsDataURL(file)
 }
 
+const resetPhotoInput = () => {
+    photoInput.value.value = ''
+    initialDisplayedProfileImage.value = profilePhotoGeneric
+}
+
 const updateUser = () => {
+    isLoading.value = true
 
     const formData = new FormData(form.value)
+
+    formData.append('contact', JSON.stringify(toRaw(formFields.contact)))
+
+    // Remove profile picture if not updated
+    if (!photoInput.value.files || photoInput.value.files.length == 0) {
+        formData.delete('profile_picture')
+    }
 
     client.patchForm('/auth/profile', formData)
         .then(({ data }) => {
@@ -115,7 +130,10 @@ const updateUser = () => {
             })
         })
         .catch(e => {
-            toast.error(`Error updating user /n${e.message}`)
+            toast.error(`Error updating user \n${e.response?.data.detail || e.message}`)
+        })
+        .finally(() => {
+            isLoading.value = false
         })
 }
 </script>
@@ -125,6 +143,13 @@ const updateUser = () => {
             <FormField name="first_name" label="First name" v-model="formFields.first_name" />
             <FormField name="middle_name" label="Middle name" :required="false" v-model="formFields.middle_name" />
             <FormField name="last_name" label="Last name" v-model="formFields.last_name" />
+            <FormField name="designation" label="Designation" v-model="formFields.designation" :required="false" />
+            <div class="flex gap-2">
+                <FormField name="work-contact" label="Work Contact" :required="false"
+                    v-model="formFields.contact.work" />
+                <FormField name="mobile-contact" label="Mobile Contact" :required="false"
+                    v-model="formFields.contact.mobile" />
+            </div>
             <div class="flex gap-8 items-center mb-4">
                 <div class="flex flex-col">
                     <label for="date_of_birth" class="mb-1.5">Date of Birth</label>
@@ -138,12 +163,17 @@ const updateUser = () => {
                     </div>
                     <label for="profile_picture" class="mb-1.5 grid place-items-center">
                         <span
-                            class="rounded-lg cursor-pointer border-1 border-green-500 py-2 px-5 hover:bg-green-500 hover:text-white">Choose
-                            Profile
-                            Photo</span>
+                            class="rounded-lg cursor-pointer border-1 border-green-500 py-2 px-5 hover:bg-green-500 hover:text-white">
+                            Choose Profile Photo
+                        </span>
                     </label>
                     <input type="file" ref="photoInput" @change="onPhotoChange" accept="image/*" id="profile_picture"
                         name="profile_picture" class="hidden">
+                    <button>
+                        <ArrowPathIcon
+                            class="size-12 cursor-pointer hover:bg-green-500 hover:stroke-white rounded-full p-2"
+                            @click.prevent="resetPhotoInput" />
+                    </button>
 
                 </div>
             </div>
@@ -155,8 +185,7 @@ const updateUser = () => {
                 <DropDownField label="Gender" name="gender" :options="genders" v-model="formFields.gender" />
             </div>
             <div class="flex mb-6 mt-2">
-                <button
-                    class="rounded-md bg-green-500 px-12 py-2 text-white cursor-pointer hover:bg-green-600">Save</button>
+                <SpinnerButton label="Update" :isLoading="isLoading" />
             </div>
         </form>
     </Modal>

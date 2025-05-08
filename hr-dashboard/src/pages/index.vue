@@ -2,8 +2,8 @@
     <div class="flex gap-8 mb-8 h-52">
         <Card class="relative md:w-3/5">
             <div class="flex gap-6 overflow-x-auto scroll-smooth scroll-hide" ref="leaveStatsContainer">
-                <LeaveStat v-for="stat in store.leaveStats" :key="`${stat.type},${stat.count}`" :type="stat.type"
-                    :count="stat.count" :total="stat.total" />
+                <LeaveStat v-for="stat in store.leaveStats" :key="stat.id" :type="stat.type" :count="stat.request_count"
+                    :total="stat.total_requests" />
 
 
             </div>
@@ -72,6 +72,7 @@ import Card from '../components/Card.vue';
 import LeaveStat from '../components/LeaveStat.vue';
 import ForwardButton from '../components/ForwardButton.vue';
 import { useStore } from '../store';
+import { formatPhoto } from '../utils';
 
 const store = useStore()
 

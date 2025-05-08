@@ -1,10 +1,11 @@
 <script setup>
-import { reactive, ref, onBeforeMount } from 'vue';
+import { reactive, ref, onBeforeMount, watch } from 'vue';
 import { client, getCompanyDepartments } from '../services/client'
 import { toast } from 'vue3-toastify';
 import Modal from './Modal.vue';
 import FormField from './FormField.vue';
 import DropDownField from './DropDownField.vue';
+import SpinnerButton from './SpinnerButton.vue';
 import profilePhotoGeneric from '../assets/generic_profile_photo.jpg';
 
 
@@ -39,8 +40,8 @@ const genders = [
 
 const departments = ref([])
 
-onBeforeMount(() => {
-    getCompanyDepartments().then(res => {
+watch(() => show, (val) => {
+    if (val) getCompanyDepartments().then(res => {
         departments.value = res.data
     })
 })
@@ -48,6 +49,8 @@ onBeforeMount(() => {
 const form = ref(null)
 const profileImg = ref(null)
 const photoInput = ref(null)
+
+const isLoading = ref(false)
 
 const onPhotoChange = () => {
     const file = photoInput.value.files[0]
@@ -74,6 +77,7 @@ const resetForm = () => {
 }
 
 const saveEmployee = () => {
+    isLoading.value = true
     // Build form data
     const formData = new FormData(form.value)
 
@@ -83,13 +87,16 @@ const saveEmployee = () => {
             toast.success('Saved employee successfully')
 
             resetForm()
-
         })
         .catch(e => {
             console.error(e)
-            toast.error(`Error saving employee!\n${e.message}`, {
+            toast.error(`Error saving employee!\n${e.response?.data.detail || e.message}`, {
                 position: toast.POSITION.BOTTOM_CENTER,
             })
+
+        })
+        .finally(() => {
+            isLoading.value = false
         })
 }
 
@@ -133,8 +140,7 @@ const saveEmployee = () => {
             </div>
             <FormField name="password" label="password" v-model="formFields.password" />
             <div class="flex mb-6 mt-2">
-                <button
-                    class="rounded-md bg-green-500 px-12 py-2 text-white cursor-pointer hover:bg-green-600">Save</button>
+                <SpinnerButton :is-loading="isLoading" label="Save" />
             </div>
         </form>
     </Modal>

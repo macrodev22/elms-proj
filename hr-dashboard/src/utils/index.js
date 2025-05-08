@@ -1,3 +1,7 @@
+import genericAvatar from '../assets/generic_person_avatar.jpg'
+import genericMaleAvatar from '../assets/generic_male_avatar.png'
+import genericFemaleAvatar from '../assets/generic_female_avatar.png'
+
 export const formatDate = (dateStr, withDay = false, html = true) => {
     const date = new Date(dateStr)
     const weekDay = date.getDay()
@@ -50,21 +54,26 @@ export const dateToCalendarFormat = (dateStr) => {
     return `${year}-${month}-${day} ${hours}:${mins}`
 }
 
-export const formatName = (user) => {
+export const formatName = (user, full = false) => {
     if (!user) return ''
     const names = [user.first_name, user.middle_name, user.last_name]
     if (names.every(n => !n)) {
-        return 'Hello'
+        return 'Anonymous'
     }
     if (names.every(n => n)) {
-        return `${names[0]} ${names[1].slice(0, 1)}. ${names[2]}`
+        return full ? `${names[0]} ${names[1]} ${names[2]}`: `${names[0]} ${names[1].slice(0, 1)}. ${names[2]}`
     }
     if (names.some(n => !n)) {
         return names.reduce((p, c) => c ? `${p} ${c}` : p, '').slice(1).trim()
     }
 }
 
-export const formatPhoto = (p) => p ? p : "https://wallpapers.com/images/hd/generic-male-avatar-icon-piiktqtfffyzulft.jpg"
+export const formatPhoto = (p, gender = null) => {
+    if (p) return p
+    if (!gender) return genericAvatar
+    if(gender.toLowerCase().startsWith('m')) return genericMaleAvatar
+    if(gender.toLowerCase().startsWith('f')) return genericFemaleAvatar
+    }
 
 export const cleanUserData = (user) => {
     const isObject = val => val && typeof val === 'object' && !Array.isArray(val);
@@ -88,4 +97,26 @@ export const cleanUserData = (user) => {
     };
 
     return clean(user);
+}
+
+export const getColor = type => {
+    const leaveColors = {
+        "Annual Leave (Holiday Entitlement)": "#AD7EE9",
+        "Sick Leave": "#EAA750",
+        "Maternity Leave": "#FF6F61",
+        "Personal Leave": "#E76CC1",
+        "Emergency Leave": "#6B5B95",
+        "Bereavement Leave": "#88B04B",
+        "Sabbatical Leave": "#6497E3",
+        "Public Holidays": "#F7CAC9",
+        "Religious Observance Leave": "#92A8D1",
+        "Military Leave": "#955251",
+        "Short Leave": "#E76CC1",
+        "Casual Leave": "#B565A7",
+        "Garden Leave": "#009B77",
+        "Unpaid Leave": "#DD4124",
+        "Time Off In Lieu (TOIL)": "#45B8AC"
+    }
+    
+    return leaveColors[type]
 }
