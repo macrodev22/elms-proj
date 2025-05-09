@@ -17,7 +17,7 @@
 const emit = defineEmits(['update:modelValue'])
 
 const { label, name, type, required, modelValue, disabled } = defineProps({
-    modelValue: String,
+    modelValue: [String , Number],
     name: { type: String, required: true },
     label: { type: String, default: 'Label' },
     type: { type: String, default: 'text' },

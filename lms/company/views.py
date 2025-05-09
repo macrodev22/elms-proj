@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView 
-from rest_framework import generics
+from rest_framework import generics,status,exceptions
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from auth.authentication import JWTAuth
@@ -34,4 +34,21 @@ class CompanyDepartmentsAPIView(APIView):
 
         return Response(DepartmentSerializer(departments, many=True).data)
     def post(self, request):
-        company = request.user.company
+        company:Company = request.user.company
+        data = request.data
+        data['company'] = company.id
+        name=data.get('name')
+
+        if data.get('head') is None:
+            raise exceptions.ValidationError('Please specify head of the deparment')
+        
+        # No duplicate deparment in the company
+        existing = Department.objects.filter(company=company, name=name).first()
+        if existing is not None:
+            raise exceptions.ValidationError(f"{name} already exists for {company.name}")
+
+        department_serializer = DepartmentSerializer(data=data)
+        if department_serializer.is_valid(raise_exception=True):
+            department_serializer.save()
+        
+        return Response(department_serializer.data, status=status.HTTP_201_CREATED)

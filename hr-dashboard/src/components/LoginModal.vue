@@ -32,14 +32,15 @@ const login = () => {
             //Other resources
             store.setResources()
 
-            toast.success(`User logged in`)
+            // toast.success(`User logged in`)
             emit('close-modal')
         })
         .catch(e => {
             console.error(e)
             toast.error(`Error logging in! \n${e.response.data.detail}`, {
                 position: toast.POSITION.TOP_CENTER,
-                theme: toast.THEME.COLORED
+                theme: toast.THEME.COLORED,
+                transition: toast.TRANSITIONS.FLIP
             })
         })
 }

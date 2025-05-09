@@ -30,8 +30,8 @@ onBeforeMount(() => {
 
 
     }).catch(e => {
-      console.error(e)
-      toast.error(`Not logged in\n${e.message}`, { position: toast.POSITION.TOP_CENTER })
+      console.error('Not logged in', e)
+      // toast.error(`Not logged in\n${e.message}`, { position: toast.POSITION.TOP_CENTER })
       showLoginModal.value = true
     })
 })
