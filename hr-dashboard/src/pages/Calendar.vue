@@ -17,6 +17,13 @@ import '@schedule-x/theme-default/dist/index.css';
 const store = useStore()
 const viewMonth = createViewMonthGrid()
 
+const getCalendarId = (leaveStatus) => {
+    switch (leaveStatus) {
+        case 'Approved': return 'approved';
+        case 'Declined': return 'declined';
+        default: return 'pending'
+    }
+}
 
 const events = store.leaveHistory.map(l => ({
     id: l.id,
@@ -24,7 +31,7 @@ const events = store.leaveHistory.map(l => ({
     start: dateToCalendarFormat(l.start_time),
     end: dateToCalendarFormat(l.end_time),
     description: l.type.name,
-    calendarId: l.status_display == 'Approved' ? 'approved' : 'pending'
+    calendarId: getCalendarId(l.status_display)
 }))
 
 const calendars = {
@@ -52,6 +59,19 @@ const calendars = {
             main: '#81c784',
             container: '#388e3c',
             onContainer: '#e8f5e9'
+        }
+    },
+    declined: {
+        colorName: 'declined',
+        lightColors: {
+            main: '#D32F2F',
+            container: '#FFCDD2',
+            onContainer: '#B71C1C'
+        },
+        darkColors: {
+            main: '#EF9A9A',
+            container: '#B71C1C',
+            onContainer: '#FFEBEE'
         }
     }
 }

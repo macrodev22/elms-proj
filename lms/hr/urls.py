@@ -8,4 +8,5 @@ urlpatterns = [
     path('report/leave-type-stats', views.LeaveTypeStatsAPIView.as_view()),
     path('report/team-availability', views.TeamAvailabilityAPIView.as_view()),
     path('report/full-employee-report', views.FullEmployeeReportAPIView.as_view()),
+    path('leave-action/<int:pk>', views.LeaveActionAPIView.as_view()),
 ]

@@ -3,6 +3,7 @@ from leave.models import LeaveRequest,LeaveProcess,LeaveType
 from leave.serializers import LeaveTypeSerializer
 from core.models import User
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
@@ -12,7 +13,26 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
     type = LeaveTypeSerializer(read_only=True)
     requested_by = UserSerializer(read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
+    supervisor_remarks = serializers.SerializerMethodField()
+    supervisor = serializers.SerializerMethodField()
+
     class Meta:
         model = LeaveRequest 
         fields = '__all__'
         
+    def get_supervisor_remarks(self, obj:LeaveRequest):
+        leave_processes = LeaveProcess.objects.filter(leave_request=obj).order_by('-created_at')
+
+        remarks = [
+            {"message": lp.remarks, "date": lp.created_at, "user": UserSerializer(lp.processed_by).data}
+              for lp in leave_processes if lp.remarks]
+        return remarks 
+    
+    def get_supervisor(self, obj:LeaveRequest):
+        user = obj.requested_by
+        user_supervisor = user.supervised_by
+        if user_supervisor is None:
+            if user.department is not None and user.department.head is not None:
+                user_supervisor = user.department.head
+        serializer = UserSerializer(user_supervisor)
+        return serializer.data

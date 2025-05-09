@@ -3,7 +3,7 @@ from company.models import Company
 from core.models import User
 
 LEAVE_STATUS_CHOICES = (('APPR', 'Approved'), ('DCLN', 'Declined'), ('PNDG', 'Pending'), ('CXLD', 'Cancelled'))
-LEAVE_PROCESS_ACTION_CHOICES = (('SEND', 'Sent to Supervisor'), ('CLSD', 'Closed'))
+LEAVE_PROCESS_ACTION_CHOICES = (('SEND', 'Sent to Supervisor'), ('CLSD', 'Closed'), ('APPR', 'Approved'), ('DCLN', 'Declined'),)
 
 # Create your models here.
 class LeaveType(models.Model):
@@ -35,6 +35,9 @@ class LeaveProcess(models.Model):
     leave_request = models.ForeignKey(LeaveRequest, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     action_taken = models.CharField(max_length=100, choices=LEAVE_PROCESS_ACTION_CHOICES)
+
+    def __str__(self):
+        return f"{self.leave_request.requested_by.email} {self.leave_request.type.name} {self.action_taken}  by {self.processed_by.email}"
 
 class SupervisorQuery(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)

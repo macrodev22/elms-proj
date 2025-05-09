@@ -33,3 +33,5 @@ class CompanyDepartmentsAPIView(APIView):
         departments = Department.objects.filter(company=user.company)
 
         return Response(DepartmentSerializer(departments, many=True).data)
+    def post(self, request):
+        company = request.user.company

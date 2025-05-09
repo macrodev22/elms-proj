@@ -30,7 +30,7 @@
         <div class="flex-1">
             <Card>
                 <h4 class="mb-4 text-2xl">Quick links</h4>
-                <QuickLink label="Leave mapping" to="#" />
+                <QuickLink label="Add department" to="#" @click.prevent="showAddDeparment = true" />
                 <QuickLink label="Leave conflict" to="#" />
                 <QuickLink label="Request leave" to="#" />
                 <QuickLink label="Leave balance" to="#" />
@@ -46,6 +46,7 @@
             <LeaveHistory v-for="leave in store.leaveHistory" :key="leave.id" :leave="leave" />
         </Card>
     </div>
+    <AddDepartmentModal :show="showAddDeparment" @close-modal="showAddDeparment = false" />
 </template>
 <style lang="css" scoped>
 .scroll-hide {
@@ -64,6 +65,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useStore } from '../store';
 import EmployeeAvailability from '../components/EmployeeAvailability.vue';
 import PublicHolidayList from '../components/PublicHolidayList.vue';
 import LeaveHistory from '../components/LeaveHistory.vue';
@@ -71,13 +73,14 @@ import QuickLink from '../components/QuickLink.vue';
 import Card from '../components/Card.vue';
 import LeaveStat from '../components/LeaveStat.vue';
 import ForwardButton from '../components/ForwardButton.vue';
-import { useStore } from '../store';
-import { formatPhoto } from '../utils';
+import AddDepartmentModal from '../components/AddDepartmentModal.vue';
 
 const store = useStore()
 
 const leaveStatsContainer = ref(null)
 const employeeAvailabilityContainer = ref(null)
+
+const showAddDeparment = ref(false)
 
 const rightScroll = (container) => {
     // console.log('scrolling ', container)

@@ -32,9 +32,8 @@ const approvedRequests = leaveData.reduce((p, c) => c.status == 'APPR' ? p + 1 :
         </div>
         <div class="flex flex-col">
             <p><span class="font-semibold">Used leave days:</span> <span>{{ usedLeaveDays }}</span></p>
+            <p><span class="font-semibold">Remaining days:</span> <span>{{ totalLeaveDays - usedLeaveDays }}</span></p>
             <p><span class="font-semibold">Total leave days:</span> <span>{{ totalLeaveDays }}</span></p>
-            <p><span class="font-semibold">Remaining days:</span> <span>{{ totalLeaveDays - usedLeaveDays }}
-                </span></p>
         </div>
         <div class="flex flex-col">
             <p><span class="font-semibold">Pending leave:</span> <span>{{leaveData.reduce((p, c) => c.status == 'PNDG' ?

@@ -1,13 +1,13 @@
 <script setup>
 import { formatDate, getDurationLabel } from '../utils';
 import StatusChip from './StatusChip.vue';
-import { CheckCircleIcon, EllipsisHorizontalCircleIcon } from '@heroicons/vue/24/outline';
+import { CheckCircleIcon, EllipsisHorizontalCircleIcon, NoSymbolIcon } from '@heroicons/vue/24/outline';
 
 const { leave } = defineProps({
     leave: Object,
 })
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(['select', 'actionClick'])
 
 </script>
 <template>
@@ -20,19 +20,21 @@ const emit = defineEmits(['select'])
         </p>
         <StatusChip :status="leave.status_display" class="flex-1" />
         <div class="flex gap-1 flex-3 justify-center text-xs">
-            <button :disabled="leave.closed"
+            <button :disabled="leave.closed" @click="emit('actionClick', { action: 'Approve', id: leave.id })"
                 class="bg-green-500 hover:bg-green-600 rounded-md py-2 px-2.5 text-white cursor-pointer disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed disabled:border-green-500 disabled:border-1">Aprrove</button>
-            <button :disabled="leave.closed"
+            <button :disabled="leave.closed" @click="emit('actionClick', { action: 'Ask Supervisor', id: leave.id })"
                 class="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">Ask
                 Supervisor</button>
             <button :disabled="leave.closed ? true : false"
+                @click="emit('actionClick', { action: 'Decline', id: leave.id })"
                 class="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">Decline
             </button>
         </div>
-        <div @click="emit('select', leave)" class="rounded-md border-1 flex items-center justify-center p-1"
-            :class="!leave.closed ? 'border-gray-500 cursor-wait hover:bg-gray-600' : 'border-green-500 cursor-pointer hover:bg-green-700'">
-            <CheckCircleIcon v-if="leave.closed" class="size-7 stroke-green-500" />
-            <EllipsisHorizontalCircleIcon v-if="!leave.closed" class="stroke-gray-500 size-7" />
+        <div @click="emit('select', leave)"
+            class="rounded-md border-1 flex items-center justify-center p-1  cursor-pointer"
+            :class="leave.closed ? 'border-gray-500 hover:bg-gray-600' : 'border-green-500 hover:bg-green-700'">
+            <NoSymbolIcon v-if="leave.closed" class="stroke-gray-500 size-7" />
+            <EllipsisHorizontalCircleIcon v-if="!leave.closed" class="size-7 stroke-green-500" />
         </div>
     </div>
 </template>

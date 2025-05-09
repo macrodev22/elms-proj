@@ -5,10 +5,11 @@ from rest_framework.views import APIView
 from auth.authentication import JWTAuth
 from rest_framework.permissions import IsAuthenticated
 from auth.permissions import IsHR
-from rest_framework import parsers,status
+from rest_framework import parsers,status,exceptions
 from core.models import User
 from core.serializers import UserSerializer
-from leave.models import LeaveRequest,LeaveType
+from leave.models import LeaveRequest,LeaveType,LeaveProcess
+from leave.serializers import LeaveProcessSerializer
 from company.models import Company
 from .serializers import LeaveRequestSerializer
 
@@ -153,3 +154,42 @@ class FullEmployeeReportAPIView(APIView):
                 })
 
         return Response(result)
+    
+class LeaveActionAPIView(APIView):
+    authentication_classes = [JWTAuth]
+    permission_classes = [IsAuthenticated, IsHR]
+
+    def post(self, request, pk):
+        user = request.user
+        leave = LeaveRequest.objects.get(pk=pk)
+        remarks = request.data.get("remarks", None)
+        action = request.data.get("action", None)
+        
+        if not remarks or not action:
+            raise exceptions.ValidationError('Remarks for action are required', code=status.HTTP_400_BAD_REQUEST)
+        
+        actions = ['Approve', 'Decline', 'Ask Supervisor']
+        if action not in actions:
+            raise exceptions.ValidationError('invalid action chosen')
+        
+        action_codes = ['APPR', 'DCLN', 'SEND']
+        action_index = actions.index(action)
+
+        action_code = action_codes[action_index]
+
+        # Check if already exists for APPR or DECL
+        if action_code != 'SEND':
+            existing = LeaveProcess.objects.filter(leave_request=leave, processed_by=user, action_taken=action_code).first()
+            if existing is not None:
+                raise exceptions.ValidationError(f"{action} action already taken")
+        leave_process = LeaveProcess.objects.create(leave_request=leave, processed_by=user, action_taken=action_code, remarks=remarks)
+
+        leave_process.save()
+        # Change leave status
+        if action_code in ['APPR', 'DCLN']:
+            leave.status = action_code
+            leave.save()
+
+        serializer = LeaveProcessSerializer(leave_process)
+
+        return Response({'detail': f"{action} successful", "leave_process": serializer.data}, status=status.HTTP_201_CREATED)

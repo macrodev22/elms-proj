@@ -2,12 +2,17 @@ import genericAvatar from '../assets/generic_person_avatar.jpg'
 import genericMaleAvatar from '../assets/generic_male_avatar.png'
 import genericFemaleAvatar from '../assets/generic_female_avatar.png'
 
-export const formatDate = (dateStr, withDay = false, html = true) => {
+export const formatDate = (dateStr, withDay = false, html = true, withTime = false) => {
     const date = new Date(dateStr)
     const weekDay = date.getDay()
     const day = date.getDate()
     const month = date.getMonth()
     const year = date.getFullYear()
+
+    const hours = date.getHours()
+    const mins = date.getMinutes()
+    let time = ''
+    if (withTime) time = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')} HRS`
 
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -23,8 +28,8 @@ export const formatDate = (dateStr, withDay = false, html = true) => {
     }
 
     if(html)
-        return `${withDay ? days[weekDay] : ''} ${day}<sup>${suffix(day)}</sup> ${months[month]} ${year}`
-    return `${withDay ? days[weekDay] : ''} ${day}${suffix(day)} ${months[month]} ${year}`
+        return `${withDay ? days[weekDay] : ''} ${day}<sup>${suffix(day)}</sup> ${months[month]} ${year} ${time}`.trim()
+    return `${withDay ? days[weekDay] : ''} ${day}${suffix(day)} ${months[month]} ${year} ${time}`.trim()
 }
 
 export const getDurationLabel = (startDate, endDate) => {

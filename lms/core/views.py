@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from pathlib import Path
 from core.models import User
+from auth.authentication import JWTAuth
 
 def render_dashboard(static_path:str):
     def handler(req):
@@ -33,7 +34,9 @@ def login(req):
 
         if user.role == 'EM':
             # TODO add auth and redirect to employee
-            return render_dashboard("employee_dashboard/index.html")(req)
+            token = JWTAuth.generate_token(user.id)
+
+            return render_dashboard("employee_dashboard/index.html")(req).set_cookie('token', token)
         elif user.role == 'HR':
             # TODO add auth and redirect to hr
             return render_dashboard("hr_dashboard/index.html")(req)
