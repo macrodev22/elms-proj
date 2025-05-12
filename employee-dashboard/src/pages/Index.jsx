@@ -51,7 +51,7 @@ const Index = () => {
                     <Card>
                         <h4 className='text-2xl flex items-center gap-1.5 mb-4'>
                             <MegaphoneIcon className="size-6" />
-                            <span>Announcements</span>
+                            <span>Leave Policies</span>
                         </h4>
                         { announcements.map(a => <Announcement text={a.text} author={a.author} date={a.date} />) }
                     </Card>

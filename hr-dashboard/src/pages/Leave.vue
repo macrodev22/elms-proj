@@ -4,8 +4,8 @@
         <QuickActionModal :show="showQuickAction" :action="quickActionSelected"
             @close-modal="showQuickAction = false" />
         <h2 class="font-bold text-xl mb-3 border-b-gray-50 border-b-2">Leave requests</h2>
-        <LeaveItem v-for="leave in store.leaveHistory" :key="leave.id" :leave="leave" @select="onSelectLeave"
-            @action-click="onShowQuickAction" />
+        <LeaveItem v-for="leave in sortLeavesByDates(store.leaveHistory)" :key="leave.id" :leave="leave"
+            @select="onSelectLeave" @action-click="onShowQuickAction" />
     </Card>
 </template>
 <script setup>
@@ -45,6 +45,20 @@ const onSelectLeave = (leave) => {
 const onShowQuickAction = (action) => {
     quickActionSelected.value = action
     showQuickAction.value = true
+}
+
+const sortLeavesByDates = (leaveHistory) => {
+    return [...leaveHistory].sort((a, b) => {
+        let order = 0
+        const aStartTime = new Date(a.start_time)
+        const bStartTtime = new Date(b.start_time)
+        const aCreationTime = new Date(a.requested_at)
+        const bCreationTime = new Date(b.requested_at)
+        if (aStartTime < bStartTtime) order -= 3
+        if (aCreationTime < bCreationTime) order -= 2
+        if (a.closed) order += 15
+        return order
+    })
 }
 
 </script>

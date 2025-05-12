@@ -43,7 +43,7 @@
     <div class="flex gap-8">
         <Card class=" md:w-3/5">
             <h4 class="mb-2 text-2xl">Leave history</h4>
-            <LeaveHistory v-for="leave in store.leaveHistory" :key="leave.id" :leave="leave" />
+            <LeaveHistory v-for="leave in sortLeavesByPriority(store.leaveHistory)" :key="leave.id" :leave="leave" />
         </Card>
     </div>
     <AddDepartmentModal :show="showAddDeparment" @close-modal="showAddDeparment = false" />
@@ -95,4 +95,18 @@ const rightScroll = (container) => {
             behavior: 'smooth'
         })
 }
+
+const sortLeavesByPriority = (leaveHistory) => {
+    return [...leaveHistory].sort((a, b) => {
+        const aStartTime = new Date(a.start_time)
+        const bStartTime = new Date(b.start_time)
+
+        let order = 0
+        if (aStartTime < bStartTime) order -= 5
+        if (a.status_display == 'Pending') order -= 7
+        if (a.closed) order += 6
+        return order
+    }).slice(0, 5)
+}
+
 </script>

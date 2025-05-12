@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from auth.permissions import IsHR
 from rest_framework import parsers,status,exceptions
 from core.models import User
-from core.serializers import UserSerializer
+from core.serializers import UserSerializer,UserCreateSerializer
 from leave.models import LeaveRequest,LeaveType,LeaveProcess
 from leave.serializers import LeaveProcessSerializer
 from company.models import Company
@@ -24,11 +24,11 @@ class CreateEmployeeAPIView(APIView):
         data = request.data.copy()
         data['company'] = user.company.id
         data['is_active'] = True
-        employee_serializer = UserSerializer(data=data, context={'request': request})
+        employee_serializer = UserCreateSerializer(data=data, context={'request': request})
 
         if employee_serializer.is_valid(raise_exception=True):
-            employee_serializer.save()
-            return Response({'detail': 'success', "data": employee_serializer.data}, status=status.HTTP_201_CREATED)
+            created_user = employee_serializer.save()
+            return Response({'detail': 'success', "data": UserSerializer(created_user).data}, status=status.HTTP_201_CREATED)
 
 class LeaveListAPIView(APIView):
     serializer_class = LeaveRequestSerializer
@@ -51,8 +51,8 @@ class LeaveOverviewReportAPIView(APIView):
         total_employees = User.objects.filter(company=company).count()
         total_leave_days = total_employees * 21
 
-        today = datetime.now()
-        employees_on_leave = LeaveRequest.objects.filter(company=company, status='APPR', start_time__gt=today, end_time__lt=today).count()
+        today = timezone.now()
+        employees_on_leave = LeaveRequest.objects.filter(company=company, status='APPR', start_time__gte=today, end_time__lte=today).count()
         
         done_leaves = LeaveRequest.objects.filter(company=company, end_time__lt=today, status='APPR').all()
         used_leave_days = 0

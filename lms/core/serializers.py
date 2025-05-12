@@ -35,3 +35,11 @@ class UserSerializer(ModelSerializer):
         elif obj.profile_picture:
             return obj.profile_picture.url
         return None
+    
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ['groups', 'user_permissions', 'is_superuser', 'is_staff', 'last_login']
+        extra_kwargs = {
+            "password": { "write_only": True }
+        }

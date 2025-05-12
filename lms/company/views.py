@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import generics,status,exceptions
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from auth.permissions import IsHR
 from auth.authentication import JWTAuth
 from core.models import User
 from company.models import Company,Department
@@ -26,7 +27,7 @@ class CompanyListCreateAPIView(generics.ListCreateAPIView):
 
 class CompanyDepartmentsAPIView(APIView):
     authentication_classes = [JWTAuth]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsHR]
 
     def get(self, request):
         user:User = request.user
