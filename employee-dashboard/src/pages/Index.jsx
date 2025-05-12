@@ -18,9 +18,9 @@ const publicHolidays = [
 
 const announcements = [
     { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-15' },
-    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-15' },
-    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-15' },
-    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-15' },
+    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-16' },
+    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-17' },
+    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-18' },
 ]
 
 // const data = {
@@ -43,7 +43,7 @@ const Index = () => {
                     </Card>
                     <Card>
                         <h4 className="text-2xl mb-4">Public holidays</h4>
-                        { publicHolidays.map(h => <PublicHoliday name={h.name} date={h.date} remarks={h.remarks} />) }
+                        { publicHolidays.map(h => <PublicHoliday name={h.name} date={h.date} remarks={h.remarks} key={h.name} />) }
                     </Card>
                 </div>
                 <div className='grid grid-cols-2 gap-6'>
@@ -53,7 +53,7 @@ const Index = () => {
                             <MegaphoneIcon className="size-6" />
                             <span>Leave Policies</span>
                         </h4>
-                        { announcements.map(a => <Announcement text={a.text} author={a.author} date={a.date} />) }
+                        { announcements.map(a => <Announcement text={a.text} author={a.author} date={a.date} key={a.date+a.author} />) }
                     </Card>
                     <Card>
                         <h4 className='text-2xl mb-4'>Leave stats</h4>
