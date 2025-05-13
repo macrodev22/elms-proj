@@ -54,6 +54,12 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    def get_supervisor(self):
+        if self.supervised_by != None:
+            return self.supervised_by 
+        else:
+            return self.department.head
+
     def __str__(self):
         company_name = self.company.name if self.company else "(No company)"
         role = self.role if self.role else 'n/a'

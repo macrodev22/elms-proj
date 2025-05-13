@@ -1,0 +1,134 @@
+import { useState, createContext } from "react";
+import { client } from "../services/client";
+
+
+const StoreContext = createContext({
+    auth: { user: {
+        "id": 3,
+        "profile_picture_url": "http://localhost:8000/media/profile_pictures/m_32_ZgrQj3H.jpg",
+        "role_display": "Human Resource",
+        "gender_display": "Male",
+        "company": {
+            "id": 2,
+            "name": "Intek Travel",
+            "email": "info@intek.travel",
+            "website": "https://www.intektravel.com",
+            "address": "Naguru, Kampala",
+            "contact": "0414123456",
+            "created_at": "2025-04-11T15:01:12.644281Z",
+            "updated_at": "2025-04-11T15:01:12.644308Z",
+            "num_employees": 15,
+            "work_start_time": "08:30:00",
+            "work_end_time": "05:30:00"
+        },
+        "first_name": "John",
+        "last_name": "Smite",
+        "is_active": true,
+        "date_joined": "2025-04-16T12:40:11Z",
+        "email": "john@gmail.com",
+        "role": "HR",
+        "profile_picture": "http://localhost:8000/media/profile_pictures/m_32_ZgrQj3H.jpg",
+        "date_of_birth": "1987-05-15",
+        "middle_name": "Fahrenheit",
+        "contact": {
+            "mobile": "0764258147",
+            "work": "0770123456"
+        },
+        "gender": "M",
+        "designation": "Human Resource Manager",
+        "department": 5,
+        "supervised_by": null
+    }, 
+    token: null },
+    requests: [
+        {
+            "id": 9,
+            "type": {
+                "id": 7,
+                "name": "Sabbatical Leave",
+                "description": "Extended periods off for personal projects, research, or study"
+            },
+            "status_display": "Approved",
+            "requested_at": "2025-05-08T16:12:45.692911Z",
+            "start_time": "2025-05-09T06:00:00Z",
+            "end_time": "2025-05-15T18:00:00Z",
+            "status": "APPR",
+            "reason": "Books are too many for me. Give me some ka time.",
+            "closed": false,
+            "company": 2,
+            "requested_by": 3
+        },
+    ],
+    queries: [ 
+        {
+            "id": 2,
+            "leave_request": {
+                "id": 17,
+                "type": {
+                    "id": 7,
+                    "name": "Sabbatical Leave",
+                    "description": "Extended periods off for personal projects, research, or study"
+                },
+                "status_display": "Pending",
+                "requested_at": "2025-05-13T18:19:35.089993Z",
+                "start_time": "2025-05-17T00:19:00Z",
+                "end_time": "2025-05-23T21:19:00Z",
+                "status": "PNDG",
+                "reason": "Papers are near. Some time off",
+                "closed": false,
+                "company": 2,
+                "requested_by": 17
+            },
+            "created_at": "2025-05-13T18:27:14.718760Z",
+            "updated_at": "2025-05-13T18:27:14.726753Z",
+            "hr_remarks": "Which papers are those?",
+            "supervisor_remarks": null,
+            "closed": false,
+            "sent_by": 3,
+            "sent_to": 4,
+            "leave_process": 34
+        },
+     ],
+    setUser(){},
+    setToken(){},
+    setRequests(){},
+    actions: {
+        fetchRequests(){},
+    }
+})
+
+export const StoreContextProvider = (props) => {
+
+    const [user, setUser] = useState({id:17, company: 2, first_name:'Alexander', last_name: 'Kinyera'})
+    const [token, setToken] = useState('')
+    const [requests, setRequests] = useState([])
+    const [queries, setQueries] = useState([])
+
+    const fetchRequests = () => {
+        return client.get('/employee/leave-requests')
+        .then(({data}) => {
+            const { requests, queries } = data
+            setRequests(requests)
+            setQueries(queries)
+        })
+        .catch(e => console.error('error fetching requests', e))
+    }
+
+    return <StoreContext.Provider value={{
+        auth: { user: user, token: token },
+        requests,
+        queries,
+        setUser,
+        setToken,
+        setRequests,
+        setQueries,
+        actions: {
+            fetchRequests,
+        }
+    }}>
+        {props.children}
+    </StoreContext.Provider>
+}
+
+
+export default StoreContext

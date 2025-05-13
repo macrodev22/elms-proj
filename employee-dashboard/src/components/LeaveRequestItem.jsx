@@ -25,7 +25,7 @@ const LeaveRequestItem = (props) => {
     const request = props.request
     
     return (
-        <div className="bg-gray-100 rounded-md p-2 text-base flex mb-2">
+        <div className="bg-gray-100 rounded-md p-2 text-base flex mb-2 items-center">
             <span className="flex-[3] truncate">{ request.type.name }</span>
             <span className="flex-[3] truncate">{ formatDateRange(request) }</span>
             <span className="flex-[1.5]">{ duration(request) }</span>

@@ -4,6 +4,7 @@ import Layout from "../Layout";
 import Stats from "../pages/Stats";
 import Requests from "../pages/Requests";
 import Reports from "../pages/Reports";
+import NotFound from "../pages/NotFound";
 
 export const router = createBrowserRouter([
     { path: '/', element: <Layout />,
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
             {
                 path: 'reports', element: <Reports />
             },
+
+            {
+                path: '*', element: <NotFound />
+            }
         ]
      }
 ])

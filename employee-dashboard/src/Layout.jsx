@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import logo from '/favicon.svg'
@@ -6,23 +6,60 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import NavButton from './components/NavButton'
 import ProfilePicture from './components/ProfilePicture'
 import AddLeaveRequestModal from './components/AddLeaveRequestModal'
+import {Toaster} from 'react-hot-toast'
+import { client } from './services/client'
+import StoreContext from './store/StoreContext'
+import LoginModal from './components/LoginModal'
 
 
 export default function Layout() {
 
+  const ctx = useContext(StoreContext)
+
   const [showAddLeave, setShowAddLeave] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
   
   const addLeaveRequest = () => {
     setShowAddLeave(true)
   }
 
-  const onCloseModal = (e) => {
+  const onCloseModal = () => {
     setShowAddLeave(false)
   }
 
+  useEffect(() => {
+    client.get('/auth/user')
+    .then(({data}) => {
+      const { user, token } = data
+      ctx.setUser(user)
+      ctx.setToken(token)
+      client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      ctx.actions.fetchRequests()
+      setShowLogin(false)
+    }).catch(e => {
+      setShowLogin(true)
+      console.error('error authenticating user',e)
+    })
+    
+
+  }, [])
+
+  const getBadge = (queries) => {
+    if (!queries?.length) return null 
+    return queries.reduce((p,c) =>{ 
+      if (!c.supervisor_remarks) {
+        p.count += 1
+        return p
+      }
+      else return p
+    } , { count: 0 })
+  }
+  
     return (
         <>
+        <Toaster position='top-center' />
         <AddLeaveRequestModal show={showAddLeave}  onClose={onCloseModal} title="Add leave request" />
+        <LoginModal show={showLogin} onLoggedIn={() => setShowLogin(false)} />
       <div className="bg-blue-100 px-12 flex justify-between items-center">
         <div className="flex justify-between items-centre">
           <img src={logo} alt="logo" className='h-12 my-2' />
@@ -30,7 +67,7 @@ export default function Layout() {
         <div className="flex gap-6 5 self-stretch py-2">
           <NavButton label="Dashboard" to="/" />
           <NavButton label="Stats" to="/stats" />
-          <NavButton label="My Requests" to="/requests" />
+          <NavButton label="My Requests" to="/requests" badge={getBadge(ctx.queries)} />
           <NavButton label="Report" to="/reports" />
         </div>
         <div>

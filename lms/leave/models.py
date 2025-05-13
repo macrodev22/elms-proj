@@ -47,4 +47,5 @@ class SupervisorQuery(models.Model):
     hr_remarks = models.TextField(null=True, blank=True)
     supervisor_remarks = models.TextField(null=True, blank=True)
     closed = models.BooleanField(default=False)
-    leave_process = models.ForeignKey(LeaveProcess, on_delete=models.PROTECT)
+    leave_process = models.ForeignKey(LeaveProcess, on_delete=models.PROTECT, related_name='supervisor_queries')
+    leave_request = models.ForeignKey(LeaveRequest, on_delete=models.PROTECT, related_name='supervisor_queries')

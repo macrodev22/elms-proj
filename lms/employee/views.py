@@ -5,9 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 
 from auth.authentication import JWTAuth
 from core.models import User
-from leave.models import LeaveRequest
-from leave.serializers import LeaveRequestSerializer
-from .serializers import LeaveRequestSerializerEmp
+from leave.models import LeaveRequest,LeaveProcess,SupervisorQuery
+from leave.serializers import LeaveRequestCreateSerializer
+from .serializers import LeaveRequestSerializerEmp,LeaveProcessSerializerEmp,SupervisorQuerySerializerEmp
 from core.serializers import UserSerializer
 
 
@@ -21,14 +21,17 @@ class LeaveRequestsAPIView(APIView):
         user:User = request.user
         leave_requests = user.leave_requests
 
+        queries = user.supervisor_queries_received.filter().all()
+
         return Response({ 
             "user": UserSerializer(user).data,
-            "requests": LeaveRequestSerializerEmp(leave_requests, many=True).data
+            "requests": LeaveRequestSerializerEmp(leave_requests, many=True).data,
+            "queries": SupervisorQuerySerializerEmp(queries, many=True).data
             })
     
     def post(self, request):
         data = request.data 
-        leave_request = LeaveRequestSerializer(data=data)
+        leave_request = LeaveRequestCreateSerializer(data=data)
         if leave_request.is_valid(raise_exception=True):
             leave_request.save()
 

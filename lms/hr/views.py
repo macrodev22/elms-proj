@@ -8,7 +8,7 @@ from auth.permissions import IsHR
 from rest_framework import parsers,status,exceptions
 from core.models import User
 from core.serializers import UserSerializer,UserCreateSerializer
-from leave.models import LeaveRequest,LeaveType,LeaveProcess
+from leave.models import LeaveRequest,LeaveType,LeaveProcess,SupervisorQuery
 from leave.serializers import LeaveProcessSerializer
 from company.models import Company
 from .serializers import LeaveRequestSerializer
@@ -177,6 +177,7 @@ class LeaveActionAPIView(APIView):
 
         action_code = action_codes[action_index]
 
+
         # Check if already exists for APPR or DECL
         if action_code != 'SEND':
             existing = LeaveProcess.objects.filter(leave_request=leave, processed_by=user, action_taken=action_code).first()
@@ -189,6 +190,12 @@ class LeaveActionAPIView(APIView):
         if action_code in ['APPR', 'DCLN']:
             leave.status = action_code
             leave.save()
+
+        # Add Supervisor Query for SEND
+        if action_code == 'SEND':
+            supervisor = leave.requested_by.get_supervisor()
+            supervisor_query = SupervisorQuery.objects.create(sent_by=user, sent_to=supervisor, hr_remarks=remarks, leave_process=leave_process, leave_request=leave)
+            supervisor_query.save()
 
         serializer = LeaveProcessSerializer(leave_process)
 
