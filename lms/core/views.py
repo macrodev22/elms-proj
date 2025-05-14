@@ -35,14 +35,16 @@ def login(req):
         if user.role == 'EM':
             # TODO add auth and redirect to employee
             token = JWTAuth.generate_token(user.id)
-
-            return render_dashboard("employee_dashboard/index.html")(req).set_cookie('token', token)
+            response = render_dashboard("employee_dashboard/index.html")(req)
+            response.set_cookie('token', token)
+            return response
+        
         elif user.role == 'HR':
             # TODO add auth and redirect to hr
             return render_dashboard("hr_dashboard/index.html")(req)
         else:
             return render(req, "login.html", context={ "errors": ['This user can not log in from here. Use admin panel'] })
-
+        
 def hr_dashboard(req):
     index_file_path = Path(__file__).resolve().parent / "static" / "hr_dashboard" / "index.html"
     with open(index_file_path, 'r', encoding='utf-8') as file:

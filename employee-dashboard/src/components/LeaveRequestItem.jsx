@@ -2,8 +2,7 @@ import { formatDate } from "../utils"
 import IconButton from "./IconButton"
 import LeaveClosedChip from "./LeaveClosedChip"
 import StatusChip from "./StatusChip"
-
-
+import { duration } from "../utils"
 
 const formatDateRange = (request) => {
     const startDate = new Date(request.start_time)
@@ -11,15 +10,6 @@ const formatDateRange = (request) => {
     return `${formatDate(startDate)} - ${formatDate(endDate)}`
 }
 
-const duration = (request) => {
-    const msInDay = 24*60*60*1000
-    const { end_time, start_time } = request 
-
-    const d1 = new Date(start_time)
-    const d2 = new Date(end_time)
-    
-    return `${Math.floor(d2-d1)/msInDay} Days`
-}
 
 const LeaveRequestItem = (props) => {
     const request = props.request

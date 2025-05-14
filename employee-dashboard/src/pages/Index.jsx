@@ -56,7 +56,7 @@ const Index = () => {
                         { announcements.map(a => <Announcement text={a.text} author={a.author} date={a.date} key={a.date+a.author} />) }
                     </Card>
                     <Card>
-                        <h4 className='text-2xl mb-4'>Leave stats</h4>
+                        <h4 className='text-2xl mb-4'>On leave</h4>
                         <LeaveStat used={3} />
                     </Card>
                 </div>

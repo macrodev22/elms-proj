@@ -193,7 +193,7 @@ class LeaveActionAPIView(APIView):
 
         # Add Supervisor Query for SEND
         if action_code == 'SEND':
-            supervisor = leave.requested_by.get_supervisor()
+            supervisor = leave.requested_by.supervisor
             supervisor_query = SupervisorQuery.objects.create(sent_by=user, sent_to=supervisor, hr_remarks=remarks, leave_process=leave_process, leave_request=leave)
             supervisor_query.save()
 

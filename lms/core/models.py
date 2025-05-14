@@ -54,7 +54,8 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-    def get_supervisor(self):
+    @property
+    def supervisor(self):
         if self.supervised_by != None:
             return self.supervised_by 
         else:

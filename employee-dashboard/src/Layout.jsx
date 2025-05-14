@@ -8,6 +8,7 @@ import ProfilePicture from './components/ProfilePicture'
 import AddLeaveRequestModal from './components/AddLeaveRequestModal'
 import {Toaster} from 'react-hot-toast'
 import { client } from './services/client'
+import { greeting } from './utils'
 import StoreContext from './store/StoreContext'
 import LoginModal from './components/LoginModal'
 
@@ -17,7 +18,7 @@ export default function Layout() {
   const ctx = useContext(StoreContext)
 
   const [showAddLeave, setShowAddLeave] = useState(false)
-  const [showLogin, setShowLogin] = useState(false)
+  const { showLogin, setShowLogin } = ctx
   
   const addLeaveRequest = () => {
     setShowAddLeave(true)
@@ -79,7 +80,7 @@ export default function Layout() {
       <div className="bg-blue-200 h-[190px]">
         <div className="py-4 px-12 flex justify-between">
           <h4 className="text-4xl font-semibold flex justify-between w-full mt-4">
-            <span>Good morning, Mary ☕</span>
+            <span>{ greeting()[0] }{`, ${ctx.auth.user.first_name || ''}`} { greeting()[1] }</span>
             <button onClick={addLeaveRequest} className="bg-blue-500 text-white flex gap-2 items-center px-3 py-2 font-normal text-xl rounded-md cursor-pointer hover:bg-blue-600"><ArrowRightIcon className='size-6' /> Request leave</button>
           </h4>
         </div>

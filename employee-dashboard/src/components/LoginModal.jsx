@@ -24,6 +24,8 @@ const LoginModal = ({show, onLoggedIn}) => {
                 ctx.setToken(token)
                 ctx.setUser(user)
                 client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+                
+                setPassword('')
                 onLoggedIn()
                 return `Logged in successfully`
             },

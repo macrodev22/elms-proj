@@ -39,3 +39,24 @@ export const formatPhoto = user => {
     if (gender == 'F') return malePhoto
     return personPhoto
 }
+
+export const duration = (request) => {
+
+    const { start_time, end_time } = request
+    const start = new Date(start_time)
+    const end = new Date(end_time)
+    
+    const dTinMs = end - start 
+
+    const days = dTinMs / (1000*60*60*24)
+    return `${Math.ceil(days)} days old`
+}
+
+export const greeting = () => {
+    const now = new Date()
+    const hours = now.getHours()
+    if (hours >= 0 && hours < 12) return [`Good morning`, '☕🍵']
+    if (hours <= 12 && hours < 16) return ['Good afternoon', '🧁']
+    if (hours >= 16 && hours <= 19) return ['Good evening', '🌆']
+    return ['Hello', '🌃']
+}

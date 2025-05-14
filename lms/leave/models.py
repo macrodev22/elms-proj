@@ -49,3 +49,6 @@ class SupervisorQuery(models.Model):
     closed = models.BooleanField(default=False)
     leave_process = models.ForeignKey(LeaveProcess, on_delete=models.PROTECT, related_name='supervisor_queries')
     leave_request = models.ForeignKey(LeaveRequest, on_delete=models.PROTECT, related_name='supervisor_queries')
+
+    def __str__(self):
+        return f"{self.sent_by.email} to {self.sent_to.email} {self.hr_remarks}"

@@ -40,6 +40,7 @@ const StoreContext = createContext({
         "supervised_by": null
     }, 
     token: null },
+    showLogin: false,
     requests: [
         {
             "id": 9,
@@ -89,11 +90,13 @@ const StoreContext = createContext({
             "leave_process": 34
         },
      ],
+    setShowLogin() {},
     setUser(){},
     setToken(){},
     setRequests(){},
     actions: {
         fetchRequests(){},
+        fetchUser(){},
     }
 })
 
@@ -103,6 +106,7 @@ export const StoreContextProvider = (props) => {
     const [token, setToken] = useState('')
     const [requests, setRequests] = useState([])
     const [queries, setQueries] = useState([])
+    const [showLogin, setShowLogin] = useState(false)
 
     const fetchRequests = () => {
         return client.get('/employee/leave-requests')
@@ -114,16 +118,34 @@ export const StoreContextProvider = (props) => {
         .catch(e => console.error('error fetching requests', e))
     }
 
+    const fetchUser = () => {
+        client.get('/auth/user')
+        .then(({data}) => {
+      const { user, token } = data
+      setUser(user)
+      setToken(token)
+      client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      fetchRequests()
+      setShowLogin(false)
+        }).catch(e => {
+      setShowLogin(true)
+      console.error('error authenticating user',e)
+        })
+    }
+
     return <StoreContext.Provider value={{
         auth: { user: user, token: token },
         requests,
         queries,
+        showLogin,
         setUser,
         setToken,
         setRequests,
         setQueries,
+        setShowLogin,
         actions: {
             fetchRequests,
+            fetchUser,
         }
     }}>
         {props.children}
