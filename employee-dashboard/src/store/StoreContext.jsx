@@ -41,6 +41,7 @@ const StoreContext = createContext({
     }, 
     token: null },
     showLogin: false,
+    showUpdate: false,
     requests: [
         {
             "id": 9,
@@ -91,6 +92,7 @@ const StoreContext = createContext({
         },
      ],
     setShowLogin() {},
+    setShowUpdate(){},
     setUser(){},
     setToken(){},
     setRequests(){},
@@ -107,6 +109,7 @@ export const StoreContextProvider = (props) => {
     const [requests, setRequests] = useState([])
     const [queries, setQueries] = useState([])
     const [showLogin, setShowLogin] = useState(false)
+    const [showUpdate, setShowUpdate] = useState(false)
 
     const fetchRequests = () => {
         return client.get('/employee/leave-requests')
@@ -138,11 +141,13 @@ export const StoreContextProvider = (props) => {
         requests,
         queries,
         showLogin,
+        showUpdate,
         setUser,
         setToken,
         setRequests,
         setQueries,
         setShowLogin,
+        setShowUpdate,
         actions: {
             fetchRequests,
             fetchUser,

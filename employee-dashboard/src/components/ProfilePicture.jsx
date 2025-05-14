@@ -5,6 +5,7 @@ import { formatName, formatPhoto } from "../utils"
 import { client } from "../services/client"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
+import EmployeeUpdateForm from "./EmployeeUpdateForm"
 
 const ProfileDetails = ({ show, onClose }) => {
     const ctx = useContext(StoreContext)
@@ -24,6 +25,11 @@ const ProfileDetails = ({ show, onClose }) => {
             console.error('logout error', e)
             onClose()
         })
+    }
+
+    const editProfile = () => {
+        ctx.setShowUpdate(true)
+        onClose()
     }
 
     return (
@@ -50,8 +56,9 @@ const ProfileDetails = ({ show, onClose }) => {
             </div>
             <div className="flex justify-between w-full mt-6">
                 <button onClick={logout} className="bg-red-400 text-white text-2xl py-1 px-4 rounded-md hover:bg-red-500">Logout</button>
-                <button className="rounded-md bg-blue-400 text-2xl text-white px-4 py-1 hover:bg-blue-500">Edit</button>
+                <button onClick={editProfile} className="rounded-md bg-blue-400 text-2xl text-white px-4 py-1 hover:bg-blue-500">Edit</button>
             </div>
+            
         </div>)
     )
 }
@@ -61,10 +68,12 @@ function ProfilePicture() {
 
     const ctx = useContext(StoreContext)
     const [showDetails, setShowDetails] = useState(false)
+    const {showUpdate, setShowUpdate } = ctx
 
     return (
         <div className="bg-gray-100 rounded-full relative max-w-[250px] p-[4px] flex gap-2 justify-between items-center my-1">
             <ProfileDetails show={showDetails} onClose={() => setShowDetails(false)} />
+            <EmployeeUpdateForm show={showUpdate} onClose={() => setShowUpdate(false)}  />
             <button className="cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
                 <ChevronDownIcon className="size-6" />
             </button>

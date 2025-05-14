@@ -35,8 +35,8 @@ export const formatName = user => {
 export const formatPhoto = user => {
     const { profile_picture_url, gender } = user
     if (profile_picture_url) return profile_picture_url
-    if (gender == 'M') return femalePhoto
-    if (gender == 'F') return malePhoto
+    if (gender == 'F') return femalePhoto
+    if (gender == 'M') return malePhoto
     return personPhoto
 }
 

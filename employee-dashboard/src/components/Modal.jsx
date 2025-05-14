@@ -14,11 +14,11 @@ const Backdrop = (props) => {
 }
 
 const Overlay = (props) => {
-    const { children, onClose, title } = props
+    const { children, onClose, title, closable } = props
 
     return createPortal(
-        <Card className="w-[75%] left-[50%] top-6 fixed p-6 transform-[translateX(-50%)]">
-        <h4 className="font-bold mb-6 flex justify-between text-xl"><span>{title}</span> <button className="cursor-pointer" onClick={onClose}><XCircleIcon className="size-12 stroke-red-400" /></button></h4>
+        <Card className="w-[75%] left-[50%] top-6 fixed p-6 transform-[translateX(-50%)] overflow-y-auto">
+        <h4 className="font-bold mb-6 flex justify-between text-xl"><span>{title}</span> {closable && <button className="cursor-pointer" onClick={onClose}><XCircleIcon className="size-12 stroke-red-400" /></button>}</h4>
         { children }
         </Card>,
         document.getElementById('modals-container')
@@ -36,7 +36,7 @@ const Modal =  (props) => {
 
     return (show ? <>
         <Backdrop onClose={close} dark={dark} />
-        <Overlay onClose={close} title={title} >{ children }</Overlay>
+        <Overlay onClose={close} title={title} closable={closable} >{ children }</Overlay>
         </>: <></>)
 }
 
