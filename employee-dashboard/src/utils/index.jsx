@@ -49,7 +49,7 @@ export const duration = (request) => {
     const dTinMs = end - start 
 
     const days = dTinMs / (1000*60*60*24)
-    return `${Math.ceil(days)} days old`
+    return `${Math.ceil(days)} days`
 }
 
 export const greeting = () => {
@@ -59,4 +59,36 @@ export const greeting = () => {
     if (hours <= 12 && hours < 16) return ['Good afternoon', '🧁']
     if (hours >= 16 && hours <= 19) return ['Good evening', '🌆']
     return ['Hello', '🌃']
+}
+
+export const formatError = (err) => {
+// {
+//     "start_time": [
+//         "This field is required."
+//     ],
+//     "end_time": [
+//         "This field is required."
+//     ]
+// }
+const replaceKey = (key) => {
+    const keys = {
+        'start_time': 'Start Date',
+        'end_time': 'End Date',
+    }
+    if (Object.keys(keys).includes(key)) return keys[key]
+    return key
+}
+
+
+const errData = err.response?.data 
+    if (!errData) return err.message
+    if (errData.detail) return errData.detail 
+
+    let errorStr = ''
+    const entries = Object.entries(errData)
+    for (const [key, values] of entries) {
+        errorStr += `\n${replaceKey(key)}:\n`
+        for(const v of values) errorStr += `${v}\n`
+    }
+    return errorStr
 }

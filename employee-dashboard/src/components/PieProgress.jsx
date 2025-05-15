@@ -1,10 +1,5 @@
-const PieProgress = (props) => {
+const PieProgress = ({ total=21, used=0,title='Allowance', size=128 }) => {
 
-    const total = props.total || 21
-    const used = props.used || 0
-    const title = props.title || 'Allowance'
-
-    const size = props.size || 128
     const strokeWidth = 6
     const radius = Math.floor((size/2)-(1*strokeWidth))
     const circumference = 2*Math.PI*radius

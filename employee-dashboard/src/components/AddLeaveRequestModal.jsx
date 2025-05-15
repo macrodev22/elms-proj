@@ -6,6 +6,7 @@ import TextField from "./TextField"
 import toast from "react-hot-toast"
 import { client } from "../services/client"
 import StoreContext from "../store/StoreContext"
+import { formatError } from "../utils"
 
 
 
@@ -52,7 +53,7 @@ const AddLeaveRequestModal = (props) => {
         toast.promise(addRequest, {
             loading: 'Making leave request',
             error: e => { 
-                return `Error making leave request!\n${e.message}`
+                return `Error making leave request!\n${formatError(e)}`
              },
             success: 'Leave request added successfully'
         })

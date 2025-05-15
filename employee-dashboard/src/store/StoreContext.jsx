@@ -91,6 +91,11 @@ const StoreContext = createContext({
             "leave_process": 34
         },
      ],
+     stats: {
+    "total_leave_days": 21,
+    "days_used": 2,
+    "days_pending_approval": 19
+    },
     setShowLogin() {},
     setShowUpdate(){},
     setUser(){},
@@ -99,6 +104,7 @@ const StoreContext = createContext({
     actions: {
         fetchRequests(){},
         fetchUser(){},
+        fetchStats(){},
     }
 })
 
@@ -110,6 +116,7 @@ export const StoreContextProvider = (props) => {
     const [queries, setQueries] = useState([])
     const [showLogin, setShowLogin] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false)
+    const [stats, setStats] = useState({"total_leave_days": 0, "days_used": 0, "days_pending_approval": 0})
 
     const fetchRequests = () => {
         return client.get('/employee/leave-requests')
@@ -136,12 +143,23 @@ export const StoreContextProvider = (props) => {
         })
     }
 
+    const fetchStats = () => {
+        client.get('/employee/leave-stats')
+        .then(({ data }) => {
+            setStats(data)
+        })
+        .catch(e => {
+            console.error('error fetching stats', e)
+        })
+    }
+
     return <StoreContext.Provider value={{
         auth: { user: user, token: token },
         requests,
         queries,
         showLogin,
         showUpdate,
+        stats,
         setUser,
         setToken,
         setRequests,
@@ -151,6 +169,7 @@ export const StoreContextProvider = (props) => {
         actions: {
             fetchRequests,
             fetchUser,
+            fetchStats,
         }
     }}>
         {props.children}

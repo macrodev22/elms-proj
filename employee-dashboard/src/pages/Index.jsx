@@ -1,4 +1,6 @@
 import { MegaphoneIcon } from "@heroicons/react/24/outline"
+import { useContext, useEffect } from "react"
+import StoreContext from "../store/StoreContext"
 import Card from "../components/Card"
 import LeavePattern from "../components/LeavePattern"
 import PieProgress from "../components/PieProgress"
@@ -30,15 +32,22 @@ const announcements = [
 // }
 
 const Index = () => {
+    const ctx = useContext(StoreContext)
+    const { total_leave_days, days_used, days_pending_approval } = ctx.stats
+
+    useEffect(() => {
+        ctx.actions.fetchStats()
+    })
+
     return (
         <>
             <div className="relative mt-[-80px] px-12 grid grid-cols-[1fr_2fr] gap-6">
                 <div className="flex flex-col gap-6">
                     <Card isDark={true} className="basis-[220px]" >
-                        <h4 className="text-2xl flex justify-between mb-4"><span>Retrospective</span><span className="bg-blue-400 rounded-md uppercase text-lg font-light px-3 py-1">19 Days</span></h4>
+                        <h4 className="text-2xl flex justify-between mb-4"><span>Retrospective</span><span className="bg-blue-400 rounded-md uppercase text-lg font-light px-3 py-1">{total_leave_days - days_used} Days</span></h4>
                         <div className="flex justify-between">
-                            <PieProgress used={7} />
-                            <DaysPending days={6} />
+                            <PieProgress used={days_used} total={total_leave_days} />
+                            <DaysPending days={days_pending_approval} />
                         </div>
                     </Card>
                     <Card>

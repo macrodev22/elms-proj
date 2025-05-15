@@ -36,6 +36,7 @@ export default function Layout() {
       ctx.setToken(token)
       client.defaults.headers.common['Authorization'] = `Bearer ${token}`
       ctx.actions.fetchRequests()
+      ctx.actions.fetchStats()
       setShowLogin(false)
     }).catch(e => {
       setShowLogin(true)
