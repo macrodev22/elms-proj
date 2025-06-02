@@ -1,6 +1,6 @@
 <template>
-    <div class="flex gap-8 mb-8 h-52">
-        <Card class="relative md:w-3/5">
+    <div class="flex flex-col md:flex-row gap-8 mb-8 h-52">
+        <Card class="relative md:w-3/5 w-[100%]">
             <div class="flex gap-6 overflow-x-auto scroll-smooth scroll-hide" ref="leaveStatsContainer">
                 <LeaveStat v-for="stat in store.leaveStats" :key="stat.id" :type="stat.type" :count="stat.request_count"
                     :total="stat.total_requests" />
@@ -10,12 +10,12 @@
             <ForwardButton @click="rightScroll(leaveStatsContainer)"
                 class="absolute right-0 top-[50%] translate-x-[50%] translate-y-[-50%] z-10" />
         </Card>
-        <Card class="flex-1 overflow-y-hidden">
+        <Card class="md:flex-1 h-52 md:overflow-y-hidden">
             <h4 class="text-2xl mb-4">Upcoming public holidays</h4>
             <PublicHolidayList :holidays="store.holidays" />
         </Card>
     </div>
-    <div class="flex gap-8 mb-8 h-36">
+    <div class="flex flex-col mt-64 md:flex-row md:mt-0 gap-8 mb-8 h-36">
         <div class="relative md:w-3/5">
             <Card>
                 <h4 class="mb-4 text-2xl">Team availability</h4>

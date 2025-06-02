@@ -49,7 +49,7 @@ watch(() => store.auth.user, (newUser) => {
   <div class="bg-green-100 py-2 px-12 relative">
     <AddEmployeeModal :show="showAddEmployeeModal" @close-modal="showAddEmployeeModal = false" />
     <LoginModal :show="showLoginModal" @close-modal="showLoginModal = false" />
-    <div class="flex justify-between items-center">
+    <div class="flex flex-col gap-4.5 items-center justify-between md:flex-row md:gap-0">
       <div class="h-12"><img src="/favicon.svg" alt="Logo" class="h-full"></div>
       <div class="flex gap-6.5 items-stretch self-stretch my-[-8px]">
         <NavButton label="Home" href="/" :active="route.name == 'home'" />
