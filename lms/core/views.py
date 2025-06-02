@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from pathlib import Path
+from django.db import IntegrityError
 from core.models import User
+from company.models import Company
 from auth.authentication import JWTAuth
 
 def render_dashboard(static_path:str):
@@ -13,8 +15,59 @@ def render_dashboard(static_path:str):
     return handler
 
 # Create your views here.
-def home(req):
-    return render(req, template_name='index.html')
+def get_started(req):
+    if req.method == 'GET':
+        return render(req, template_name='get_started.html')
+    
+    elif req.method == 'POST':
+        # Register company
+        data = req.POST 
+        errors = {  }
+        company_name = data.get("company_name", None)
+        if company_name is None:
+            errors['company_name'] = ['Company name is mandatory']
+        email = data.get("email", None)
+        if email is None:
+            errors['email'] = ['Email is mandatory']
+        contact = data.get("contact", None)
+        if contact is None:
+            errors['contact'] = ['Contact is mandatory']
+        address = data.get("address", None)
+        if address is None:
+            errors['address'] = ['Address is mandatory']
+        num_employees = data.get("num_employees", None)
+        if num_employees is None:
+            errors['num_employees'] = ['Number of employees is mandatory']
+        else:
+            try:
+                num_employees = int(num_employees)
+            except:
+                errors['num_employees'] = ['Number of employees should be a number']
+        website = data.get("website", None)
+
+        # Validation
+        if not errors:
+            # Submit company
+            company = Company(name=company_name, email=email, website=website, address=address, contact=contact, num_employees=num_employees)
+            try:
+                company.save()
+                return render(req, template_name="index.html")
+            except IntegrityError as e:
+                errors['company_name'] = ['The company name must be unique']
+                errors['email'] = ['The email must be unique']
+
+
+        if errors:
+            return render(req, template_name="get_started.html", context={ 
+                'errors': errors,
+                'company_name_value': company_name,
+                'email_value': email,
+                'contact_value': contact,
+                'address_value': address,
+                'num_employees_value': num_employees,
+                'website_value': website,
+                })
+        
 
 def login(req):
     if req.method == 'GET':

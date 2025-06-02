@@ -1,8 +1,11 @@
 import Modal from "./Modal";
 import StatusChip from "./StatusChip";
-import { formatName, duration } from "../utils";
+import { formatName, duration, formatDate } from "../utils";
+import { useContext } from "react";
+import StoreContext from "../store/StoreContext";
 
 const LeaveRequestDetails = ({ leave, show, onClose, }) => {
+    const ctx = useContext(StoreContext)
 
     return (
         <Modal show={show} onClose={onClose} title="Leave details">
@@ -19,14 +22,14 @@ const LeaveRequestDetails = ({ leave, show, onClose, }) => {
             <p>Duration:</p>
             <p>{ duration(leave.start_time, leave.end_time) }</p>
             <p>Dates:</p>
-            <p v-html="`${formatDate(leave.start_time, true)} to ${formatDate(leave.end_time, true)}`"></p>
+            <p>{ `${formatDate(leave.start_time)} to ${formatDate(leave.end_time)}` }</p>
             <p>Reason:</p>
             <p>{ leave.reason }</p>
         </div>
 
         <div class="mt-4" v-if="leave.supervisor_remarks">
             <label for="supervisor-remarks" class="font-semibold">Supervisor remarks <span
-                    class="text-gray-600 font-normal">{'SUPERVISOR NAME'}</span></label>
+                    class="text-gray-600 font-normal">{formatName(ctx.auth.user.supervisor)}</span></label>
             <ul id="supervisor-remarks"
                 class="w-full mt-2 border-1 border-gray-100 rounded-md p-2 max-h-100 overflow-y-auto text-orange-500 focus:outline-none">
                 {leave.supervisor_remarks && leave.supervisor_remarks.map(r => <li class="bg-slate-50 rounded-sm p-1 my-1">{ r.message } <span

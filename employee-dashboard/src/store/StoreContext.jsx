@@ -37,7 +37,29 @@ const StoreContext = createContext({
         "gender": "M",
         "designation": "Human Resource Manager",
         "department": 5,
-        "supervised_by": null
+        "supervised_by": 2,
+        "supervisor": {
+            "id": 2,
+            "password": "testpassword",
+            "first_name": "Joan",
+            "last_name": "Jowie",
+            "is_active": true,
+            "date_joined": "2025-04-11T15:01:19Z",
+            "email": "joan@intek.travel",
+            "role": "EM",
+            "profile_picture": null,
+            "date_of_birth": null,
+            "middle_name": null,
+            "contact": {
+                "mobile": "",
+                "work": ""
+            },
+            "gender": "M",
+            "designation": null,
+            "company": 2,
+            "department": 3,
+            "supervised_by": 6
+        },
     }, 
     token: null },
     showLogin: false,

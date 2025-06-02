@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from leave.models import LeaveRequest,LeaveProcess,SupervisorQuery
 from leave.serializers import LeaveTypeSerializer
+from core.serializers import UserSerializer
 
 class LeaveRequestSerializerEmp(serializers.ModelSerializer):
     type = LeaveTypeSerializer(read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
+    requested_by = UserSerializer(read_only=True)
     
     class Meta:
         model = LeaveRequest
