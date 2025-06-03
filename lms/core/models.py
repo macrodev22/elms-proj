@@ -41,7 +41,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=20, choices=USER_ROLE_CHOICES)
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='users', null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='users', null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='employees', null=True, blank=True)
     middle_name = models.CharField(max_length=255, null=True, blank=True)
     supervised_by = models.ForeignKey('core.User', on_delete=models.PROTECT, related_name="subordinates", null=True, blank=True)
