@@ -16,9 +16,13 @@ class LeaveTypeSerializer(ModelSerializer):
 class LeaveRequestSerializer(ModelSerializer):
     type = LeaveTypeSerializer(read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
+    duration = serializers.SerializerMethodField()
     class Meta:
         model = LeaveRequest 
         fields = '__all__'
+    
+    def get_duration(self, obj):
+        return obj.duration
 
 class LeaveRequestCreateSerializer(ModelSerializer):
     class Meta:

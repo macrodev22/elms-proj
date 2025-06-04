@@ -37,7 +37,7 @@ const Index = () => {
 
     useEffect(() => {
         ctx.actions.fetchStats()
-    })
+    }, [])
 
     return (
         <>

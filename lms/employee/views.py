@@ -6,8 +6,8 @@ from rest_framework import status
 
 from auth.authentication import JWTAuth
 from core.models import User
-from leave.models import LeaveRequest,LeaveProcess,SupervisorQuery
-from leave.serializers import LeaveRequestCreateSerializer
+from leave.models import LeaveRequest,LeaveType,SupervisorQuery
+from leave.serializers import LeaveRequestCreateSerializer,LeaveTypeSerializer
 from .serializers import LeaveRequestSerializerEmp,LeaveProcessSerializerEmp,SupervisorQuerySerializerEmp
 from core.serializers import UserSerializer
 
@@ -45,13 +45,25 @@ class LeaveStatsAPIView(APIView):
 
     def get(self, request):
         user = request.user 
+        total_leave_days = 21
 
-        used_leave = LeaveRequest.objects.filter(requested_by=user.id, closed=True).all()
-        serializer = LeaveRequestSerializerEmp(used_leave, many=True)
+        leave_requests = user.leave_requests
+        now = timezone.now()
+
+        used_leave = leave_requests.filter(end_time__lte=now, closed=False, status="APPR")
+        pending_leave = leave_requests.filter(start_time__gte=now, closed=False, status="PNDG")
+        days_used = 0
+        days_pending_approval = 0
+
+        for u_l in used_leave:
+            days_used += u_l.duration
+        for p_l in pending_leave:
+            days_pending_approval += p_l.duration
+        
         return Response({
-            "total_leave_days": 21,
-            "days_used": 2,
-            "days_pending_approval": 3
+            "total_leave_days": total_leave_days,
+            "days_used": days_used,
+            "days_pending_approval": days_pending_approval
         })
 
 class LeavePatternAPIView(APIView):
@@ -60,20 +72,25 @@ class LeavePatternAPIView(APIView):
 
     def get(self, request):
         user = request.user
-        leave_requests = LeaveRequest.objects.filter(requested_by=user, status='APPR', closed=False).all()
+        now = timezone.now()
+        naive_year_start = timezone.datetime(now.year, 1, 1, 0, 0, 0)
+        year_start = timezone.make_aware(naive_year_start, timezone.get_current_timezone())
+        naive_year_end = timezone.datetime(now.year, 12,31,23,59,59)
+        year_end = timezone.make_aware(naive_year_end, timezone.get_current_timezone())
+        leave_requests = LeaveRequest.objects.filter(requested_by=user, start_time__gte=year_start, start_time__lte=year_end)
         
-        pattern = { "Jan": 2, "Feb": 3, "Mar": 0, "Apr": 2, "May": 0, "Jun": 0, "Jul": 0, "Aug": 0, "Sep": 0, "Oct": 0, "Nov": 0, "Dec": 0 }
+        pattern = { "Jan": 0, "Feb": 0, "Mar": 0, "Apr": 0, "May": 0, "Jun": 0, "Jul": 0, "Aug": 0, "Sep": 0, "Oct": 0, "Nov": 0, "Dec": 0 }
         months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         for lr in leave_requests:
             # Get months
-            days = (lr.end_time - lr.start_time).days + 1
-            start_month = lr.start_time.month
+            days = lr.duration
+            start_month = lr.start_time.month - 1
             end_month = lr.end_time.month
 
             # Get number of days per month
             
             # update pattern
-            pattern[months[start_month]] = days 
+            pattern[months[start_month]] += days 
 
         return Response(pattern)
 
@@ -94,3 +111,31 @@ class LeaveDeleteAPIView(APIView):
         leave.closed = True 
         leave.save()
         return Response(LeaveRequestSerializerEmp(leave).data, status=status.HTTP_202_ACCEPTED)
+    
+class LeaveReportSummaryAPIView(APIView):
+    authentication_classes = [JWTAuth]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user:User = request.user
+        leave_requests = user.leave_requests
+        types = []
+        leave_types = LeaveType.objects.all()
+        now = timezone.now()
+        for l_type in leave_types:
+            t = LeaveTypeSerializer(l_type).data
+            finished_leaves_t = leave_requests.filter(closed=False, type=l_type, status="APPR", end_time__lte=now)
+            days_used = 0
+            for f_l in finished_leaves_t:
+                days_used += f_l.duration
+            t["days_used"] = days_used
+
+            types.append(t)
+
+        result = {
+            "employee": UserSerializer(user).data,
+            "approved_leave": LeaveRequestSerializerEmp(leave_requests.filter(status="APPR"), many=True).data,
+            "pending_leave": LeaveRequestSerializerEmp(leave_requests.filter(status="PNDG"), many=True).data,
+            "types": types
+        }
+        return Response(result)

@@ -92,3 +92,25 @@ const errData = err.response?.data
     }
     return errorStr
 }
+
+export const getLeaveColors = (type) => {
+    const leaveColors = {
+        "Annual Leave (Holiday Entitlement)": { bgColor: "#E0F7FA", highlightColor: "#00BCD4" },
+        "Sick Leave": { bgColor: "#FFF3E0", highlightColor: "#FF9800" },
+        "Maternity Leave": { bgColor: "#F8BBD0", highlightColor: "#D81B60" },
+        "Personal Leave": { bgColor: "#E3F2FD", highlightColor: "#2196F3" },
+        "Emergency Leave": { bgColor: "#FFEBEE", highlightColor: "#F44336" },
+        "Bereavement Leave": { bgColor: "#D7CCC8", highlightColor: "#6D4C41" },
+        "Sabbatical Leave": { bgColor: "#E0F2F1", highlightColor: "#00796B" },
+        "Public Holidays": { bgColor: "#FFF9C4", highlightColor: "#FFEB3B" },
+        "Religious Observance Leave": { bgColor: "#EDE7F6", highlightColor: "#673AB7" },
+        "Military Leave": { bgColor: "#E8EAF6", highlightColor: "#3F51B5" },
+        "Short Leave": { bgColor: "#BBDEFB", highlightColor: "#1976D2" },
+        "Casual Leave": { bgColor: "#C8E6C9", highlightColor: "#4CAF50" },
+        "Garden Leave": { bgColor: "#D1C4E9", highlightColor: "#9575CD" },
+        "Unpaid Leave": { bgColor: "#FFFDE7", highlightColor: "#FBC02D" },
+        "Time Off In Lieu (TOIL)": { bgColor: "#FFECB3", highlightColor: "#FFA000" }
+    };
+
+    return leaveColors[type] || { bgColor: "lightgray", highlightColor: "darkgray" };
+}

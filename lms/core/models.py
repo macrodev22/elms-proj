@@ -59,7 +59,7 @@ class User(AbstractUser):
         if self.supervised_by != None:
             return self.supervised_by 
         else:
-            return self.department.head
+            return self.department.head if self.department is not None else None
 
     def __str__(self):
         company_name = self.company.name if self.company else "(No company)"

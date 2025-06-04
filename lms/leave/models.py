@@ -1,6 +1,8 @@
 from django.db import models
 from company.models import Company
 from core.models import User
+from django.utils import timezone
+from datetime import datetime
 
 LEAVE_STATUS_CHOICES = (('APPR', 'Approved'), ('DCLN', 'Declined'), ('PNDG', 'Pending'), ('CXLD', 'Cancelled'))
 LEAVE_PROCESS_ACTION_CHOICES = (('SEND', 'Sent to Supervisor'), ('CLSD', 'Closed'), ('APPR', 'Approved'), ('DCLN', 'Declined'),)
@@ -25,6 +27,12 @@ class LeaveRequest(models.Model):
     reason = models.TextField(null=True, blank=True)
     closed = models.BooleanField(default=False, blank=True)
 
+    @property
+    def duration(self) -> datetime:
+        start_date = timezone.localtime(self.start_time)
+        end_date = timezone.localtime(self.end_time)
+        return (end_date - start_date).days + 1
+    
     def __str__(self):
         return f"{self.type.name} - {self.requested_by.email} - {self.company.name}"
 
