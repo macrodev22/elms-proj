@@ -49,9 +49,9 @@ watch(() => store.auth.user, (newUser) => {
   <div class="bg-green-100 py-2 px-12 relative">
     <AddEmployeeModal :show="showAddEmployeeModal" @close-modal="showAddEmployeeModal = false" />
     <LoginModal :show="showLoginModal" @close-modal="showLoginModal = false" />
-    <div class="flex flex-col gap-4.5 items-center justify-between md:flex-row md:gap-0">
+    <div class="flex flex-col gap-6.5 items-center justify-between md:flex-row md:gap-0">
       <div class="h-12"><img src="/favicon.svg" alt="Logo" class="h-full"></div>
-      <div class="flex gap-6.5 items-stretch self-stretch my-[-8px]">
+      <div class="flex flex-col sm:flex-row gap-6.5 items-stretch justify-between self-stretch my-[-8px]">
         <NavButton label="Home" href="/" :active="route.name == 'home'" />
         <NavButton label="Calendar" href="/calendar" :active="route.name == 'calendar'" />
         <NavButton label="Leave" :href="{ name: 'leave' }" :active="route.name == 'leave'" />
@@ -63,7 +63,7 @@ watch(() => store.auth.user, (newUser) => {
     </div>
   </div>
   <div class="bg-green-200 py-6 px-12 h-[180px]">
-    <h2 class="text-4xl font-semibold flex justify-between"><span>Dashboard</span>
+    <h2 class="text-4xl font-semibold flex gap-2 flex-col sm:flex-row sm:justify-between"><span>Dashboard</span>
       <Button label="Add Employee" @click="showAddEmployeeModal = true">
         <PlusIcon class="size-6" />
       </Button>

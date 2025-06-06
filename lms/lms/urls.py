@@ -26,6 +26,7 @@ urlpatterns = [
     path("api/hr/", include("hr.urls")),
     path("api/leave/", include('leave.urls')),
     path('api/', include('api.urls')),
+    path('api/admin/', include('administrator.urls')),
 ]
 
 if settings.DEBUG:

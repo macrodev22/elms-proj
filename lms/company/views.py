@@ -18,7 +18,7 @@ class CompanyEmployeesAPIView(APIView):
     def get(self, request):
         user:User = request.user
         company = user.company
-        user_serializer = UserSerializer(company.users, many=True)
+        user_serializer = UserSerializer(company.users, many=True, context={'request': request})
         return Response({"company": CompanySerializer(company).data, "employees":user_serializer.data})
     
 class CompanyListCreateAPIView(generics.ListCreateAPIView):

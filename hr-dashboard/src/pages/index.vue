@@ -15,7 +15,7 @@
             <PublicHolidayList :holidays="store.holidays" />
         </Card>
     </div>
-    <div class="flex flex-col mt-64 md:flex-row md:mt-0 gap-8 mb-8 h-36">
+    <div class="flex flex-col mt-64 md:flex-row md:mt-0 gap-8 mb-8 md:h-36">
         <div class="relative md:w-3/5">
             <Card>
                 <h4 class="mb-4 text-2xl">Team availability</h4>
@@ -27,7 +27,7 @@
             <ForwardButton @click="rightScroll(employeeAvailabilityContainer)"
                 class="absolute right-0 top-[50%] translate-x-[50%] translate-y-[-50%] z-10" />
         </div>
-        <div class="flex-1">
+        <div class="md:flex-1">
             <Card>
                 <h4 class="mb-4 text-2xl">Quick links</h4>
                 <QuickLink label="Add department" to="#" @click.prevent="showAddDeparment = true" />

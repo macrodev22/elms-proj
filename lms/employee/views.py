@@ -31,7 +31,10 @@ class LeaveRequestsAPIView(APIView):
             })
     
     def post(self, request):
+        user:User = request.user
         data = request.data 
+        data['requested_by'] = user.id
+        data['company'] = user.company.id
         leave_request = LeaveRequestCreateSerializer(data=data)
         if leave_request.is_valid(raise_exception=True):
             leave_request.save()
