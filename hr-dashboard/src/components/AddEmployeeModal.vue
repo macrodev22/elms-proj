@@ -109,7 +109,7 @@ const saveEmployee = () => {
             <FormField name="middle_name" label="Middle name" :required="false" v-model="formFields.middle_name" />
             <FormField name="last_name" label="Last name" v-model="formFields.last_name" />
             <FormField name="email" label="Email" type="email" v-model="formFields.email" />
-            <div class="flex gap-8 items-center mb-4">
+            <div class="flex flex-col sm:flex-row gap-8 items-start sm:items-center mb-4">
                 <div class="flex flex-col">
                     <label for="date_of_birth" class="mb-1.5">Date of Birth</label>
                     <input v-model="formFields.date_of_birth" type="date" placeholder="Date of Birth"
@@ -122,7 +122,7 @@ const saveEmployee = () => {
                     </div>
                     <label for="profile_picture" class="mb-1.5 grid place-items-center">
                         <span
-                            class="rounded-lg cursor-pointer border-1 border-green-500 py-2 px-5 hover:bg-green-500 hover:text-white">Choose
+                            class="rounded-lg cursor-pointer border-1 border-green-500 px-1 py-0.5 sm:py-2 sm:px-5 hover:bg-green-500 hover:text-white">Choose
                             Profile
                             Photo</span>
                     </label>
@@ -132,7 +132,7 @@ const saveEmployee = () => {
                 </div>
             </div>
 
-            <div class="flex gap-4">
+            <div class="flex flex-col sm:flex-row gap-4">
                 <DropDownField name="department" label="Department" v-model="formFields.department"
                     :options="departments.map(d => ({ value: d.id, label: d.name }))" />
                 <DropDownField label="Role" name="role" :options="roles" v-model="formFields.role" />

@@ -69,7 +69,7 @@ watch(() => store.auth.user, (newUser) => {
       </Button>
     </h2>
   </div>
-  <main class="px-12 top-[-4rem] relative">
+  <main class="px-4 md:px-12 top-[-4rem] relative">
     <RouterView />
   </main>
 </template>

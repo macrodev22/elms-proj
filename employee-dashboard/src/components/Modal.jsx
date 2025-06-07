@@ -17,7 +17,7 @@ const Overlay = (props) => {
     const { children, onClose, title, closable } = props
 
     return createPortal(
-        <Card className="w-[75%] left-[50%] top-6 fixed p-6 transform-[translateX(-50%)] max-h-[95vh] overflow-y-auto">
+        <Card className="w-[95%] md:w-[75%] left-[50%] top-6 fixed p-6 transform-[translateX(-50%)] max-h-[95vh] overflow-y-auto">
         <h4 className="font-bold mb-6 flex justify-between text-xl"><span>{title}</span> {closable && <button className="cursor-pointer" onClick={onClose}><XCircleIcon className="size-12 stroke-red-400" /></button>}</h4>
         { children }
         </Card>,

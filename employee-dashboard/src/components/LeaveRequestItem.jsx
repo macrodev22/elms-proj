@@ -47,8 +47,8 @@ const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails }) => {
         <div className="bg-gray-100 rounded-md p-2 text-base flex mb-2 items-center">
             <span className="flex-[3] truncate">{ request.type.name }</span>
             <span className="flex-[3] truncate">{ formatDateRange(request) }</span>
-            <span className="flex-[1.5]">{ duration(request) }</span>
-            <span className="flex-[3] truncate">{ request.reason }</span>
+            <span className="flex-[1.5] hidden sm:block">{ duration(request) }</span>
+            <span className="flex-[3] truncate hidden sm:block">{ request.reason }</span>
             <span className="flex-[2]"><StatusChip status={request.status_display} /></span>
             <div className="flex gap-2">
                 <LeaveClosedChip onClick={() => onShowDetails(request)} isClosed={request.closed} />

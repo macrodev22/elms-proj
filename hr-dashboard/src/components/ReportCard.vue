@@ -9,7 +9,7 @@ const { title, buttonLabel } = defineProps({
 const emit = defineEmits(['btn-click'])
 </script>
 <template>
-    <Card class="h-[400px] flex flex-col justify-between">
+    <Card class="md:h-[400px] flex flex-col justify-between">
         <h2 class="mb-2 pb-2 font-bold text-xl border-b-2 border-b-gray-50">{{ title }}</h2>
 
         <slot />

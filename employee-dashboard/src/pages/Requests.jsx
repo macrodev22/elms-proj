@@ -50,7 +50,7 @@ const Requests = () => {
     return (
         <>
         <LeaveRequestDetails show={showDetails} leave={selectedRequest} onClose={() => setShowDetails(false)} />
-        <Card className="relative mt-[-80px] mx-12">
+        <Card className="relative mt-[-40px] md:mt-[-80px]">
             { queries?.length && (
                 <>
                 <h2 className="font-semibold text-2xl mb-4">Queries to me</h2>

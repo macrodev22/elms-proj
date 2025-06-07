@@ -77,7 +77,7 @@ const calendars = {
 }
 
 const calendarApp = createCalendar({
-    selectedDate: '2025-05-19',
+    selectedDate: new Date().toISOString().split('T')[0], // '2025-05-19',
     views: [
         viewMonth,
         createViewMonthAgenda(),

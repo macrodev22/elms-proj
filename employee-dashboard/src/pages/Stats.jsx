@@ -41,9 +41,9 @@ const Stats = () => {
     }, [])
 
     return (
-        <Card className="relative mt-[-80px] p-4 mx-12">
+        <Card className="relative mt-[-40px] md:mt-[-80px] p-4">
             <h2 className='text-2xl font-semibold mb-4'>Stats</h2>
-            <div className="flex gap-8 mb-8">
+            <div className="flex flex-col sm:flex-row gap-8 mb-8">
                 <LeaveDaysStats approvedDays={approvedDays} approvedCount={approvedCount} pendingCount={pendingCount} pendingDays={pendingDays} />
                 <LeaveDaysOverview total={total_leave_days} remaining={total_leave_days - days_used} used={days_used} />
             </div>

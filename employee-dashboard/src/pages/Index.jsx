@@ -19,10 +19,46 @@ const publicHolidays = [
 ]
 
 const announcements = [
-    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-15' },
-    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-16' },
-    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-17' },
-    { text: "Dear team, it's time to plan your festive holidays!", author: 'Mugisha Musimenta', date: '2025-05-18' },
+    {
+        text: "Annual leave requests must be submitted at least 2 weeks in advance.",
+        author: "HR Department",
+        date: "2025-06-01"
+    },
+    {
+        text: "Employees are entitled to 21 working days of paid annual leave per year.",
+        author: "Leave Policy v2.1",
+        date: "2025-06-02"
+    },
+    {
+        text: "Carry-over of unused leave is limited to 10 days into the next calendar year.",
+        author: "HR Department",
+        date: "2025-06-03"
+    },
+    {
+        text: "Public holidays falling during your leave period will not be counted as leave days.",
+        author: "Leave Policy v2.1",
+        date: "2025-06-04"
+    },
+    {
+        text: "Sick leave must be supported by a medical certificate after 2 consecutive days.",
+        author: "Medical HR Guidelines",
+        date: "2025-06-05"
+    },
+    {
+        text: "Maternity leave entitlement is 90 calendar days with full pay.",
+        author: "HR Department",
+        date: "2025-06-06"
+    },
+    {
+        text: "Paternity leave is granted for 4 working days within two weeks of delivery.",
+        author: "HR Department",
+        date: "2025-06-07"
+    },
+    {
+        text: "Compassionate leave may be granted upon approval by your supervisor.",
+        author: "Leave Policy v2.1",
+        date: "2025-06-08"
+    }
 ]
 
 // const data = {
@@ -41,7 +77,7 @@ const Index = () => {
 
     return (
         <>
-            <div className="relative mt-[-80px] px-12 grid grid-cols-[1fr_2fr] gap-6">
+            <div className="relative mt-[-40px] md:mt-[-80px] flex flex-col md:grid md:grid-cols-[1fr_2fr] gap-6">
                 <div className="flex flex-col gap-6">
                     <Card isDark={true} className="basis-[220px]" >
                         <h4 className="text-2xl flex justify-between mb-4"><span>Retrospective</span><span className="bg-blue-400 rounded-md uppercase text-lg font-light px-3 py-1">{total_leave_days - days_used} Days</span></h4>
@@ -57,7 +93,7 @@ const Index = () => {
                 </div>
                 <div className='grid grid-cols-2 gap-6'>
                     <LeavePattern className="col-span-2" />
-                    <Card>
+                    <Card className="max-h-90 overflow-y-auto">
                         <h4 className='text-2xl flex items-center gap-1.5 mb-4'>
                             <MegaphoneIcon className="size-6" />
                             <span>Leave Policies</span>

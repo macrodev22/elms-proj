@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Index from "../pages/Index";
 import Layout from "../Layout";
 import Stats from "../pages/Stats";
@@ -26,5 +26,9 @@ export const router = createBrowserRouter([
                 path: '*', element: <NotFound />
             }
         ]
+     },
+     {
+        path: '/login',
+        element: <Navigate to="/" />
      }
 ])

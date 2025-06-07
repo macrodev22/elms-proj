@@ -18,12 +18,14 @@ const ProfileDetails = ({ show, onClose }) => {
             client.defaults.headers.common['Authorization'] = 'Bearer null'
             ctx.setToken(null)
             ctx.setShowLogin(true)
-            onClose()
+            onClose() 
             navigate('/')
         })
         .catch(e => {
             console.error('logout error', e)
             onClose()
+        }).finally(() => {
+            window.location.href = "/"
         })
     }
 

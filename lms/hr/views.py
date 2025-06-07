@@ -11,6 +11,7 @@ from core.serializers import UserSerializer,UserCreateSerializer
 from leave.models import LeaveRequest,LeaveType,LeaveProcess,SupervisorQuery
 from leave.serializers import LeaveProcessSerializer
 from company.models import Company
+from company.serializers import CompanySerializer
 from .serializers import LeaveRequestSerializer
 
 # Create your views here.
@@ -37,9 +38,32 @@ class LeaveListAPIView(APIView):
 
     def get(self, request):
         company = request.user.company
-        leaves = LeaveRequest.objects.filter(company=company).all()
-        return Response(LeaveRequestSerializer(leaves, many=True).data)
+        leaves = LeaveRequest.objects.filter(company=company).all().order_by('-requested_at','start_time')
+        return Response(LeaveRequestSerializer(leaves, many=True, context={'request': request}).data)
 
+class MobileDashStatsAPIView(APIView):
+    authentication_classes = [JWTAuth]
+    permission_classes = [IsAuthenticated, IsHR]
+    
+    def get(self, request):
+        user:User = request.user
+        company:Company = user.company
+        leave_requests = company.leave_requests
+        now = timezone.now()
+        year_start = timezone.datetime(now.year, 1, 1, tzinfo=now.tzinfo)
+        year_end = timezone.datetime(now.year, 12, 31, 23,59,59, tzinfo=now.tzinfo)
+        yearly_leave_requests = leave_requests.filter(start_time__gte=year_start, end_time__lte=year_end)
+        
+
+        return Response({
+            "company": CompanySerializer(company).data,
+            "total_employees": company.num_employees if user.company.num_employees is not None else 2,
+            "registered_employees": company.users.count(),
+            "total_leave_requests": yearly_leave_requests.count(),
+            "pending_leave_requests": yearly_leave_requests.filter(status="PNDG").count(),
+            "approved_leave_requests": yearly_leave_requests.filter(status="APPR").count(),
+            "declined_leave_requests": yearly_leave_requests.filter(status="DCLN").count()
+         })
 
 
 class LeaveOverviewReportAPIView(APIView):

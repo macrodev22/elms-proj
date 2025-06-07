@@ -7,7 +7,7 @@ from core.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
-        fields = ['first_name', 'middle_name', 'last_name', 'email']
+        fields = ['first_name', 'middle_name', 'last_name', 'email', 'profile_picture']
 
 class LeaveRequestSerializer(serializers.ModelSerializer):
     type = LeaveTypeSerializer(read_only=True)

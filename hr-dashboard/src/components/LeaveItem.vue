@@ -14,12 +14,12 @@ const emit = defineEmits(['select', 'actionClick'])
     <div class="bg-gray-100 rounded-md flex gap-2 justify-between items-center text-base font-normal p-2 mb-4">
         <p class="flex-[1.5] truncate font-semibold">{{ leave.type.name }}</p>
         <p class="flex-3" v-html="`${formatDate(leave.start_time)} - ${formatDate(leave.end_time)}`"></p>
-        <p class="flex-1 font-semibold">{{ getDurationLabel(leave.start_time, leave.end_time) }}</p>
+        <p class="hidden sm:block flex-1 font-semibold">{{ getDurationLabel(leave.start_time, leave.end_time) }}</p>
         <p class="flex-3 truncate"
             v-html="`<span class='text-gray-600 text-sm'>(${leave.requested_by.first_name || leave.requested_by.email})</span> ${leave.reason}`">
         </p>
         <StatusChip :status="leave.status_display" class="flex-1" />
-        <div class="flex gap-1 flex-3 justify-center text-xs">
+        <div class="hidden sm:flex gap-1 flex-3 justify-center text-xs">
             <button :disabled="leave.closed" @click="emit('actionClick', { action: 'Approve', id: leave.id })"
                 class="bg-green-500 hover:bg-green-600 rounded-md py-2 px-2.5 text-white cursor-pointer disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed disabled:border-green-500 disabled:border-1">Aprrove</button>
             <button :disabled="leave.closed" @click="emit('actionClick', { action: 'Ask Supervisor', id: leave.id })"

@@ -23,6 +23,7 @@ const logout = () => {
                 position: toast.POSITION.TOP_CENTER
             })
 
+        }).finally(() => {
             window.location.href = '/'
         })
 }

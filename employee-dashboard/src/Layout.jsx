@@ -62,11 +62,11 @@ export default function Layout() {
         <Toaster position='top-center' />
         <AddLeaveRequestModal show={showAddLeave}  onClose={onCloseModal} title="Add leave request" />
         <LoginModal show={showLogin} onLoggedIn={() => setShowLogin(false)} />
-      <div className="bg-blue-100 px-12 flex justify-between items-center">
+      <div className="bg-blue-100 px-12 flex flex-col gap-6 md:gap-0 md:flex-row md:justify-between items-center">
         <div className="flex justify-between items-centre">
           <img src={logo} alt="logo" className='h-12 my-2' />
         </div>
-        <div className="flex gap-6 5 self-stretch py-2">
+        <div className="flex flex-col sm:flex-row gap-6 self-stretch justify-between py-2">
           <NavButton label="Dashboard" to="/" />
           <NavButton label="Stats" to="/stats" />
           <NavButton label="My Requests" to="/requests" badge={getBadge(ctx.queries)} />
@@ -80,7 +80,7 @@ export default function Layout() {
       {/* second dash area  */}
       <div className="bg-blue-200 h-[190px]">
         <div className="py-4 px-12 flex justify-between">
-          <h4 className="text-4xl font-semibold flex justify-between w-full mt-4">
+          <h4 className="text-xl md:text-4xl font-semibold flex flex-col gap-4 md:flex-row justify-between w-full mt-4">
             <span>{ greeting()[0] }{`, ${ctx.auth.user.first_name || ''}`} { greeting()[1] }</span>
             <button onClick={addLeaveRequest} className="bg-blue-500 text-white flex gap-2 items-center px-3 py-2 font-normal text-xl rounded-md cursor-pointer hover:bg-blue-600"><ArrowRightIcon className='size-6' /> Request leave</button>
           </h4>
@@ -88,7 +88,7 @@ export default function Layout() {
       </div>
 
       {/* main  */}
-      <main>
+      <main className='px-4 md:px-12'>
         <Outlet />
       </main>
     </>
