@@ -36,7 +36,7 @@ onBeforeMount(() => {
 
         <ReportCard title="Overview" @btn-click="showEmployeeReport = true">
             <div class="flex flex-col sm:grid sm:grid-cols-2 gap-x-4 gap-y-8">
-                <ReportStatChip item="Number of employees" :count="store.employeeOverview.total_employees" />
+                <ReportStatChip item="Number of employees" :count="company.num_employees" />
                 <ReportStatChip item="Employees on leave" :count="store.employeeOverview.employees_on_leave" />
                 <ReportStatChip item="Used leave days" :count="store.employeeOverview.used_leave_days" />
                 <ReportStatChip item="Unused leave days" :count="store.employeeOverview.remaining_leave_days" />

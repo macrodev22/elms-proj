@@ -22,7 +22,7 @@ class CompanyEmployeesAPIView(APIView):
         return Response({"company": CompanySerializer(company).data, "employees":user_serializer.data})
     
 class CompanyListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Company.objects.all()
+    queryset = Company.objects.all().order_by('-created_at')
     serializer_class = CompanySerializer 
 
 class CompanyDepartmentsAPIView(APIView):
