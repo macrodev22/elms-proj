@@ -13,6 +13,7 @@ from leave.serializers import LeaveProcessSerializer
 from company.models import Company
 from company.serializers import CompanySerializer
 from .serializers import LeaveRequestSerializer
+from .utils import send_leave_action_notification
 
 # Create your views here.
 class CreateEmployeeAPIView(APIView):
@@ -184,7 +185,7 @@ class LeaveActionAPIView(APIView):
     permission_classes = [IsAuthenticated, IsHR]
 
     def post(self, request, pk):
-        user = request.user
+        user:User = request.user
         leave = LeaveRequest.objects.get(pk=pk)
         remarks = request.data.get("remarks", None)
         action = request.data.get("action", None)
@@ -214,6 +215,11 @@ class LeaveActionAPIView(APIView):
         if action_code in ['APPR', 'DCLN']:
             leave.status = action_code
             leave.save()
+            # Send email of notification of new leave status  
+            subject = f"Your leave request has been {action}ed" 
+            message = f"Dear {leave.requested_by.first_name},\n\nYour request for {leave.type.name} starting on {leave.start_time.date()} have been {action}ed by {user.first_name}.\n\nRemarks: {remarks}.\n\nRegards,\n{leave.company.name} HR"
+            send_leave_action_notification(leave.requested_by.email, subject=subject, message=message) 
+
 
         # Add Supervisor Query for SEND
         if action_code == 'SEND':
