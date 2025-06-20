@@ -20,9 +20,9 @@ class LeaveRequestsAPIView(APIView):
 
     def get(self, request):
         user:User = request.user
-        leave_requests = user.leave_requests
+        leave_requests = user.leave_requests.order_by('-requested_at')
 
-        queries = user.supervisor_queries_received.filter().all()
+        queries = user.supervisor_queries_received.order_by('-created_at').all()
 
         return Response({ 
             "user": UserSerializer(user).data,
@@ -121,10 +121,12 @@ class LeaveReportSummaryAPIView(APIView):
 
     def get(self, request):
         user:User = request.user
-        leave_requests = user.leave_requests
+        now = timezone.now()
+        year_start = timezone.datetime(now.year, 1, 1)
+        # year_end = timezone.datetime(now.year, 12, 31, 23,59,59)
+        leave_requests = user.leave_requests.filter(start_time__gte=year_start)
         types = []
         leave_types = LeaveType.objects.all()
-        now = timezone.now()
         for l_type in leave_types:
             t = LeaveTypeSerializer(l_type).data
             finished_leaves_t = leave_requests.filter(closed=False, type=l_type, status="APPR", end_time__lte=now)
@@ -139,6 +141,7 @@ class LeaveReportSummaryAPIView(APIView):
             "employee": UserSerializer(user).data,
             "approved_leave": LeaveRequestSerializerEmp(leave_requests.filter(status="APPR"), many=True).data,
             "pending_leave": LeaveRequestSerializerEmp(leave_requests.filter(status="PNDG"), many=True).data,
+            "declined_leave": LeaveRequestSerializerEmp(leave_requests.filter(status='DCLN'), many=True).data,
             "types": types
         }
         return Response(result)

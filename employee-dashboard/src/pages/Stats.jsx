@@ -48,7 +48,7 @@ const Stats = () => {
                 <LeaveDaysOverview total={total_leave_days} remaining={total_leave_days - days_used} used={days_used} />
             </div>
             <div className="flex gap-4 w-full overflow-x-scroll ">
-                {leaveTypesStats && leaveTypesStats.map(t => <LeaveTypeStat used={t.days_used} strokeColor={getLeaveColors(t.name).highlightColor} key={t.id} type={t.name} />)}
+                {leaveTypesStats && leaveTypesStats.sort((a,b) => b.days_used - a.days_used).map(t => <LeaveTypeStat used={t.days_used} strokeColor={getLeaveColors(t.name).highlightColor} key={t.id} type={t.name} />)}
                 
             </div>
         </Card>

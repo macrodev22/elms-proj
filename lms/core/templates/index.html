@@ -10,6 +10,10 @@
 
 {% block 'content' %}
         <div class="content">
+          <div id="download-progress-wrapper">
+            <p id="download-text">Downloading android app...<span id="down-percentage">(0%)</span></p>
+            <progress id="download-progress" max=100 value=1 >
+          </div>
           <h2>
             A <span>powerful</span>, <span>feature rich</span>,
             <span>all rounded</span> automated leave management solution.
@@ -28,4 +32,62 @@
           <img src="{% static 'img/employee-happiness.jpg' %}" alt="hero" />
         </div>
       </div>
+      <script>
+        window.isDownloading = false
+        const downProgWrapper = document.querySelector('#download-progress-wrapper')
+        const appDownloadBtn = document.querySelector('.app-download-btn')
+        const downTextEl = document.querySelector('#download-text')
+        const downPercentEl = document.querySelector('#down-percentage')
+        const downProgress = document.querySelector('#download-progress')
+
+        document.body.appendChild(downProgWrapper)
+        appDownloadBtn.addEventListener('click', () => {
+          if(!window.isDownloading) {
+            downProgWrapper.style.display = 'flex'
+
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', '/download/elms_android.apk')
+            xhr.responseType = 'blob'
+
+            xhr.addEventListener('progress', (e) => {
+              // console.log('progress', xhr, e)
+              if(e.lengthComputable) {
+                const percentage = (e.loaded / e.total) * 100
+                downPercentEl.innerText = `(${Math.round(percentage)}%)`
+                downProgress.value = percentage
+              }
+            })
+
+            xhr.addEventListener('load', () => {
+              // console.log('load', xhr)
+              if(xhr.status == 200) {
+                const blob = xhr.response 
+                const url = URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.href = url
+                a.style.display = 'none'
+                a.download = 'elms_android.apk'
+                document.body.appendChild(a)
+                a.click() 
+
+                URL.revokeObjectURL(url)
+                document.body.removeChild(a)
+
+              } else {
+                downTextEl.innerText = `Download failed : ${xhr.status} ${xhr.statusText}`
+                window.isDownloading = false
+                setTimeout(() => downProgWrapper.style.display = 'none', 3000)
+              }
+            })
+
+            xhr.addEventListener('error', e => {
+              downTextEl.innerText = `Download failed: ${e.status}`
+              window.isDownloading = false
+              setTimeout(() => downProgWrapper.style.display = 'none', 3000)
+            })
+
+            xhr.send()
+          }
+        })
+      </script>
 {% endblock %}

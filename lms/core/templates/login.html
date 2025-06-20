@@ -1,4 +1,5 @@
 {% extends 'base.html' %} {% block 'content' %}
+{% load static %}
 <div class="login-container">
   <h3 class="content-heading">User Login</h3>
   <form class="form" action="/login" method="post">
@@ -21,11 +22,25 @@
     </div>
     <div class="input-group">
       <label>Password</label>
-      <input type="password" name="password" placeholder="Password" autocomplete="false" required />
+      <div class="password-field-wrapper">
+        <div class="icon"><img src='{% static "img/visibility.svg" %}' id="visibility-icon" /></div>
+        <input type="password" name="password" placeholder="Password" autocomplete="false" required />
+      </div>
     </div>
     <div>
       <button class="btn btn-primary">Login</button>
     </div>
   </form>
 </div>
+<script>
+  const visIcon = document.querySelector('#visibility-icon')
+  const passwordEl = document.querySelector('input[name=password]')
+
+  window.passwordVisible = false
+  visIcon.addEventListener('click', (e) => {
+    window.passwordVisible = !window.passwordVisible
+    e.target.src = window.passwordVisible ? '{% static "img/visibility_off.svg" %}' : '{% static "img/visibility.svg" %}'
+    passwordEl.type = window.passwordVisible ? 'text' : 'password'
+  })
+</script>
 {% endblock %}

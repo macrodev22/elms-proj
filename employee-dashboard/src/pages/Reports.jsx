@@ -1,6 +1,30 @@
+import { useEffect, useState } from "react"
 import Card from "../components/Card"
+import { client } from "../services/client"
+import toast from "react-hot-toast"
+import { duration, formatDate } from "../utils"
+
+const ReportItem = ({ start_date, end_date, duration, type, status }) => {
+    return (
+        <>
+        <div>{ start_date }</div>
+        <div>{ end_date }</div>
+        <div>{ duration }</div>
+        <div>{ type }</div>
+        <div>{ status }</div>
+        </>
+    )
+}
 
 const Reports = () => {
+    const [leaveRequests, setLeaveRequests] = useState([])
+
+    useEffect(() => {
+        client.get('/employee/leave-requests').then(({data}) => {
+            setLeaveRequests(data.requests)
+        }).catch(e => toast.error(`Error getting leave requests: ${e.message}`))
+    }, [])
+
     return (
         <Card className="mt-[-80px]">
             <h2 className='text-2xl font-semibold mb-4'>Reports</h2>
@@ -12,11 +36,12 @@ const Reports = () => {
                 <div className="font-bold">Type</div>
                 <div className="font-bold">Status</div>
 
-                <div>1st Jan 2025</div>
+                {/* <div>1st Jan 2025</div>
                 <div>4th Jan 2025</div>
                 <div>4 days</div>
                 <div>Maternity Leave</div>
-                <div>Completed</div>
+                <div>Completed</div> */}
+                {leaveRequests.map(l => <ReportItem start_date={formatDate(l.start_time, true)}  end_date={formatDate(l.end_time, true)} key={l.id} duration={duration(l)} status={l.status_display} type={l.type?.name} />)}
             </div>
         </Card>
     )
