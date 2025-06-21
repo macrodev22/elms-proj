@@ -15,7 +15,7 @@ from company.serializers import CompanySerializer
 from .serializers import LeaveRequestSerializer
 from .utils import send_leave_action_notification
 
-# Create your views here.
+# Create Employee View
 class CreateEmployeeAPIView(APIView):
     authentication_classes = [JWTAuth]
     permission_classes = [IsAuthenticated, IsHR]
@@ -32,6 +32,7 @@ class CreateEmployeeAPIView(APIView):
             created_user = employee_serializer.save()
             return Response({'detail': 'success', "data": UserSerializer(created_user).data}, status=status.HTTP_201_CREATED)
 
+# Leave list view
 class LeaveListAPIView(APIView):
     serializer_class = LeaveRequestSerializer
     authentication_classes = [JWTAuth]
