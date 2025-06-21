@@ -67,6 +67,12 @@ const announcements = [
 //     "days_pending_approval": 19
 // }
 
+// const data = {
+//     "total_leave_days": 21,
+//     "days_used": 2,
+//     "days_pending_approval": 19
+// }
+
 const Index = () => {
     const ctx = useContext(StoreContext)
     const { total_leave_days, days_used, days_pending_approval } = ctx.stats

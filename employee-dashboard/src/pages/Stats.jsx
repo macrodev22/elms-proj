@@ -1,4 +1,5 @@
 import Card from '../components/Card'
+<<<<<<< Updated upstream
 import LeaveDaysOverview from '../components/LeaveDaysOverview'
 import LeaveDaysStats from '../components/LeaveDaysStats'
 import LeaveTypeStat from '../components/LeaveTypeStat'
@@ -7,6 +8,8 @@ import StoreContext from '../store/StoreContext'
 import { client } from '../services/client'
 import toast from 'react-hot-toast'
 import { getLeaveColors } from '../utils'
+=======
+>>>>>>> Stashed changes
 
 const Stats = () => {
 
@@ -41,6 +44,7 @@ const Stats = () => {
     }, [])
 
     return (
+<<<<<<< Updated upstream
         <Card className="relative mt-[-40px] md:mt-[-80px] p-4">
             <h2 className='text-2xl font-semibold mb-4'>Stats</h2>
             <div className="flex flex-col sm:flex-row gap-8 mb-8">
@@ -51,6 +55,11 @@ const Stats = () => {
                 {leaveTypesStats && leaveTypesStats.sort((a,b) => b.days_used - a.days_used).map(t => <LeaveTypeStat used={t.days_used} strokeColor={getLeaveColors(t.name).highlightColor} key={t.id} type={t.name} />)}
                 
             </div>
+=======
+        <Card className="relative mt-[-80px] p-4 mx-12">
+            <h2 className='text-2xl font-semibold mb-4'>Stats</h2>
+            {[1,2,3,4,5].map(e => <div className='m-2'>{e}</div>)}
+>>>>>>> Stashed changes
         </Card>
     )
 }
