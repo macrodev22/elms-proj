@@ -29,7 +29,9 @@ class CreateEmployeeAPIView(APIView):
         employee_serializer = UserCreateSerializer(data=data, context={'request': request})
 
         if employee_serializer.is_valid(raise_exception=True):
-            created_user = employee_serializer.save()
+            created_user:User = employee_serializer.save()
+            message = f"Hello {created_user.first_name},\n\nYour employee account at {created_user.company.name} has been created successfully\n\nLogin with the credentials below:\nEmail: {created_user.email}\nPassword: {data['password']}\n\nRegards..."
+            send_leave_notification(created_user.email, f"Your Employee Account has been created", message)
             return Response({'detail': 'success', "data": UserSerializer(created_user).data}, status=status.HTTP_201_CREATED)
 
 # Leave list view
@@ -217,9 +219,13 @@ class LeaveActionAPIView(APIView):
             leave.status = action_code
             leave.save()
             # Send email of notification of new leave status  
-            subject = f"Your leave request has been {action}ed" 
+            subject = f"Your {leave.type.name} request has been {action}d" 
             message = f"Dear {leave.requested_by.first_name},\n\nYour request for {leave.type.name} starting on {leave.start_time.date()} to {leave.end_time.date()} has been {action}d by {user.first_name}.\n\nRemarks: {remarks}.\n\nRegards,\n{leave.company.name} HR"
             send_leave_notification(leave.requested_by.email, subject=subject, message=message) 
+
+            hr_subject = f"You have {action}d a leave request for {leave.requested_by.email}"
+            hr_message = f"Dear {user.first_name},\n\nYou have {action}d the request for {leave.type.name} requested by {leave.requested_by.first_name} ({leave.requested_by.email}). Remarks: {remarks} \n\n{user.company.name}"
+            send_leave_notification(user.email, hr_subject, hr_message)
 
 
         # Add Supervisor Query for SEND
