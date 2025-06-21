@@ -48,7 +48,6 @@ class LeaveStatsAPIView(APIView):
 
     def get(self, request):
         user = request.user 
-<<<<<<< Updated upstream
         total_leave_days = 21
 
         leave_requests = user.leave_requests
@@ -146,13 +145,3 @@ class LeaveReportSummaryAPIView(APIView):
             "types": types
         }
         return Response(result)
-=======
-
-        used_leave = LeaveRequest.objects.filter(requested_by=user.id, closed=True).all()
-        serializer = LeaveRequestSerializerEmp(used_leave, many=True)
-        return Response({
-            "total_leave_days": 21,
-            "days_used": 2,
-            "days_pending_approval": 19
-        })
->>>>>>> Stashed changes

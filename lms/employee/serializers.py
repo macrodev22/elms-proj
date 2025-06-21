@@ -6,11 +6,8 @@ from core.serializers import UserSerializer
 class LeaveRequestSerializerEmp(serializers.ModelSerializer):
     type = LeaveTypeSerializer(read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
-<<<<<<< Updated upstream
     requested_by = UserSerializer(read_only=True)
     duration = serializers.SerializerMethodField()
-=======
->>>>>>> Stashed changes
     
     class Meta:
         model = LeaveRequest
