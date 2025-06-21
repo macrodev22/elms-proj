@@ -7,7 +7,7 @@ import ReportStatChip from '../components/ReportStatChip.vue';
 import contactTrace from '../assets/contact_trace.svg'
 import leaveReport from '../assets/leave_report.svg'
 import EmployeeFullReportModal from '../components/EmployeeFullReportModal.vue';
-
+// show reports
 const store = useStore()
 const company = computed(() => store.auth.user.company)
 
