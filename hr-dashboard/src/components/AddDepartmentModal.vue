@@ -21,6 +21,8 @@ const departmentHead = ref(null)
 const deparmentName = ref('')
 const minEmployees = ref(1)
 
+// get Departments function
+
 const getDepartments = () => client.get('/company/departments')
         .then(({ data }) => {
             departments.value = data
