@@ -16,7 +16,7 @@ const formatDateRange = (request) => {
 
 const ReactSwal = withReactContent(Swal)
 
-const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails }) => {
+const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails, isQuery=false }) => {
     
     const onDeleteRequest = () => {
         ReactSwal.fire({
@@ -51,7 +51,7 @@ const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails }) => {
             <span className="flex-[3] truncate hidden sm:block">{ request.reason }</span>
             <span className="flex-[2]"><StatusChip status={request.status_display} /></span>
             <div className="flex gap-2">
-                <LeaveClosedChip onClick={() => onShowDetails(request)} isClosed={request.closed} />
+                <LeaveClosedChip onClick={() => onShowDetails(request, isQuery)} isClosed={request.closed} />
                 <IconButton type="delete" onClick={onDeleteRequest} />
             </div>
         </div>

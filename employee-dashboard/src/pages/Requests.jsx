@@ -1,8 +1,6 @@
 import { useEffect, useContext, useState } from "react"
 import Card from "../components/Card"
 import LeaveRequestItem from "../components/LeaveRequestItem"
-import { client } from "../services/client"
-import toast from "react-hot-toast"
 import StoreContext from "../store/StoreContext"
 import LeaveRequestDetails from "../components/LeaveRequestDetails"
 // leave requests details
@@ -27,38 +25,41 @@ const Requests = () => {
             "requested_by": 3
         })
     const [showDetails, setShowDetails] = useState(false)
+    const [selectedIsQuery, setSelectedIsQuery] = useState(false)
 
     useEffect(() => {
-        client.get('/employee/leave-requests')
-        .then(({data}) => {
-            const {requests} = data
-            ctx.setRequests(requests)
-        })
-        .catch(e => {
-            toast.error(`Error getting requests!\n${e.message}`)
-        })
+        ctx.actions.fetchRequests()
+        // client.get('/employee/leave-requests')
+        // .then(({data}) => {
+        //     const {requests,queries} = data
+        //     ctx.setRequests(requests)
+        // })
+        // .catch(e => {
+        //     toast.error(`Error getting requests!\n${e.message}`)
+        // })
         
     }, [])
 
     const {requests, queries} = ctx 
 
-    const onSelectLeave = (leave) => {
+    const onSelectLeave = (leave, isQuery) => {
         setSelectedRequest(leave)
+        setSelectedIsQuery(isQuery)
         setShowDetails(true)
     }
 
     return (
         <>
-        <LeaveRequestDetails show={showDetails} leave={selectedRequest} onClose={() => setShowDetails(false)} />
+        <LeaveRequestDetails show={showDetails} leave={selectedRequest} onClose={() => setShowDetails(false)} isQuery={selectedIsQuery} />
         <Card className="relative mt-[-40px] md:mt-[-80px]">
             { queries?.length && (
                 <>
                 <h2 className="font-semibold text-2xl mb-4">Queries to me</h2>
-                { queries.map(q => <LeaveRequestItem request={q.leave_request} key={q.id} onRefreshRequests={() => ctx.actions.fetchRequests() } onShowDetails={onSelectLeave} />) }
+                { queries.map(q => <LeaveRequestItem request={q.leave_request} key={q.id} onRefreshRequests={() => ctx.actions.fetchRequests() } onShowDetails={onSelectLeave} isQuery={true} />) }
                 </>
             ) }
             <h2 className="font-semibold text-2xl mb-4">My requests</h2>
-            { requests.map(r => <LeaveRequestItem request={r} key={r.id} onRefreshRequests={() => ctx.actions.fetchRequests()} onShowDetails={onSelectLeave} />) }
+            { requests.map(r => <LeaveRequestItem request={r} key={r.id} onRefreshRequests={() => ctx.actions.fetchRequests()} onShowDetails={onSelectLeave} isQuery={false} />) }
         </Card>
         </>
     )

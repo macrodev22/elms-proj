@@ -4,7 +4,7 @@ import { formatName, duration, formatDate } from "../utils";
 import { useContext } from "react";
 import StoreContext from "../store/StoreContext";
 
-const LeaveRequestDetails = ({ leave, show, onClose, showRemarksField=false}) => {
+const LeaveRequestDetails = ({ leave, show, onClose, showRemarksField=false, isQuery=false}) => {
     const ctx = useContext(StoreContext)
 
     return (
@@ -20,7 +20,7 @@ const LeaveRequestDetails = ({ leave, show, onClose, showRemarksField=false}) =>
             <p>Requested by:</p>
             <p>{ `${formatName(leave.requested_by)} - (${leave.requested_by.email})` }</p>
             <p>Duration:</p>
-            <p>{ duration(leave.start_time, leave.end_time) }</p>
+            <p>{ duration(leave) }</p>
             <p>Dates:</p>
             <p>{ `${formatDate(leave.start_time)} to ${formatDate(leave.end_time)}` }</p>
             <p>Reason:</p>
@@ -47,7 +47,7 @@ const LeaveRequestDetails = ({ leave, show, onClose, showRemarksField=false}) =>
         </div>}
 
 
-        <div class="flex gap-4 flex-3 justify-center text-lg mt-6">
+        { isQuery && <div class="flex gap-4 flex-3 justify-center text-lg mt-6">
 
             <button 
                 class="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">
@@ -57,7 +57,7 @@ const LeaveRequestDetails = ({ leave, show, onClose, showRemarksField=false}) =>
                 class="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">
                     Discard
             </button>
-        </div>
+        </div>}
         </Modal>
     )
 }
