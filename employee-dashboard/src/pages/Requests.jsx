@@ -5,7 +5,7 @@ import { client } from "../services/client"
 import toast from "react-hot-toast"
 import StoreContext from "../store/StoreContext"
 import LeaveRequestDetails from "../components/LeaveRequestDetails"
-
+// leave requests details
 const Requests = () => {
 
     const ctx = useContext(StoreContext)
