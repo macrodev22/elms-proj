@@ -93,7 +93,7 @@ const action = (action) => {
                     <li>{{ r.hr_remarks }} <span class="text-gray-400 text-sm"
                             v-html="`${formatName(r.sent_by)} on ${formatDate(r.created_at, true, true, true)}`">
                         </span></li>
-                    <li v-if="r.supervisor_remarks" class="ml-2 text-purple-500">
+                    <li v-if="r.supervisor_remarks" class="ml-2 text-sky-500">
                         {{ r.supervisor_remarks }} <span class="text-gray-400 text-sm"
                             v-html="`${formatName(r.sent_to)} on ${formatDate(r.updated_at, true, true, true)}`"></span>
                     </li>
