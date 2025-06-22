@@ -7,7 +7,7 @@ from company.serializers import CompanySerializer
 class UserMinimalSerializer(ModelSerializer):
     class Meta:
         model = User 
-        exclude = ['groups', 'password', 'user_permissions', 'is_superuser', 'is_staff', 'last_login']
+        fields = ['first_name', 'middle_name', 'last_name', 'email', 'role', 'contact', 'gender']
 
 class UserSerializer(ModelSerializer):
 

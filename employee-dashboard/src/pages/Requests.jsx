@@ -27,6 +27,7 @@ const Requests = () => {
     const [showDetails, setShowDetails] = useState(false)
     const [selectedIsQuery, setSelectedIsQuery] = useState(false)
     const [selectedQueryId, setSelectedQueryId] = useState(null)
+    const [selectedQueryHRUser, setSelectedQueryHRUser] = useState(null)
     const [supervisorRemarks, setSupervisorRemarks] = useState("")
     const [hrRemarks, setHrRemarks] = useState("")
     const [hrRemarksDate, setHrRemarksDate] = useState("")
@@ -37,12 +38,13 @@ const Requests = () => {
 
     const {requests, queries} = ctx 
 
-    const onSelectLeave = (leave, isQuery,queryId, hrRemarks, hrRemarksDate) => {
+    const onSelectLeave = (leave, isQuery,queryId, hrRemarks, hrRemarksDate, hrUser) => {
         setSelectedRequest(leave)
         setSelectedIsQuery(isQuery)
         setSelectedQueryId(queryId)
         setHrRemarks(hrRemarks)
         setHrRemarksDate(hrRemarksDate)
+        setSelectedQueryHRUser(hrUser)
         setShowDetails(true)
     }
 
@@ -57,12 +59,13 @@ const Requests = () => {
         onSetSupervisorRemarks={setSupervisorRemarks}
         hrRemarks={hrRemarks}
         hrRemarksDate={hrRemarksDate}
+        hrUser={selectedQueryHRUser}
         />
         <Card className="relative mt-[-40px] md:mt-[-80px]">
             { queries?.length && (
                 <>
                 <h2 className="font-semibold text-2xl mb-4">Queries to me</h2>
-                { queries.map(q => <LeaveRequestItem request={q.leave_request} key={q.id} onRefreshRequests={() => ctx.actions.fetchRequests() } onShowDetails={onSelectLeave} isQuery={true} queryId={q.id} hrRemarks={q.hr_remarks}  />) }
+                { queries.map(q => <LeaveRequestItem request={q.leave_request} key={q.id} onRefreshRequests={() => ctx.actions.fetchRequests() } onShowDetails={onSelectLeave} isQuery={true} queryId={q.id} hrRemarks={q.hr_remarks} hrRemarksDate={q.created_at} hrUser={q.sent_by}  />) }
                 </>
             ) }
             <h2 className="font-semibold text-2xl mb-4">My requests</h2>

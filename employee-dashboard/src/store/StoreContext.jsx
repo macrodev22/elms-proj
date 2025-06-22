@@ -111,7 +111,18 @@ const StoreContext = createContext({
             "hr_remarks": "Which papers are those?",
             "supervisor_remarks": null,
             "closed": false,
-            "sent_by": 3,
+            "sent_by": {
+                "first_name": "John",
+                "middle_name": "Fahrenheit",
+                "last_name": "Smite",
+                "email": "john@gmail.com",
+                "role": "HR",
+                "contact": {
+                    "mobile": "0764258147",
+                    "work": "0770123456"
+                },
+                "gender": "M"
+            },
             "sent_to": 4,
             "leave_process": 34
         },

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from leave.models import LeaveRequest,LeaveProcess,SupervisorQuery
 from leave.serializers import LeaveTypeSerializer
-from core.serializers import UserSerializer
+from core.serializers import UserSerializer,UserMinimalSerializer
 
 class LeaveRequestSerializerEmp(serializers.ModelSerializer):
     type = LeaveTypeSerializer(read_only=True)
@@ -26,6 +26,7 @@ class LeaveProcessSerializerEmp(serializers.ModelSerializer):
 class SupervisorQuerySerializerEmp(serializers.ModelSerializer):
 
     leave_request = LeaveRequestSerializerEmp(read_only=True)
+    sent_by = UserMinimalSerializer(read_only=True)
 
     class Meta:
         model = SupervisorQuery 
