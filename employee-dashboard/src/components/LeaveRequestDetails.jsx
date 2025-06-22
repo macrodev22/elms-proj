@@ -4,7 +4,7 @@ import { formatName, duration, formatDate } from "../utils";
 import { useContext } from "react";
 import StoreContext from "../store/StoreContext";
 
-const LeaveRequestDetails = ({ leave, show, onClose, showRemarksField=false, isQuery=false}) => {
+const LeaveRequestDetails = ({ leave, show, onClose, isQuery=false,}) => {
     const ctx = useContext(StoreContext)
 
     return (
@@ -40,24 +40,24 @@ const LeaveRequestDetails = ({ leave, show, onClose, showRemarksField=false, isQ
             </ul>
         </div>
 
-        { showRemarksField && <div>
+        { isQuery && <div>
             <textarea v-focus v-clear v-model="remark" name="remarks" id="remarks"
                 placeholder="Enter remarks for decided action"
                 class="w-full border-1 border-gray-200 rounded-md shadow-sm p-2 mt-6 focus:outline-1 focus:outline-blue-600"></textarea>
         </div>}
 
 
-        { isQuery && <div class="flex gap-4 flex-3 justify-center text-lg mt-6">
+        <div class="flex gap-4 flex-3 justify-center text-lg mt-6">
 
-            <button 
+            { isQuery && <button 
                 class="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">
                     Respond
-            </button>
-            <button
+            </button>}
+            <button onClick={onClose}
                 class="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">
-                    Discard
+                    Close
             </button>
-        </div>}
+        </div>
         </Modal>
     )
 }

@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 from auth.authentication import JWTAuth
 from core.models import User
@@ -40,6 +41,21 @@ class LeaveRequestsAPIView(APIView):
             leave_request.save()
 
         return Response(leave_request.data)
+    
+class LeaveSupervisorRemark(APIView):
+    authentication_classes = [JWTAuth] 
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        remarks = request.data.get("supervisor_remarks", None)
+        if remarks is None:
+            return Response({"detail": "Supervisor remarks are mandatory"}, status=status.HTTP_400_BAD_REQUEST)
+        user:User = request.user
+        query:SupervisorQuery = get_object_or_404(SupervisorQuery, pk=pk)
+        
+        query.supervisor_remarks = remarks
+        query.save()
+        return Response(SupervisorQuerySerializerEmp(query).data)
 
 
 class LeaveStatsAPIView(APIView):

@@ -28,16 +28,7 @@ const Requests = () => {
     const [selectedIsQuery, setSelectedIsQuery] = useState(false)
 
     useEffect(() => {
-        ctx.actions.fetchRequests()
-        // client.get('/employee/leave-requests')
-        // .then(({data}) => {
-        //     const {requests,queries} = data
-        //     ctx.setRequests(requests)
-        // })
-        // .catch(e => {
-        //     toast.error(`Error getting requests!\n${e.message}`)
-        // })
-        
+        ctx.actions.fetchRequests()    
     }, [])
 
     const {requests, queries} = ctx 
