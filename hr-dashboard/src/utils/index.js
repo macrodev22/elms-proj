@@ -41,8 +41,9 @@ export const getDurationLabel = (startDate, endDate) => {
     const diffHrs = Math.floor(diffSec/(60*60))
     const diffDays = Math.floor(diffHrs/24)
     const diffWeeks = diffDays/7
+    const days = diffMs / (1000*60*60*24)
 
-    return `${diffDays} Days`
+    return `${Math.ceil(days)} Days`
 }
 
 export const dateToCalendarFormat = (dateStr) => {

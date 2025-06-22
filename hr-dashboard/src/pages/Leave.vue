@@ -57,7 +57,7 @@ const sortLeavesByDates = (leaveHistory) => {
         const bStartTtime = new Date(b.start_time)
         const aCreationTime = new Date(a.requested_at)
         const bCreationTime = new Date(b.requested_at)
-        if (a.status_display == 'Pending') order -= 10
+        if (a.status_display == 'Pending') order -= 15
         if (aStartTime < bStartTtime) order -= 3
         if (aCreationTime < bCreationTime) order -= 2
         if (a.closed) order += 15
