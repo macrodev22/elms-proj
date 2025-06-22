@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from leave.models import LeaveRequest,LeaveProcess,LeaveType
-from leave.serializers import LeaveTypeSerializer
+from leave.models import LeaveRequest,LeaveProcess,SupervisorQuery
+from leave.serializers import LeaveTypeSerializer,SupervisorQuerySerializer
 from core.models import User
 
 
@@ -14,19 +14,26 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
     requested_by = UserSerializer(read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     supervisor_remarks = serializers.SerializerMethodField()
+    hr_remarks = serializers.SerializerMethodField()
     supervisor = serializers.SerializerMethodField()
 
     class Meta:
         model = LeaveRequest 
         fields = '__all__'
         
-    def get_supervisor_remarks(self, obj:LeaveRequest):
+    def get_hr_remarks(self, obj:LeaveRequest):
         leave_processes = LeaveProcess.objects.filter(leave_request=obj).order_by('-created_at')
 
         remarks = [
-            {"message": lp.remarks, "date": lp.created_at, "user": UserSerializer(lp.processed_by).data}
-              for lp in leave_processes if lp.remarks]
+            {"message": lp.remarks, "action": lp.action_taken, "date": lp.created_at, "user": UserSerializer(lp.processed_by).data}
+              for lp in leave_processes if (lp.remarks and lp.action_taken != 'SEND')]
         return remarks 
+    
+    def get_supervisor_remarks(self, obj:LeaveRequest):
+        supervisor_queries = SupervisorQuery.objects.filter(leave_request=obj)
+
+        serializer = SupervisorQuerySerializer(supervisor_queries, many=True)
+        return serializer.data
     
     def get_supervisor(self, obj:LeaveRequest):
         user = obj.requested_by

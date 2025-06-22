@@ -73,17 +73,31 @@ const action = (action) => {
             <p>{{ leave.reason }}</p>
         </div>
 
-        <div class="mt-4" v-if="leave.supervisor_remarks">
-            <label for="supervisor-remarks" class="font-semibold">Supervisor remarks <span
-                    class="text-gray-600 font-normal">{{ `(${formatName(leave.supervisor)}, ${leave.supervisor.email})`
-                    }}</span></label>
-            <ul id="supervisor-remarks"
+        <div class="mt-4">
+            <p for="supervisor-remarks" class="font-semibold">Supervisor <span class="text-gray-600 font-normal">{{
+                `(${formatName(leave.supervisor)}, ${leave.supervisor.email})`
+                    }}</span></p>
+            <ul id="hr-remarks"
                 class="w-full mt-2 border-1 border-gray-100 rounded-md p-2 max-h-100 overflow-y-auto text-orange-500 focus:outline-none">
-                <li v-for="r in leave.supervisor_remarks" class="bg-slate-50 rounded-sm p-1 my-1">{{ r.message }} <span
+                <li class="font-semibold text-gray-500 italic">HR Remarks</li>
+                <li v-for="r in leave.hr_remarks" class="bg-slate-50 rounded-sm p-1 my-1">{{ r.message }} <span
                         class="text-gray-400 text-sm"
                         v-html="`on (${formatDate(r.date, true, true, true)}) by ${formatName(r.user)}`">
 
                     </span></li>
+            </ul>
+            <ul id="supervisor-remarks"
+                class="w-full mt-2 border-1 border-gray-100 rounded-md p-2 max-h-100 overflow-y-auto text-orange-500 focus:outline-none">
+                <li class="font-semibold text-gray-500 italic">Supervisor remarks</li>
+                <ul v-for="r in leave.supervisor_remarks" class="bg-slate-50 rounded-sm p-1 my-1">
+                    <li>{{ r.hr_remarks }} <span class="text-gray-400 text-sm"
+                            v-html="`${formatName(r.sent_by)} on ${formatDate(r.created_at, true, true, true)}`">
+                        </span></li>
+                    <li v-if="r.supervisor_remarks" class="ml-2 text-purple-500">
+                        {{ r.supervisor_remarks }} <span class="text-gray-400 text-sm"
+                            v-html="`${formatName(r.sent_to)} on ${formatDate(r.updated_at, true, true, true)}`"></span>
+                    </li>
+                </ul>
             </ul>
         </div>
 
