@@ -26,6 +26,10 @@ const Requests = () => {
         })
     const [showDetails, setShowDetails] = useState(false)
     const [selectedIsQuery, setSelectedIsQuery] = useState(false)
+    const [selectedQueryId, setSelectedQueryId] = useState(null)
+    const [supervisorRemarks, setSupervisorRemarks] = useState("")
+    const [hrRemarks, setHrRemarks] = useState("")
+    const [hrRemarksDate, setHrRemarksDate] = useState("")
 
     useEffect(() => {
         ctx.actions.fetchRequests()    
@@ -33,20 +37,32 @@ const Requests = () => {
 
     const {requests, queries} = ctx 
 
-    const onSelectLeave = (leave, isQuery) => {
+    const onSelectLeave = (leave, isQuery,queryId, hrRemarks, hrRemarksDate) => {
         setSelectedRequest(leave)
         setSelectedIsQuery(isQuery)
+        setSelectedQueryId(queryId)
+        setHrRemarks(hrRemarks)
+        setHrRemarksDate(hrRemarksDate)
         setShowDetails(true)
     }
 
     return (
         <>
-        <LeaveRequestDetails show={showDetails} leave={selectedRequest} onClose={() => setShowDetails(false)} isQuery={selectedIsQuery} />
+        <LeaveRequestDetails show={showDetails} 
+        leave={selectedRequest} 
+        onClose={() => setShowDetails(false)} 
+        isQuery={selectedIsQuery} 
+        onRespond={() => ctx.actions.updateSupervisorQuery(selectedQueryId, supervisorRemarks)} 
+        supervisorRemarks={supervisorRemarks}
+        onSetSupervisorRemarks={setSupervisorRemarks}
+        hrRemarks={hrRemarks}
+        hrRemarksDate={hrRemarksDate}
+        />
         <Card className="relative mt-[-40px] md:mt-[-80px]">
             { queries?.length && (
                 <>
                 <h2 className="font-semibold text-2xl mb-4">Queries to me</h2>
-                { queries.map(q => <LeaveRequestItem request={q.leave_request} key={q.id} onRefreshRequests={() => ctx.actions.fetchRequests() } onShowDetails={onSelectLeave} isQuery={true} />) }
+                { queries.map(q => <LeaveRequestItem request={q.leave_request} key={q.id} onRefreshRequests={() => ctx.actions.fetchRequests() } onShowDetails={onSelectLeave} isQuery={true} queryId={q.id} hrRemarks={q.hr_remarks}  />) }
                 </>
             ) }
             <h2 className="font-semibold text-2xl mb-4">My requests</h2>

@@ -4,7 +4,7 @@ import { formatName, duration, formatDate } from "../utils";
 import { useContext } from "react";
 import StoreContext from "../store/StoreContext";
 
-const LeaveRequestDetails = ({ leave, show, onClose, isQuery=false,}) => {
+const LeaveRequestDetails = ({ leave, show, onClose, onRespond, isQuery=false, hrRemarks='', hrRemarksDate='',supervisorRemarks = '', onSetSupervisorRemarks=()=>{}, }) => {
     const ctx = useContext(StoreContext)
 
     return (
@@ -14,7 +14,7 @@ const LeaveRequestDetails = ({ leave, show, onClose, isQuery=false,}) => {
             </span>}
             <StatusChip status={leave.status_display} />
         </div>
-        <div class="grid grid-cols-[1fr_3fr] gap-x-2 gap-y-2">
+        <div className="grid grid-cols-[1fr_3fr] gap-x-2 gap-y-2">
             <p>Type:</p>
             <p>{ leave.type.name }</p>
             <p>Requested by:</p>
@@ -27,34 +27,33 @@ const LeaveRequestDetails = ({ leave, show, onClose, isQuery=false,}) => {
             <p>{ leave.reason }</p>
         </div>
 
-        <div class="mt-4" v-if="leave.supervisor_remarks">
-            <label for="supervisor-remarks" class="font-semibold">Supervisor remarks <span
-                    class="text-gray-600 font-normal">{formatName(ctx.auth.user.supervisor)}</span></label>
+        <div className="mt-4">
+            <label for="supervisor-remarks" className="font-semibold">Supervisor remarks <span
+                    className="text-gray-600 font-normal">{formatName(ctx.auth.user.supervisor)}</span></label>
             <ul id="supervisor-remarks"
-                class="w-full mt-2 border-1 border-gray-100 rounded-md p-2 max-h-100 overflow-y-auto text-orange-500 focus:outline-none">
-                {leave.supervisor_remarks && leave.supervisor_remarks.map(r => <li class="bg-slate-50 rounded-sm p-1 my-1">{ r.message } <span
-                        class="text-gray-400 text-sm"
-                        v-html="`on (${formatDate(r.date, true, true, true)}) by ${formatName(r.user)}`">
-
-                </span></li>) }
+                className="w-full mt-2 border-1 border-gray-100 rounded-md p-2 max-h-100 overflow-y-auto text-orange-500 focus:outline-none">
+                {hrRemarks && <li className="bg-slate-50 rounded-sm p-1 my-1">{ hrRemarks } <span
+                        className="text-gray-400 text-sm">
+                    {`on (${formatDate(hrRemarksDate, true)}) by ${formatName(leave.requested_by.supervisor)}`}
+                </span></li> }
             </ul>
         </div>
 
         { isQuery && <div>
             <textarea v-focus v-clear v-model="remark" name="remarks" id="remarks"
-                placeholder="Enter remarks for decided action"
-                class="w-full border-1 border-gray-200 rounded-md shadow-sm p-2 mt-6 focus:outline-1 focus:outline-blue-600"></textarea>
+                placeholder="Enter remarks for decided action" value={supervisorRemarks} onChange={(e) => onSetSupervisorRemarks(e.target.value)}
+                className="w-full border-1 border-gray-200 rounded-md shadow-sm p-2 mt-6 focus:outline-1 focus:outline-blue-600"></textarea>
         </div>}
 
 
-        <div class="flex gap-4 flex-3 justify-center text-lg mt-6">
+        <div className="flex gap-4 flex-3 justify-center text-lg mt-6">
 
-            { isQuery && <button 
-                class="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">
+            { isQuery && <button onClick={onRespond}
+                className="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">
                     Respond
             </button>}
             <button onClick={onClose}
-                class="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">
+                className="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">
                     Close
             </button>
         </div>

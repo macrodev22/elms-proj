@@ -16,7 +16,7 @@ const formatDateRange = (request) => {
 
 const ReactSwal = withReactContent(Swal)
 
-const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails, isQuery=false }) => {
+const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails, isQuery=false, queryId=null, hrRemarks='', hrRemarksDate='' }) => {
     
     const onDeleteRequest = () => {
         ReactSwal.fire({
@@ -34,7 +34,7 @@ const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails, isQuery=f
                 toast.promise(del, {
                     loading: 'Deleting leave request...',
                     success: 'The leave request has been closed successfully.\nNo more actions will be possible on it',
-                    error: e => `Error deleting leave request!\n${e.response.data.detail || e.message }`
+                    error: e => `Error deleting leave request!\n${e.response?.data?.detail || e.message }`
                 }).finally(() => {
                     onRefreshRequests()
                 })
@@ -51,7 +51,7 @@ const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails, isQuery=f
             <span className="flex-[3] truncate hidden sm:block">{ request.reason }</span>
             <span className="flex-[2]"><StatusChip status={request.status_display} /></span>
             <div className="flex gap-2">
-                <LeaveClosedChip onClick={() => onShowDetails(request, isQuery)} isClosed={request.closed} />
+                <LeaveClosedChip onClick={() => onShowDetails(request, isQuery, queryId, hrRemarks, hrRemarksDate)} isClosed={request.closed} />
                 <IconButton type="delete" onClick={onDeleteRequest} />
             </div>
         </div>
