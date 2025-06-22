@@ -23,7 +23,7 @@ class LeaveRequestsAPIView(APIView):
         user:User = request.user
         leave_requests = user.leave_requests.order_by('-requested_at')
 
-        queries = user.supervisor_queries_received.order_by('-created_at').all()
+        queries = user.supervisor_queries_received.order_by('-created_at').filter(supervisor_remarks=None)
 
         return Response({ 
             "user": UserSerializer(user).data,
