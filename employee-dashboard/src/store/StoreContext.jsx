@@ -1,5 +1,6 @@
 import { useState, createContext } from "react";
 import { client } from "../services/client";
+import toast from "react-hot-toast";
 
 
 const StoreContext = createContext({
@@ -129,6 +130,7 @@ const StoreContext = createContext({
         fetchRequests(){},
         fetchUser(){},
         fetchStats(){},
+        updateSupervisorQuery(queryId, supervisorRemarks){ queryId && supervisorRemarks },
     }
 })
 
@@ -177,6 +179,17 @@ export const StoreContextProvider = (props) => {
         })
     }
 
+    const updateSupervisorQuery = (queryId, supervisorRemarks) => {
+        client.post(`/employee/supervisor-remark/${queryId}`, {
+            "supervisor_remarks": supervisorRemarks
+        }).then(() => {
+            fetchRequests()
+        }).catch(e => {
+            toast.error(`Error making supervisor remarks\n${e.responseText?.detail | e.status}`)
+        })
+
+    }
+
     return <StoreContext.Provider value={{
         auth: { user: user, token: token },
         requests,
@@ -194,6 +207,7 @@ export const StoreContextProvider = (props) => {
             fetchRequests,
             fetchUser,
             fetchStats,
+            updateSupervisorQuery,
         }
     }}>
         {props.children}
