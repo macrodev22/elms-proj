@@ -81,7 +81,7 @@ function ProfilePicture() {
             </button>
             <div className="flex flex-col">
                 <p className="font-bold text-md truncate">{formatName(ctx.auth.user)}</p>
-                <p className="font-normal text-sm">{ ctx.auth.user.email}</p>
+                <p className="font-normal text-sm truncate">{ ctx.auth.user.email}</p>
             </div>
             <div className="h-[55px] w-[55px] rounded-full overflow-hidden">
                 <img className="object-cover w-full h-full" src={formatPhoto(ctx.auth.user)} alt="profile picture" />
