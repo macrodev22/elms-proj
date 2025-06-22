@@ -230,9 +230,13 @@ class LeaveActionAPIView(APIView):
 
         # Add Supervisor Query for SEND
         if action_code == 'SEND':
-            supervisor = leave.requested_by.supervisor
+            supervisor:User = leave.requested_by.supervisor
             supervisor_query = SupervisorQuery.objects.create(sent_by=user, sent_to=supervisor, hr_remarks=remarks, leave_process=leave_process, leave_request=leave)
             supervisor_query.save()
+            # Notify supervisor by mail
+            subject = f"{user.first_name} has sent you a query on {leave.requested_by.first_name}'s leave request"
+            message = f"Dear {supervisor.first_name},\n\nYou have a leave request query from {user.first_name} on a {leave.type.name} request made by {leave.requested_by.first_name}.\nLeave is requested from {leave.start_time} to {leave.end_time}.\n\nRegards\nELMS on behalf of {user.company.name} HR"
+            send_leave_notification(supervisor.email, subject, message)
 
         serializer = LeaveProcessSerializer(leave_process)
 
