@@ -1,5 +1,6 @@
 <script setup>
-import { reactive, ref, onBeforeMount, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
+import { useStore } from '../store';
 import { client, getCompanyDepartments } from '../services/client'
 import { toast } from 'vue3-toastify';
 import Modal from './Modal.vue';
@@ -8,6 +9,7 @@ import DropDownField from './DropDownField.vue';
 import SpinnerButton from './SpinnerButton.vue';
 import profilePhotoGeneric from '../assets/generic_profile_photo.jpg';
 
+const store = useStore()
 
 const { show } = defineProps({
     show: { type: Boolean, default: false },
@@ -97,6 +99,7 @@ const saveEmployee = () => {
         })
         .finally(() => {
             isLoading.value = false
+            store.setTeamAvailability()
         })
 }
 
