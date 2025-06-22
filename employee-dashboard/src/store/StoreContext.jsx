@@ -185,7 +185,7 @@ export const StoreContextProvider = (props) => {
         }).then(() => {
             fetchRequests()
         }).catch(e => {
-            toast.error(`Error making supervisor remarks\n${e.responseText?.detail | e.status}`)
+            toast.error(`Error making supervisor remarks\n${e.response?.data?.detail | e.status}`)
         })
 
     }
