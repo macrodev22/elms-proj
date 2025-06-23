@@ -79,7 +79,7 @@ function ProfilePicture() {
             <button className="cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
                 <ChevronDownIcon className="size-6" />
             </button>
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-1 overflow-hidden">
                 <p className="font-bold text-md truncate">{formatName(ctx.auth.user)}</p>
                 <p className="font-normal text-sm truncate">{ ctx.auth.user.email}</p>
             </div>
