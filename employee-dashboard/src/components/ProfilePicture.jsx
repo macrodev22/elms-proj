@@ -35,7 +35,7 @@ const ProfileDetails = ({ show, onClose }) => {
     }
 
     return (
-         show && (<div className="rounded-md bg-gray-50 flex flex-col items-center p-4 absolute z-100 min-w-[100%] w-[max-content] right-0 top-[100%]">
+         show && (<div className="rounded-md bg-gray-50 flex flex-col items-center p-4 absolute z-100 min-w-[100%] w-[max-content] right-[50%] translate-x-[50%] md:right-0 md:translate-x-0 top-[100%]">
             <h4 className="font-semibold text-lg">Profile</h4>
             <div className="mt-4 grid gap-x-2 grid-cols-[1fr_2fr] [&>div:nth-child(odd)]:font-semibold">
                 <div>Company:</div>
