@@ -7,6 +7,7 @@ from django.db import IntegrityError
 from core.models import User
 from company.models import Company
 from auth.authentication import JWTAuth
+from . import utils
 
 def render_dashboard(static_path:str):
     def handler(req):
@@ -120,10 +121,12 @@ def send_reset_password_token(req):
         user = User.objects.filter(email=email).first()
         if user is not None:
             # Generate temp email reset token
-            token = "JWTTempToken"
-            email_message = f"You have requested a password reset.\nClick the lick below to reset your password\n{req.get_host()}/reset-password/{token}"
-            send_mail("Your password reset link", email_message, settings.DEFAULT_FROM_EMAIL, [user.email])
+            token = JWTAuth.generate_password_reset_token(user.id)
+            reset_link = f"{req.scheme}://{req.get_host()}/reset-password/{token}"
+            email_message = f"You have requested a password reset.\n\nClick the lick below to reset your password\n\n{reset_link}"
+            html_email_message = utils.email_password_reset_link_html(reset_link)
+            send_mail("Your password reset link", email_message, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=html_email_message)
 
-        message = f"A password reset link has been sent to {email} if a user with this email is exits"
+        message = f"A password reset link has been sent to {email} if a user with this email is exists"
 
         return render(req,template_name="forgot_password.html", context={'message': message})

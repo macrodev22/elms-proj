@@ -47,4 +47,13 @@ class JWTAuth(BaseAuthentication):
 
         return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
     
+    @staticmethod
+    def generate_password_reset_token(user_id):
+        payload = {
+            "uid": user_id,
+            "iat": datetime.datetime.now(),
+            "exp": datetime.datetime.now() + datetime.timedelta(minutes=10)
+        }
+        return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+    
     
