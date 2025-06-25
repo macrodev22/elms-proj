@@ -4,6 +4,7 @@ from .views import get_started,hr_dashboard,employee_dashboard,login
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name="index.html")),
+    path('forgot-password', TemplateView.as_view(template_name="forgot_password.html")),
     path('login', login),
     path('start', get_started),
     path('hr', hr_dashboard),

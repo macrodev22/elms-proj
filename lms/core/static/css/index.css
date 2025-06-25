@@ -195,6 +195,28 @@ main {
     color: #F5FDFF;
 }
 
+.headline-text {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.headline-text ~ p {
+    margin-bottom: 2rem;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.link, .link:visited, .link:link {
+    color: #0067B8;
+    text-decoration: none;
+}
+
+.link:hover, .link:active {
+    text-decoration: underline;
+}
+
 #download-progress-wrapper {
     position: fixed;
     bottom: 0;
