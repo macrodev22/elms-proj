@@ -55,6 +55,8 @@ const ProfileDetails = ({ show, onClose }) => {
                 <div> { ctx.auth.user.gender_display }</div>
                 <div>Designation:</div>
                 <div>{ ctx.auth.user.designation }</div>
+                <div>Supervisor:</div>
+                <div>{ formatName(ctx.auth.user.supervisor) }</div>
             </div>
             <div className="flex justify-between w-full mt-6">
                 <button onClick={logout} className="bg-red-400 text-white text-2xl py-1 px-4 rounded-md hover:bg-red-500">Logout</button>

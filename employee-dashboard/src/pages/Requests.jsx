@@ -3,6 +3,7 @@ import Card from "../components/Card"
 import LeaveRequestItem from "../components/LeaveRequestItem"
 import StoreContext from "../store/StoreContext"
 import LeaveRequestDetails from "../components/LeaveRequestDetails"
+import toast from "react-hot-toast"
 // leave requests details
 const Requests = () => {
 
@@ -37,7 +38,13 @@ const Requests = () => {
     }, [])
 
     const {requests, queries} = ctx 
-
+    const onRespond = () => {
+        if (supervisorRemarks.trim() == '') {
+            return toast.error('Supervisor remarks are required to respond')
+        }
+        ctx.actions.updateSupervisorQuery(selectedQueryId, supervisorRemarks)
+        setSupervisorRemarks('')
+    }
     const onSelectLeave = (leave, isQuery,queryId, hrRemarks, hrRemarksDate, hrUser) => {
         setSelectedRequest(leave)
         setSelectedIsQuery(isQuery)
@@ -54,7 +61,7 @@ const Requests = () => {
         leave={selectedRequest} 
         onClose={() => setShowDetails(false)} 
         isQuery={selectedIsQuery} 
-        onRespond={() => ctx.actions.updateSupervisorQuery(selectedQueryId, supervisorRemarks)} 
+        onRespond={onRespond} 
         supervisorRemarks={supervisorRemarks}
         onSetSupervisorRemarks={setSupervisorRemarks}
         hrRemarks={hrRemarks}

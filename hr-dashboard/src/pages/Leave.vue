@@ -34,8 +34,8 @@ onBeforeMount(() => {
             store.leaveHistory = res.data
         })
         .catch(e => {
-            // router.push('/login')
             toast.error(`Error getting leave history! \n${e.response.data.detail}`)
+            router.push('/login')
             console.error(e)
         })
 })
