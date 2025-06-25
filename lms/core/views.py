@@ -88,15 +88,16 @@ def login(req):
             return render(req, "login.html", context={ "errors": ['Wrong credentials!🥲'] })
 
         if user.role == 'EM':
-            # TODO add auth and redirect to employee
             token = JWTAuth.generate_token(user.id)
             response = render_dashboard("employee_dashboard/index.html")(req)
             response.set_cookie('token', token)
             return response
         
         elif user.role == 'HR':
-            # TODO add auth and redirect to hr
-            return render_dashboard("hr_dashboard/index.html")(req)
+            token = JWTAuth.generate_token(user.id)
+            response = render_dashboard("hr_dashboard/index.html")(req)
+            response.set_cookie('token', token)
+            return response
         else:
             return render(req, "login.html", context={ "errors": ['This user can not log in from here. Use admin panel'] })
         
@@ -122,7 +123,7 @@ def send_reset_password_token(req):
             token = "JWTTempToken"
             email_message = f"You have requested a password reset.\nClick the lick below to reset your password\n{req.get_host()}/reset-password/{token}"
             send_mail("Your password reset link", email_message, settings.DEFAULT_FROM_EMAIL, [user.email])
-            
+
         message = f"A password reset link has been sent to {email} if a user with this email is exits"
 
         return render(req,template_name="forgot_password.html", context={'message': message})
