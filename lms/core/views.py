@@ -130,3 +130,12 @@ def send_reset_password_token(req):
         message = f"A password reset link has been sent to {email} if a user with this email is exists"
 
         return render(req,template_name="forgot_password.html", context={'message': message})
+    
+def reset_password(req, token):
+    user, token_jwt = JWTAuth().authenticate(req)
+
+    if user is None:
+        return render(template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'The password reset link token is invalid'}})
+    else:
+        return render(template_name="reset_password.html", context={'error': {'has_error': False, 'detail':''}, 'token': token_jwt})
+    
