@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.core.mail import send_mail
+from django.conf import settings
 from django.http import HttpResponse
 from pathlib import Path
 from django.db import IntegrityError
@@ -107,3 +109,20 @@ def employee_dashboard(req):
     index_file_path = Path(__file__).resolve().parent / "static" / "employee_dashboard" / "index.html"
     with open(index_file_path, 'r', encoding='utf-8') as f:
         return HttpResponse(f.read())
+    
+def send_reset_password_token(req):
+    if(req.method == 'POST'):
+        data = req.POST
+        email = data.get('email')
+        if email is None:
+            return render(req, template_name="forgot_password.html", context={'message': 'Provide a valid email'})
+        user = User.objects.filter(email=email).first()
+        if user is not None:
+            # Generate temp email reset token
+            token = "JWTTempToken"
+            email_message = f"You have requested a password reset.\nClick the lick below to reset your password\n{req.get_host()}/reset-password/{token}"
+            send_mail("Your password reset link", email_message, settings.DEFAULT_FROM_EMAIL, [user.email])
+            
+        message = f"A password reset link has been sent to {email} if a user with this email is exits"
+
+        return render(req,template_name="forgot_password.html", context={'message': message})
