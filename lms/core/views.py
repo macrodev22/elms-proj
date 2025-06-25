@@ -132,8 +132,11 @@ def send_reset_password_token(req):
         return render(req,template_name="forgot_password.html", context={'message': message})
     
 def reset_password(req, token):
-    user, token_jwt = JWTAuth().authenticate(req)
-
+    try:
+        user, token_jwt = JWTAuth().authenticate(req)
+    except:
+        user = None
+    
     if user is None:
         return render(template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'The password reset link token is invalid'}})
     else:
