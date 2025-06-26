@@ -44,19 +44,19 @@ const action = (action) => {
     }
 
     isLoading.value = true
-    loadingToatId = toast.loading('Actioning the leave request', { timeout: -1 })
+    loadingToatId = toast.loading('Actioning the leave request', { timeout: -1, position: 'top-center', theme: toast.THEME.COLORED })
     client.post(`/hr/leave-action/${leave.id}`, payload)
         .then(({ data }) => {
             store.setLeaveHistory()
-            toast.success(data.detail, { position: toast.POSITION.TOP_CENTER, theme: toast.THEME.COLORED })
+            toast.update(loadingToatId, { type: 'success', isLoading: false, autoClose: 2000, render: data.detail })
         })
         .catch(e => {
             console.error('action leave', e)
-            toast.error(`${e.response?.data[0] || e.message}`)
+            toast.update(loadingToatId, { type: 'error', isLoading: false, autoClose: 2000, render: `${e.response?.data?.detail | e.message}` })
+            // toast.error(`${e.response?.data[0] || e.message}`)
         })
         .finally(() => {
             isLoading.value = false
-            toast.update(loadingToatId, { type: 'success', isLoading: false, autoClose: 1000 })
         })
 }
 
