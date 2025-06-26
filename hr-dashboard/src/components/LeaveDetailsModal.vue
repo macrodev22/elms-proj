@@ -8,6 +8,8 @@ import StatusChip from './StatusChip.vue';
 import { client } from '../services/client';
 
 const store = useStore()
+const isLoading = ref(false)
+let loadingToatId
 
 const emit = defineEmits(['close-modal'])
 
@@ -41,6 +43,8 @@ const action = (action) => {
         action,
     }
 
+    isLoading.value = true
+    loadingToatId = toast.loading('Actioning the leave request', { timeout: -1 })
     client.post(`/hr/leave-action/${leave.id}`, payload)
         .then(({ data }) => {
             store.setLeaveHistory()
@@ -49,6 +53,10 @@ const action = (action) => {
         .catch(e => {
             console.error('action leave', e)
             toast.error(`${e.response?.data[0] || e.message}`)
+        })
+        .finally(() => {
+            isLoading.value = false
+            toast.update(loadingToatId, { type: 'success', isLoading: false, autoClose: 1000 })
         })
 }
 

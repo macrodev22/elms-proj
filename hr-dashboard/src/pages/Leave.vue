@@ -13,14 +13,12 @@ import { onBeforeMount, ref } from 'vue';
 import { useStore } from '../store';
 import { client } from '../services/client';
 import { toast } from 'vue3-toastify';
-import { useRouter } from 'vue-router';
 import Card from '../components/Card.vue';
 import LeaveItem from '../components/LeaveItem.vue';
 import LeaveDetailsModal from '../components/LeaveDetailsModal.vue';
 import QuickActionModal from '../components/QuickActionModal.vue';
 
 const store = useStore()
-const router = useRouter()
 
 const selectedLeave = ref(null)
 const showLeaveDetails = ref(false)
@@ -35,7 +33,6 @@ onBeforeMount(() => {
         })
         .catch(e => {
             toast.error(`Error getting leave history! \n${e.response.data.detail}`)
-            // router.push('/login')
             store.showLoginModal = true
             console.error(e)
         })
