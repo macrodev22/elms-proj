@@ -38,7 +38,7 @@ const LeaveRequestDetails = ({ leave, show, onClose, onRespond, isQuery=false, h
 
         { isQuery && <div>
             <textarea name="remarks" id="remarks"
-                placeholder="Enter remarks for decided action" value={supervisorRemarks} onChange={(e) => onSetSupervisorRemarks(e.target.value)}
+                placeholder="Enter supervisor response" value={supervisorRemarks} onChange={(e) => onSetSupervisorRemarks(e.target.value)}
                 className="w-full border-1 border-gray-200 rounded-md shadow-sm p-2 mt-6 focus:outline-1 focus:outline-blue-600"></textarea>
         </div>}
 
