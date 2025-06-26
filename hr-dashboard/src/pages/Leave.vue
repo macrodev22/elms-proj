@@ -32,7 +32,7 @@ onBeforeMount(() => {
             store.leaveHistory = res.data
         })
         .catch(e => {
-            toast.error(`Error getting leave history! \n${e.response.data.detail}`)
+            toast.error(`Error getting leave history! \n${e.response.data.detail}`, { position: toast.POSITION.TOP_CENTER })
             store.showLoginModal = true
             console.error(e)
         })

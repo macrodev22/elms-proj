@@ -37,6 +37,7 @@ const Stats = () => {
         .catch(e => {
             console.error(e)
             toast.error(`Error getting stats: ${e.toString()}`)
+            ctx.showLogin = true
         })
     }, [])
 
