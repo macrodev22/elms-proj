@@ -4,6 +4,7 @@ import { formatName, formatPhoto } from "../utils";
 
 export const useStore = defineStore('store', {
     state: () => ({
+        showLoginModal: false,
         auth: { 
           user: {
             id: null,

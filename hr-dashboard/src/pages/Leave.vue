@@ -35,7 +35,8 @@ onBeforeMount(() => {
         })
         .catch(e => {
             toast.error(`Error getting leave history! \n${e.response.data.detail}`)
-            router.push('/login')
+            // router.push('/login')
+            store.showLoginModal = true
             console.error(e)
         })
 })

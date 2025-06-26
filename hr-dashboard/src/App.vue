@@ -16,7 +16,7 @@ const store = useStore()
 const route = useRoute()
 
 const showAddEmployeeModal = ref(false)
-const showLoginModal = ref(false)
+// const showLoginModal = ref(false)
 
 onBeforeMount(() => {
   client.get('/auth/user')
@@ -32,7 +32,7 @@ onBeforeMount(() => {
     }).catch(e => {
       console.error('Not logged in', e)
       // toast.error(`Not logged in\n${e.message}`, { position: toast.POSITION.TOP_CENTER })
-      showLoginModal.value = true
+      store.showLoginModal = true
     })
 })
 
@@ -48,7 +48,7 @@ watch(() => store.auth.user, (newUser) => {
 <template>
   <div class="bg-green-100 py-2 px-12 relative">
     <AddEmployeeModal :show="showAddEmployeeModal" @close-modal="showAddEmployeeModal = false" />
-    <LoginModal :show="showLoginModal" @close-modal="showLoginModal = false" />
+    <LoginModal :show="store.showLoginModal" @close-modal="store.showLoginModal = false" />
     <div class="flex flex-col gap-6.5 items-center justify-between md:flex-row md:gap-0">
       <div class="h-12"><img src="/favicon.svg" alt="Logo" class="h-full"></div>
       <div class="flex flex-col sm:flex-row gap-6.5 items-stretch justify-between self-stretch my-[-8px]">
