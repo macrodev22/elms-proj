@@ -127,7 +127,7 @@ def send_reset_password_token(req):
             html_email_message = utils.email_password_reset_link_html(reset_link)
             send_mail("Your password reset link", email_message, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=html_email_message)
 
-        message = f"A password reset link has been sent to {email} if a user with this email exists"
+        message = f"Check your email. A password reset link has been sent to {email} if a user with this email exists."
 
         return render(req,template_name="forgot_password.html", context={'message': message})
     
