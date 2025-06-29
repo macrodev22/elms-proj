@@ -37,7 +37,13 @@ const StoreContext = createContext({
         },
         "gender": "M",
         "designation": "Human Resource Manager",
-        "department": 5,
+        "department": {
+            "id": 5,
+            "name": "Human Resource",
+            "min_active_employees": 1,
+            "company": 2,
+            "head": 6
+        },
         "supervised_by": 2,
         "supervisor": {
             "id": 2,

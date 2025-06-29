@@ -179,7 +179,7 @@ const updateUser = () => {
             </div>
 
             <div class="flex flex-col sm:flex-row gap-4">
-                <DropDownField name="department" label="Department" v-model="formFields.department"
+                <DropDownField name="department" label="Department" v-model="formFields.department.id"
                     :options="departments.map(d => ({ value: d.id, label: d.name }))" />
                 <DropDownField label="Role" name="role" :options="roles" v-model="formFields.role" />
                 <DropDownField label="Gender" name="gender" :options="genders" v-model="formFields.gender" />

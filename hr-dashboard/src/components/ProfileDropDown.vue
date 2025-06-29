@@ -39,7 +39,7 @@ const logout = () => {
             <p class="font-semibold">Role:</p>
             <p>{{ user?.role_display }}</p>
             <p class="font-semibold">Department</p>
-            <p></p>
+            <p>{{ user?.department?.name }}</p>
             <p class="font-semibold">Contact:</p>
             <div>
                 <p>Mob: {{ user?.contact.mobile }}</p>

@@ -126,7 +126,7 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
             </div>
 
             <div className="flex gap-4">
-                <InputField name="department" label="Department" value={department} disabled={true}
+                <InputField name="department" label="Department" value={department?.name} disabled={true}
                      />
                 <InputField label="Role" name="role" disabled={true} value={role_display}  />
                 <DropDown label="Gender" name="gender" options={[{value:'M', label:'Male'}, {value:'F', label: 'Female'}]} value={newGender} onChange={e => setNewGender(e.target.value)} />
