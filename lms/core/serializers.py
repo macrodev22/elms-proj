@@ -81,7 +81,7 @@ class PasswordChangeSerializer(serializers.Serializer):
         new_password = attrs.get("new_password")
         new_password_confirm = attrs.get("new_password_confirm")
         if new_password != new_password_confirm:
-            raise serializers.ValidationError({"new_password_confirm": "New password and new password confirmation do not match"})
+            raise serializers.ValidationError({"new_password_confirm": "Passwords do not match"})
         # Django validation
         user:User = self.context['request'].user
         validate_password(new_password, user)

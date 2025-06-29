@@ -3,6 +3,7 @@ import { ref, reactive, watch, toRaw } from 'vue';
 import { useStore } from '../store';
 import { client, getCompanyDepartments } from '../services/client';
 import { toast } from 'vue3-toastify';
+import { vScrollIntoView, vClear } from '../directives';
 import profilePhotoGeneric from '../assets/generic_profile_photo.jpg'
 import Modal from './Modal.vue';
 import FormField from './FormField.vue';
@@ -41,8 +42,11 @@ const formFields = reactive({
 const showChangePassword = ref(false)
 const newPassword = reactive({
     oldPassword: "",
+    oldPasswordErrors: [],
     newPassword: "",
+    newPasswordErrors: [],
     newPasswordConfirmation: "",
+    newPasswordConfirmationErrors: [],
 })
 
 watch(() => show, (val) => {
@@ -145,6 +149,33 @@ const updateUser = () => {
             isLoading.value = false
         })
 }
+
+const updatePassword = () => {
+    passwordIsLoading.value = true
+    client.post('/auth/change-password', {
+        "old_password": newPassword.oldPassword,
+        "new_password": newPassword.newPassword,
+        "new_password_confirm": newPassword.newPasswordConfirmation,
+    })
+        .then(({ data }) => {
+            toast.success(data?.detail, { position: toast.POSITION.TOP_CENTER })
+        })
+        .catch(e => {
+            console.error('password update', e)
+            newPassword.oldPasswordErrors = []
+            newPassword.newPasswordErrors = []
+            newPassword.newPasswordConfirmationErrors = []
+
+            toast.error(`Error changing password: ${e.status}`)
+            const { data } = e.response
+            if (data?.old_password) newPassword.oldPasswordErrors = data.old_password
+            if (data?.new_password) newPassword.newPasswordErrors = data.new_password
+            if (data?.new_password_confirm) newPassword.newPasswordConfirmationErrors = data.new_password_confirm
+        })
+        .finally(() => {
+            passwordIsLoading.value = false
+        })
+}
 </script>
 <template>
     <Modal title="Update profile" :show="show" @close-modal="emit('close-modal')">
@@ -199,10 +230,20 @@ const updateUser = () => {
         </form>
         <!-- Update password  -->
         <Button label="Change password" @click="showChangePassword = !showChangePassword" />
-        <form v-if="showChangePassword">
-            <FormField name="old_password" type="password" label="Old password" />
-            <FormField name="new_password" type="password" label="New password" />
-            <FormField name="new_password_confirm" type="password" label="New password confirmation" />
+        <form v-if="showChangePassword" @submit.prevent="updatePassword" v-scroll-into-view v-clear>
+            <FormField name="old_password" type="password" label="Old password" v-model="newPassword.oldPassword" />
+            <ul v-if="newPassword.oldPasswordErrors" class="text-sm text-red-500 mb-4 mt-[-1rem]">
+                <li v-for="e of newPassword.oldPasswordErrors">{{ e }}</li>
+            </ul>
+            <FormField name="new_password" type="password" label="New password" v-model="newPassword.newPassword" />
+            <ul v-if="newPassword.newPasswordErrors" class="text-sm text-red-500 mb-4 mt-[-1rem]">
+                <li v-for="e of newPassword.newPasswordErrors">{{ e }}</li>
+            </ul>
+            <FormField name="new_password_confirm" type="password" label="New password confirmation"
+                v-model="newPassword.newPasswordConfirmation" />
+            <ul v-if="newPassword.newPasswordConfirmationErrors" class="text-sm text-red-500 mb-4 mt-[-1rem]">
+                <li v-for="e of newPassword.newPasswordConfirmationErrors">{{ e }}</li>
+            </ul>
             <div class="flex mb-6 mt-2">
                 <SpinnerButton label="Set new password" :isLoading="passwordIsLoading" />
             </div>
