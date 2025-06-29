@@ -4,7 +4,7 @@ from rest_framework import exceptions,status,parsers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from core.serializers import UserSerializer
+from core.serializers import UserSerializer,PasswordChangeSerializer
 from company.serializers import CompanySerializer
 from leave.serializers import LeaveRequestSerializer,LeaveProcessSerializer
 from core.models import User
@@ -99,3 +99,13 @@ class ProfileAPIView(APIView):
             return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class PasswordChangeAPIView(APIView):
+    authentication_classes = [JWTAuth]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response({ "detail": "Password updated successfully" })

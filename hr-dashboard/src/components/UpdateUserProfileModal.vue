@@ -8,6 +8,7 @@ import Modal from './Modal.vue';
 import FormField from './FormField.vue';
 import DropDownField from './DropDownField.vue';
 import SpinnerButton from './SpinnerButton.vue';
+import Button from './Button.vue';
 import { ArrowPathIcon } from '@heroicons/vue/24/outline';
 
 const store = useStore()
@@ -33,8 +34,15 @@ const formFields = reactive({
     },
     gender: "",
     designation: null,
-    department: "",
+    department: { id: null },
     password: 'defaultpassword'
+})
+
+const showChangePassword = ref(false)
+const newPassword = reactive({
+    oldPassword: "",
+    newPassword: "",
+    newPasswordConfirmation: "",
 })
 
 watch(() => show, (val) => {
@@ -74,6 +82,7 @@ const profileImg = ref(null)
 const photoInput = ref(null)
 
 const isLoading = ref(false)
+const passwordIsLoading = ref(false)
 
 const initialDisplayedProfileImage = ref('')
 
@@ -186,6 +195,16 @@ const updateUser = () => {
             </div>
             <div class="flex mb-6 mt-2">
                 <SpinnerButton label="Update" :isLoading="isLoading" />
+            </div>
+        </form>
+        <!-- Update password  -->
+        <Button label="Change password" @click="showChangePassword = !showChangePassword" />
+        <form v-if="showChangePassword">
+            <FormField name="old_password" type="password" label="Old password" />
+            <FormField name="new_password" type="password" label="New password" />
+            <FormField name="new_password_confirm" type="password" label="New password confirmation" />
+            <div class="flex mb-6 mt-2">
+                <SpinnerButton label="Set new password" :isLoading="passwordIsLoading" />
             </div>
         </form>
     </Modal>
