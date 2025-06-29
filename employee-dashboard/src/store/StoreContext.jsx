@@ -147,7 +147,7 @@ const StoreContext = createContext({
 
 export const StoreContextProvider = (props) => {
 
-    const [user, setUser] = useState({id:17, company: 2, first_name:'Alexander', last_name: 'Kinyera'})
+    const [user, setUser] = useState({id:0, company: 2, first_name:'', last_name: ''})
     const [token, setToken] = useState('')
     const [requests, setRequests] = useState([])
     const [queries, setQueries] = useState([])
