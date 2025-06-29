@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer,SerializerMethodField
 from rest_framework import serializers
 
 from core.models import User
-from company.serializers import CompanySerializer
+from company.serializers import CompanySerializer,DepartmentSerializer
 
 class UserMinimalSerializer(ModelSerializer):
     class Meta:
@@ -15,6 +15,7 @@ class UserSerializer(ModelSerializer):
     role_display = serializers.CharField(source='get_role_display', read_only=True)
     gender_display = serializers.CharField(source='get_gender_display', read_only=True)
     supervisor = serializers.SerializerMethodField()
+    department = DepartmentSerializer(read_only=True)
 
     class Meta:
         model = User
