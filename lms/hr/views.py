@@ -30,8 +30,8 @@ class CreateEmployeeAPIView(APIView):
 
         if employee_serializer.is_valid(raise_exception=True):
             created_user:User = employee_serializer.save()
-            message = f"Hello {created_user.first_name},\n\nYour employee account at {created_user.company.name} has been created successfully\n\nLogin with the credentials below:\nEmail: {created_user.email}\nPassword: {data['password']}\n{request.scheme}//{request.get_host()}/login\n\nRegards..."
-            send_leave_notification(created_user.email, f"Your Employee Account has been created", message)
+            message = f"Hello {created_user.first_name},\n\nYour employee account at {created_user.company.name} has been created successfully\n\nLogin with the credentials below:\nEmail: {created_user.email}\nPassword: {data['password']}\n{request.scheme}://{request.get_host()}/login\n\nRegards..."
+            send_leave_notification(created_user.email, f"Your Employee Account at {user.company.name} has been created", message)
             return Response({'detail': 'success', "data": UserSerializer(created_user).data}, status=status.HTTP_201_CREATED)
 
 # Leave list view
