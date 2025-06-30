@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import LeaveRequestsAPIView,LeaveStatsAPIView,LeaveDeleteAPIView,LeavePatternAPIView,LeaveReportSummaryAPIView,LeaveSupervisorRemark
+from .views import LeaveRequestsAPIView,LeaveStatsAPIView,LeaveDeleteAPIView,LeavePatternAPIView,LeaveReportSummaryAPIView,LeaveSupervisorRemark,EmployeesOnLeaveAPIView
 
 urlpatterns = [
     path('leave-requests', LeaveRequestsAPIView.as_view()),
@@ -9,4 +9,5 @@ urlpatterns = [
     path('leave-pattern', LeavePatternAPIView.as_view()),
     path('leave/<int:pk>', LeaveDeleteAPIView.as_view()),
     path('reports/summary', LeaveReportSummaryAPIView.as_view()),
+    path('on-leave', EmployeesOnLeaveAPIView.as_view()),
 ]

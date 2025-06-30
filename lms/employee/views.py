@@ -161,3 +161,11 @@ class LeaveReportSummaryAPIView(APIView):
             "types": types
         }
         return Response(result)
+    
+class EmployeesOnLeaveAPIView(APIView):
+    def get(self, request):
+        now = timezone.now()
+        leave_today = LeaveRequest.objects.filter(start_time__lte=now, end_time__gte=now, closed=False, status='APPR')
+        employees = [l.requested_by for l in leave_today]
+
+        return Response(UserSerializer(employees, many=True, context={'request': request}).data)
