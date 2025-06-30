@@ -16,7 +16,7 @@ const approvedRequests = leaveData.reduce((p, c) => c.status == 'APPR' ? p + 1 :
 </script>
 
 <template>
-    <div class="flex gap-6 items-center justify-between rounded-md bg-gray-100 p-2 shadow-sm mb-4">
+    <div class="flex flex-col md:flex-row gap-6 items-center justify-between rounded-md bg-gray-100 p-2 shadow-sm mb-4">
         <div class="flex gap-2 items-center">
             <img :src="formatPhoto(employee.profile_picture_url, employee.gender)" :alt="employee.first_name"
                 class="size-22 rounded-full object-cover">
