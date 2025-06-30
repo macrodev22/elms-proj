@@ -139,6 +139,8 @@ def reset_password(req, token):
     
     if user is None:
         return render(template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'The password reset link token is invalid'}})
+    elif token_jwt != token:
+        return render(template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'The password reset link token is invalid'}})
     else:
         return render(template_name="reset_password.html", context={'error': {'has_error': False, 'detail':''}, 'token': token_jwt})
     
