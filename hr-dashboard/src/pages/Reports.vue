@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, computed } from 'vue';
+import { ref, onBeforeMount, onMounted, computed } from 'vue';
 import { client } from '../services/client';
 import { useStore } from '../store';
 import ReportCard from '../components/ReportCard.vue';
@@ -13,15 +13,22 @@ const company = computed(() => store.auth.user.company)
 
 const showEmployeeReport = ref(false)
 
-const weekly_employee_details = ref({
-    birthdays: 1,
-    pending_leave: 2,
-    days_used: 1,
-    days_left: 4
+const employee_details = ref({
+    departments: 0,
+    pending_leave: 0,
+    days_used: 0,
+    days_left: 0
 })
 
 onBeforeMount(() => {
     store.setEmployeeOverview()
+})
+
+onMounted(() => {
+    client.get('/company/departments')
+        .then(({ data }) => {
+            employee_details.value.departments = data.length
+        })
 })
 
 </script>
@@ -36,7 +43,7 @@ onBeforeMount(() => {
 
         <ReportCard title="Overview" @btn-click="showEmployeeReport = true">
             <div class="flex flex-col sm:grid sm:grid-cols-2 gap-x-4 gap-y-8">
-                <ReportStatChip item="Number of employees" :count="company.num_employees" />
+                <ReportStatChip item="Departments" :count="employee_details.departments" />
                 <ReportStatChip item="Employees on leave" :count="store.employeeOverview.employees_on_leave" />
                 <ReportStatChip item="Used leave days" :count="store.employeeOverview.used_leave_days" />
                 <ReportStatChip item="Unused leave days" :count="store.employeeOverview.remaining_leave_days" />
@@ -45,10 +52,10 @@ onBeforeMount(() => {
 
         <ReportCard title="Employee details">
             <div class="flex flex-col sm:grid sm:grid-cols-2 sm:grid-rows-2 gap-x-4 gap-y-8">
-                <ReportStatChip item="Birthdays" :count="weekly_employee_details.birthdays" />
+                <ReportStatChip item="Total employees" :count="company.num_employees" />
                 <ReportStatChip item="Registered employees" :count="company.registered_employees" />
-                <ReportStatChip item="Upcoming leaves" :count="weekly_employee_details.pending_leave" />
-                <ReportStatChip item="Duration of upcoming leaves" :count="weekly_employee_details.days_left" />
+                <ReportStatChip item="Upcoming leaves" :count="employee_details.pending_leave" />
+                <ReportStatChip item="Duration of upcoming leaves" :count="employee_details.days_left" />
             </div>
         </ReportCard>
 
