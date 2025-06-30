@@ -54,8 +54,10 @@ onMounted(() => {
             <div class="flex flex-col sm:grid sm:grid-cols-2 sm:grid-rows-2 gap-x-4 gap-y-8">
                 <ReportStatChip item="Total employees" :count="company.num_employees" />
                 <ReportStatChip item="Registered employees" :count="company.registered_employees" />
-                <ReportStatChip item="Upcoming leaves" :count="employee_details.pending_leave" />
-                <ReportStatChip item="Duration of upcoming leaves" :count="employee_details.days_left" />
+                <ReportStatChip item="Approved leaves"
+                    :count="store.leaveHistory.reduce((acc, c) => acc + (c.status == 'APPR' ? 1 : 0), 0)" />
+                <ReportStatChip item="Declined leaves"
+                    :count="store.leaveHistory.reduce((acc, c) => acc + (c.status == 'DCLN' ? 1 : 0), 0)" />
             </div>
         </ReportCard>
 
