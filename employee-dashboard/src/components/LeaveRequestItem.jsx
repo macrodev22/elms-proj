@@ -49,7 +49,7 @@ const LeaveRequestItem = ({ request, onRefreshRequests, onShowDetails, isQuery=f
             <span className="flex-[3] truncate">{ formatDateRange(request) }</span>
             <span className="flex-[1.5] hidden sm:block">{ duration(request) }</span>
             <span className="flex-[3] truncate hidden sm:block">{ request.reason }</span>
-            <span className="flex-[2]"><StatusChip status={request.status_display} /></span>
+            <span className="flex-[2]"><StatusChip status={ request.closed ? 'Cancelled' : request.status_display} /></span>
             <div className="flex gap-2">
                 <LeaveClosedChip onClick={() => onShowDetails(request, isQuery, queryId, hrRemarks, hrRemarksDate, hrUser)} isClosed={request.closed} />
                 <IconButton type="delete" onClick={onDeleteRequest} />

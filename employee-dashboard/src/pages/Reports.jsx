@@ -11,7 +11,7 @@ const ReportItem = ({ start_date, end_date, duration, type, status }) => {
         <div>{ end_date }</div>
         <div>{ duration }</div>
         <div>{ type }</div>
-        <div>{ status }</div>
+        <div className={`${status == '(Cancelled)' ? 'text-red-500' : ''}`}>{ status }</div>
         </>
     )
 }

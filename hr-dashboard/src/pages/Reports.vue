@@ -22,6 +22,7 @@ const employee_details = ref({
 
 onBeforeMount(() => {
     store.setEmployeeOverview()
+    store.setEmployeesOnLeave()
 })
 
 onMounted(() => {
@@ -44,7 +45,7 @@ onMounted(() => {
         <ReportCard title="Overview" @btn-click="showEmployeeReport = true">
             <div class="flex flex-col sm:grid sm:grid-cols-2 gap-x-4 gap-y-8">
                 <ReportStatChip item="Departments" :count="employee_details.departments" />
-                <ReportStatChip item="Employees on leave" :count="store.employeeOverview.employees_on_leave" />
+                <ReportStatChip item="Employees on leave" :count="store.employeesOnLeave.length" />
                 <ReportStatChip item="Used leave days" :count="store.employeeOverview.used_leave_days" />
                 <ReportStatChip item="Unused leave days" :count="store.employeeOverview.remaining_leave_days" />
             </div>

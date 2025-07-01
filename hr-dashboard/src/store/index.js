@@ -45,6 +45,7 @@ export const useStore = defineStore('store', {
           employeeAvailability: [],
           leaveHistory: [],
           leaveStats: [],
+          employeesOnLeave:[],
           employeeOverview: {
             total_employees: 0,
             employees_on_leave: 0,
@@ -111,6 +112,11 @@ export const useStore = defineStore('store', {
         this.setLeaveStats()
         this.setTeamAvailability()
         this.setLeaveHistory()
+      },
+      setEmployeesOnLeave() {
+        client.get('/employee/on-leave')
+        .then(({data}) => this.employeesOnLeave = data)
+        .catch(e => console.error('error getting employees on leave', e))
       },
     }      
 })
