@@ -26,6 +26,7 @@ export const formatDate = (dateString, addDay=false) => {
 }
 
 export const formatName = user => {
+    if (!user) return 'N/A'
     const names = [user.first_name, user.middle_name, user.last_name]
     if (names.every(n => n)) return `${names[0]} ${names[1].slice(0,1)}, ${names[2]}`
     if (names.every(n => !n)) return 'Anonymous'

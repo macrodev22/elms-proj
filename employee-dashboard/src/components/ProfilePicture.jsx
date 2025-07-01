@@ -43,7 +43,7 @@ const ProfileDetails = ({ show, onClose }) => {
                 <div>Role:</div>
                 <div>{ ctx.auth.user.role_display }</div>
                 <div>Department:</div>
-                <div>{ ctx.auth.user.department.name }</div>
+                <div>{ ctx.auth.user.department?.name }</div>
                 <div>Contact:</div>
                 <div className="grid grid-cols-[1fr_2fr]">
                     <div>Mobile:</div>

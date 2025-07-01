@@ -18,7 +18,7 @@ const emit = defineEmits(['select', 'actionClick'])
         <p class="flex-3 truncate"
             v-html="`<span class='text-gray-600 text-sm'>(${leave.requested_by.first_name || leave.requested_by.email})</span> ${leave.reason}`">
         </p>
-        <StatusChip :status="leave.status_display" class="flex-1" />
+        <StatusChip :status="leave.closed ? 'Cancelled' : leave.status_display" class="flex-1" />
         <div class="hidden sm:flex gap-1 flex-3 justify-center text-xs">
             <button :disabled="leave.closed" @click="emit('actionClick', { action: 'Approve', id: leave.id })"
                 class="bg-green-500 hover:bg-green-600 rounded-md py-2 px-2.5 text-white cursor-pointer disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed disabled:border-green-500 disabled:border-1">Aprrove</button>

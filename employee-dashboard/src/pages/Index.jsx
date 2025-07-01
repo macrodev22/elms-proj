@@ -99,7 +99,7 @@ const Index = () => {
                         { publicHolidays.map(h => <PublicHoliday name={h.name} date={h.date} remarks={h.remarks} key={h.name} />) }
                     </Card>
                 </div>
-                <div className='grid grid-cols-2 gap-6'>
+                <div className='flex flex-col lg:grid lg:grid-cols-2 gap-6'>
                     <LeavePattern className="col-span-2" />
                     <Card className="max-h-90 overflow-y-auto">
                         <h4 className='text-2xl flex items-center gap-1.5 mb-4'>

@@ -49,17 +49,24 @@ const onShowQuickAction = (action) => {
 }
 
 const sortLeavesByDates = (leaveHistory) => {
+    const now = new Date()
+
     return [...leaveHistory].sort((a, b) => {
-        let order = 0
-        const aStartTime = new Date(a.start_time)
-        const bStartTtime = new Date(b.start_time)
-        const aCreationTime = new Date(a.requested_at)
-        const bCreationTime = new Date(b.requested_at)
-        if (a.status_display == 'Pending') order -= 35
-        if (aStartTime < bStartTtime) order -= 3
-        if (aCreationTime < bCreationTime) order -= 2
-        if (a.closed) order += 15
-        return order
+
+        if (a.closed && !b.closed) return 1
+        if (!a.closed && b.closed) return -1
+        if (a.closed && b.closed) return 0
+
+
+        if (a.status_display === 'Pending' && b.status_display !== 'Pending') return -1
+        if (b.status_display === 'Pending' && a.status_display !== 'Pending') return 1
+
+        const aStartDiff = Math.abs(new Date(a.start_time) - now)
+        const bStartDiff = Math.abs(new Date(b.start_time) - now)
+        if (aStartDiff !== bStartDiff) return aStartDiff - bStartDiff
+
+        // If still equal, sort by newest requested_at first
+        return new Date(b.requested_at) - new Date(a.requested_at)
     })
 }
 
