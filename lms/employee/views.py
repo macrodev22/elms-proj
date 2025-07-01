@@ -163,9 +163,13 @@ class LeaveReportSummaryAPIView(APIView):
         return Response(result)
     
 class EmployeesOnLeaveAPIView(APIView):
+    authentication_classes = [JWTAuth]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
+        user:User = request.user
         now = timezone.now()
-        leave_today = LeaveRequest.objects.filter(start_time__lte=now, end_time__gte=now, closed=False, status='APPR')
+        leave_today = LeaveRequest.objects.filter(start_time__lte=now, end_time__gte=now, closed=False, status='APPR', company=user.company)
         employees = [l.requested_by for l in leave_today]
 
-        return Response(UserSerializer(employees, many=True, context={'request': request}).data)
+        return Response(LeaveRequestSerializerEmp(leave_today, many=True, context={'request': request}).data)

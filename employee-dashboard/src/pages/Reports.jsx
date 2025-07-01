@@ -31,7 +31,7 @@ const downloadReport = (leaveRequests, name='Employee') => {
     }
 
     const aoa = [["From", "To", "Duration(Days)", "Leave Type", "Status"]]
-    const leaveRows = leaveRequests.map(lr => ([new Date(lr.start_time), new Date(lr.end_time), lr.duration, lr.type.name, lr.status_display]))
+    const leaveRows = leaveRequests.filter(lr => !lr.closed).map(lr => ([new Date(lr.start_time), new Date(lr.end_time), lr.duration, lr.type.name, lr.status_display]))
     aoa.push(...leaveRows)
     worker.postMessage(aoa)
 }
@@ -61,7 +61,7 @@ const Reports = () => {
                 <div>4 days</div>
                 <div>Maternity Leave</div>
                 <div>Completed</div> */}
-                {leaveRequests.map(l => <ReportItem start_date={formatDate(l.start_time, true)}  end_date={formatDate(l.end_time, true)} key={l.id} duration={duration(l)} status={l.status_display} type={l.type?.name} />)}
+                {leaveRequests.map(l => <ReportItem start_date={formatDate(l.start_time, true)}  end_date={formatDate(l.end_time, true)} key={l.id} duration={duration(l)} status={`${l.closed ? '(Cancelled)' : l.status_display}`} type={l.type?.name} />)}
             </div>
         </Card>
     )

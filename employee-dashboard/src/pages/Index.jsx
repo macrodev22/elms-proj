@@ -8,6 +8,7 @@ import DaysPending from "../components/DaysPending"
 import PublicHoliday from "../components/PublicHoliday"
 import LeaveStat from "../components/LeaveStat"
 import Announcement from "../components/Announcement"
+import EmployeeCard from "../components/EmployeeCard"
 
 const publicHolidays = [
     { name: 'Holy Thursday', date: '2025-04-17', remarks: 'Optional Holiday' },
@@ -79,6 +80,7 @@ const Index = () => {
 
     useEffect(() => {
         ctx.actions.fetchStats()
+        ctx.actions.fetchEmployeesOnLeave()
     }, [])
 
     return (
@@ -108,7 +110,10 @@ const Index = () => {
                     </Card>
                     <Card>
                         <h4 className='text-2xl mb-4'>On leave</h4>
-                        <LeaveStat used={3} />
+                        <div className="flex justify-center items-center">
+                        {ctx.employeesOnLeave.length > 0 ? ctx.employeesOnLeave.map(l => <EmployeeCard key={l.id} user={l.requested_by} leaveType={l.type.name} />) : <p className="text-gray-500">No employees are on leave today</p> }
+                
+                        </div>
                     </Card>
                 </div>
             </div>

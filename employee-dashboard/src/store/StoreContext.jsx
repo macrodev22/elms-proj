@@ -138,6 +138,80 @@ const StoreContext = createContext({
     "days_used": 2,
     "days_pending_approval": 19
     },
+    employeesOnLeave: [
+         {
+        "id": 26,
+        "type": {
+            "id": 12,
+            "name": "Casual Leave",
+            "description": "Used for short-term personal needs like attending events or appointments"
+        },
+        "status_display": "Approved",
+        "requested_by": {
+            "id": 10,
+            "profile_picture_url": "http://localhost:8000/media/profile_pictures/m_55.jpg",
+            "role_display": "Employee",
+            "gender_display": "Male",
+            "supervisor": {
+                "first_name": "Tiffany",
+                "middle_name": "",
+                "last_name": "Tiffy",
+                "email": "tiffy@gmail.com",
+                "role": "EM",
+                "contact": {
+                    "mobile": "075432456",
+                    "work": "04143034556/2"
+                },
+                "gender": "F"
+            },
+            "department": {
+                "id": 3,
+                "name": "Reservations",
+                "min_active_employees": 2,
+                "company": 2,
+                "head": 2
+            },
+            "company": {
+                "id": 2,
+                "registered_employees": 14,
+                "name": "Intek Travel",
+                "email": "info@intek.travel",
+                "website": "https://www.intektravel.com",
+                "address": "Naguru, Kampala",
+                "contact": "0414123456",
+                "created_at": "2025-04-11T15:01:12.644281Z",
+                "updated_at": "2025-04-11T15:01:12.644308Z",
+                "num_employees": 15,
+                "work_start_time": "08:30:00",
+                "work_end_time": "05:30:00"
+            },
+            "first_name": "Arthur",
+            "last_name": "Ssenabulya",
+            "is_active": true,
+            "date_joined": "2025-05-06T22:00:31Z",
+            "email": "arthur@gmail.com",
+            "role": "EM",
+            "profile_picture": "http://localhost:8000/media/profile_pictures/m_55.jpg",
+            "date_of_birth": "2004-05-13",
+            "middle_name": "Blick",
+            "contact": {
+                "mobile": "0700142354",
+                "work": "0770456789"
+            },
+            "gender": "M",
+            "designation": "Travel Agent",
+            "supervised_by": 4
+        },
+        "duration": 5,
+        "requested_at": "2025-06-30T22:16:30.751137Z",
+        "start_time": "2025-06-29T03:16:00Z",
+        "end_time": "2025-07-03T18:00:00Z",
+        "status": "APPR",
+        "reason": "I need some fresh air",
+        "closed": false,
+        "company": 2
+    },
+    ],
     setShowLogin() {},
     setShowUpdate(){},
     setUser(){},
@@ -148,6 +222,7 @@ const StoreContext = createContext({
         fetchUser(){},
         fetchStats(){},
         updateSupervisorQuery(queryId, supervisorRemarks){ queryId && supervisorRemarks },
+        fetchEmployeesOnLeave() {},
     }
 })
 
@@ -160,6 +235,7 @@ export const StoreContextProvider = (props) => {
     const [showLogin, setShowLogin] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false)
     const [stats, setStats] = useState({"total_leave_days": 0, "days_used": 0, "days_pending_approval": 0})
+    const [employeesOnLeave, setEmployeesOnLeave] = useState([])
 
     const fetchRequests = () => {
         return client.get('/employee/leave-requests')
@@ -207,6 +283,13 @@ export const StoreContextProvider = (props) => {
 
     }
 
+    const fetchEmployeesOnLeave = () => {
+        client.get('/employee/on-leave')
+        .then(({data}) => {
+            setEmployeesOnLeave(data)
+        })
+    }
+
     return <StoreContext.Provider value={{
         auth: { user: user, token: token },
         requests,
@@ -214,6 +297,7 @@ export const StoreContextProvider = (props) => {
         showLogin,
         showUpdate,
         stats,
+        employeesOnLeave,
         setUser,
         setToken,
         setRequests,
@@ -225,6 +309,7 @@ export const StoreContextProvider = (props) => {
             fetchUser,
             fetchStats,
             updateSupervisorQuery,
+            fetchEmployeesOnLeave,
         }
     }}>
         {props.children}
