@@ -125,7 +125,7 @@ def send_reset_password_token(req):
             reset_link = f"{req.scheme}://{req.get_host()}/reset-password/{token}"
             email_message = f"You have requested a password reset.\n\nClick the lick below to reset your password\n\n{reset_link}"
             html_email_message = utils.email_password_reset_link_html(reset_link)
-            send_mail("Your password reset link (Valid for 10 minutes)", email_message, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=html_email_message)
+            send_mail("Your password reset link (Expires in 10 minutes)", email_message, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=html_email_message)
 
         message = f"Check your email. A password reset link has been sent to {email} if a user with this email exists."
         # print(f"Reset token link {req.scheme}://{req.get_host()}/reset-password/{token}")

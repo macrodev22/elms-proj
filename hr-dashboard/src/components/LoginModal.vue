@@ -51,7 +51,7 @@ const login = () => {
         <form method="post" @submit.prevent="login">
             <div class="flex flex-col mt-8">
                 <FormField name="email" label="Email" v-model="email" />
-                <FormField name="password" label="Password" type="password" v-model="password" autocomplete="false" />
+                <FormField name="password" label="Password" type="password" v-model="password" autocomplete="off" />
                 <div class="flex mb-6">
                     <button
                         class="cursor-pointer bg-green-500 hover:bg-green-600 text-white rounded-md px-14 py-2 text-xl">Login</button>
