@@ -26,6 +26,14 @@ class LeaveRequestSerializer(ModelSerializer):
         return obj.duration
 
 class LeaveRequestCreateSerializer(ModelSerializer):
+
+    def validate(self, attrs):
+        start_time = attrs.get('start_time')
+        end_time = attrs.get('end_time')
+        if start_time and end_time and start_time >= end_time:
+            raise serializers.ValidationError('Start date and time must be before end date and time')
+        return attrs
+
     class Meta:
         model = LeaveRequest
         fields = '__all__'     
