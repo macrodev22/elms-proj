@@ -152,6 +152,10 @@ const updateUser = () => {
 
 const updatePassword = () => {
     passwordIsLoading.value = true
+    newPassword.oldPasswordErrors = []
+    newPassword.newPasswordErrors = []
+    newPassword.newPasswordConfirmationErrors = []
+
     client.post('/auth/change-password', {
         "old_password": newPassword.oldPassword,
         "new_password": newPassword.newPassword,
@@ -161,7 +165,7 @@ const updatePassword = () => {
             toast.success(data?.detail, { position: toast.POSITION.TOP_CENTER })
         })
         .catch(e => {
-            console.error('password update', e)
+            // console.error('password update', e)
             newPassword.oldPasswordErrors = []
             newPassword.newPasswordErrors = []
             newPassword.newPasswordConfirmationErrors = []

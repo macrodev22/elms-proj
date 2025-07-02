@@ -60,20 +60,33 @@ def leave_action_email_html(leave, remarks, action, user):
 
 def hr_leave_action_email_html(leave, remarks, action, user):
     hr_message_html = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
-            <p>Dear {user.first_name},</p>
+    <html>
+    <body style="font-family: Arial, sans-serif; background-color: #f9fafb; color: #333; padding: 30px;">
+        <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); padding: 25px;">
+        
+        <p style="font-size: 18px; color: #2c3e50; margin-bottom: 20px;">
+            Dear <span style="color: #2980b9;">{user.first_name}</span>,
+        </p>
 
-            <p>
-            You have <strong>{action}d</strong> the request for <strong>{leave.type.name}</strong> requested by <strong>{leave.requested_by.first_name}</strong> (<a href="mailto:{leave.requested_by.email}">{leave.requested_by.email}</a>).
-            </p>
+        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #34495e;">
+            You have <strong style="color: #27ae60;">{action}d</strong> the request for 
+            <strong style="color: #2980b9;">{leave.type.name}</strong> requested by 
+            <strong style="color: #8e44ad;">{leave.requested_by.first_name}</strong> 
+            (<a href="mailto:{leave.requested_by.email}" style="color: #e67e22; text-decoration: none;">{leave.requested_by.email}</a>).
+        </p>
 
-            <p><strong>Remarks:</strong> {remarks}</p>
+        <p style="font-size: 16px; margin-bottom: 30px;">
+            <strong style="color: #e67e22;">Remarks:</strong> {remarks}
+        </p>
 
-            <p>{user.company.name}</p>
-        </body>
-        </html>
-        """
+        <p style="font-size: 16px; color: #7f8c8d; font-weight: bold;">
+            {user.company.name}
+        </p>
+
+        </div>
+    </body>
+    </html>
+    """
     return hr_message_html
 
 def created_user_email_html(request, created_user, data):

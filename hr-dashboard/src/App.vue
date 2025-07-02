@@ -54,7 +54,7 @@ watch(() => store.auth.user, (newUser) => {
       <div class="flex flex-col sm:flex-row gap-6.5 items-stretch justify-between self-stretch my-[-8px]">
         <NavButton label="Home" href="/" :active="route.name == 'home'" />
         <NavButton label="Calendar" href="/calendar" :active="route.name == 'calendar'" />
-        <NavButton label="Leave" :href="{ name: 'leave' }" :active="route.name == 'leave'" />
+        <NavButton label="Leave" :href="{ name: 'leave' }" :active="route.name == 'leave'" :badge="store.leaveHistory.filter(l => l.status == 'PNDG' && !l.closed).length" />
         <NavButton label="Reports" :href="{ name: 'reports' }" :active="route.name == 'reports'" />
       </div>
       <div>
