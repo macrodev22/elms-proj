@@ -22,3 +22,5 @@ def email_password_reset_link_html(reset_link,):
     </body>
     </html>
     """
+
+    return email_html_message

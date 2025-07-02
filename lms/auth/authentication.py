@@ -56,4 +56,13 @@ class JWTAuth(BaseAuthentication):
         }
         return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
     
+    @staticmethod
+    def validate_password_reset_token(token):
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise exceptions.AuthenticationFailed('User not authenticated')
+        except jwt.InvalidTokenError:
+            raise exceptions.AuthenticationFailed('Invalid token')
     
+        return payload['uid']

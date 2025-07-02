@@ -125,22 +125,40 @@ def send_reset_password_token(req):
             reset_link = f"{req.scheme}://{req.get_host()}/reset-password/{token}"
             email_message = f"You have requested a password reset.\n\nClick the lick below to reset your password\n\n{reset_link}"
             html_email_message = utils.email_password_reset_link_html(reset_link)
-            send_mail("Your password reset link", email_message, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=html_email_message)
+            send_mail("Your password reset link (Valid for 10 minutes)", email_message, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=html_email_message)
 
         message = f"Check your email. A password reset link has been sent to {email} if a user with this email exists."
+        # print(f"Reset token link {req.scheme}://{req.get_host()}/reset-password/{token}")
 
         return render(req,template_name="forgot_password.html", context={'message': message})
     
-def reset_password(req, token):
+def check_reset_password_token(req, token):
     try:
-        user, token_jwt = JWTAuth().authenticate(req)
+        user_id = JWTAuth.validate_password_reset_token(token)
+
     except:
-        user = None
+        return render(req, template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'The password reset link token is invalid'}})
+
+    return render(req, template_name="reset_password.html", context={'error': {'has_error': False, 'detail':''}, 'token': token})
+
+def reset_password(req):
+    data = req.POST 
+    token = data.get('token')
+    password = data.get('password')
+    password_confirm = data.get('password_confirm')
+
+    if password != password_confirm:
+        return render(req, template_name="reset_password.html", context={'error': {'has_error': False, 'detail':'', 'form_error': 'Passwords do not match' }, 'token': token, })
     
-    if user is None:
-        return render(template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'The password reset link token is invalid'}})
-    elif token_jwt != token:
-        return render(template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'The password reset link token is invalid'}})
-    else:
-        return render(template_name="reset_password.html", context={'error': {'has_error': False, 'detail':''}, 'token': token_jwt})
+    try:
+        user_id = JWTAuth.validate_password_reset_token(token)
+        user = User.objects.get(pk=user_id)
+        user.set_password(password)
+        user.save()
+        return render(req, template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'Your password has been reset successfully 😊' }, 'token': token, })
+
+    except:
+        return render(req, template_name="reset_password.html", context={'error': {'has_error': True, 'detail':'The password reset link token has expired. Try again' }, 'token': token, })
+
+
     
