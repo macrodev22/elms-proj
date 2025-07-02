@@ -87,6 +87,9 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
                     setOldPasswordError('')
                     setPasswordError('')
                     setPasswordConfirmError('')
+                    setPassword('')
+                    setOldPassword('')
+                    setPasswordConfirm('')
                     return 'Password changed successfully'
                 },
                 error: err => {
