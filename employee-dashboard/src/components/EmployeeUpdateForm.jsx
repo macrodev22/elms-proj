@@ -23,6 +23,15 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
     const profileDisplay = useRef()
     const photoInput = useRef()
     const formRef = useRef()
+    const passwordFormRef = useRef()
+
+    const [showUpdatePassword, setShowUpdatePassword] = useState(false)
+    const [password, setPassword] = useState('')
+    const [passwordConfirm, setPasswordConfirm] = useState('')
+    const [oldPassword, setOldPassword] = useState('')
+    const [passwordError, setPasswordError] = useState('')
+    const [oldPasswordError, setOldPasswordError] = useState('')
+    const [passwordConfirmError, setPasswordConfirmError] = useState('')
 
     useEffect(() => {
         if(ctx.auth.user) {
@@ -38,6 +47,12 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
         }
         
     }, [ctx.auth.user])
+
+    useEffect(() => {
+        if(showUpdatePassword && passwordFormRef.current) {
+            passwordFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+    }, [showUpdatePassword])
 
     const onChangeImage = (e) => {
         const file = e.target.files[0]
@@ -55,6 +70,36 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
         photoInput.current.value = ''
         photoInput.current.dispatchEvent(new Event('change'))
         profileDisplay.current.src= profile_picture_url
+    }
+
+    const onUpdatePassword = (e) => {
+        e.preventDefault()
+        const update = client.post('/auth/change-password', {
+            "old_password": oldPassword,
+            "new_password": password,
+            "new_password_confirm": passwordConfirm
+        })
+        toast.promise(
+            update,
+            {
+                loading: 'Updating password',
+                success: () => {
+                    setOldPasswordError('')
+                    setPasswordError('')
+                    setPasswordConfirmError('')
+                    return 'Password changed successfully'
+                },
+                error: err => {
+                    const {data} = err.response 
+                    if(data) {
+                        setOldPasswordError(data.old_password)
+                        setPasswordError(data.new_password)
+                        setPasswordConfirmError(data.new_password_confirm)
+                        return 'Error chaning password!\nSelect the error highlighted below'
+                    } else return `Error chaning password: ${err.message}`
+                }
+            }
+        )
     }
 
     const onSubmit = e => {
@@ -76,8 +121,11 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
             update,
             {
                 loading: 'Updating employee data',
-                success: (user) => {
-                    ctx.auth.user = user
+                success: (res) => {
+                    const user = res.data
+                    console.log('updated user', user)
+                    ctx.setUser(user)
+                    return 'Employee details updated successfully'
                 },
                 error: err => `Error updating employee ${err.toString()}`
             }
@@ -135,6 +183,13 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
                 <button className="rounded-md bg-blue-400 px-6 py-2 text-lg hover:bg-blue-500 text-white">Update</button>
             </div>
         </form>
+        <button onClick={() => setShowUpdatePassword(!showUpdatePassword)} className="rounded-md bg-green-400 text-white px-6 py-2 text-lg hover:bg-green-500">Update password</button>
+        { showUpdatePassword && <form className="mt-4" ref={passwordFormRef} onSubmit={onUpdatePassword}>
+            <InputField type="password" name='old_password' label='Old Password' value={oldPassword} onChange={ e => setOldPassword(e.target.value) } error={oldPasswordError} />
+            <InputField type="password" name='new_password' label='New password' value={password} onChange={e => setPassword(e.target.value)} error={passwordError} />
+            <InputField type="password" name='new_password_confirm' label='Confirm new password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} error={passwordConfirmError} />
+            <button className="mt-4 bg-blue-400 text-white text-lg hover:bg-blue-500 py-2 px-6 rounded-md">Save new password</button>
+        </form>}
         </Modal>
     )
 }

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { ChevronDownIcon } from "@heroicons/react/24/outline"
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
 import StoreContext from "../store/StoreContext"
 import { formatName, formatPhoto } from "../utils"
 import { client } from "../services/client"
@@ -79,7 +79,7 @@ function ProfilePicture() {
             <ProfileDetails show={showDetails} onClose={() => setShowDetails(false)} />
             <EmployeeUpdateForm show={showUpdate} onClose={() => setShowUpdate(false)}  />
             <button className="cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
-                <ChevronDownIcon className="size-6" />
+                {showDetails ? <ChevronUpIcon className="size-6" /> : <ChevronDownIcon className="size-6" />}
             </button>
             <div className="flex flex-col flex-1 overflow-hidden">
                 <p className="font-bold text-md truncate">{formatName(ctx.auth.user)}</p>
