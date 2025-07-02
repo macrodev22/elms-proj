@@ -22,6 +22,9 @@ const AddLeaveRequestModal = (props) => {
     const [end_time, setEndTime] = useState('')
     const [type, setType] = useState('')
 
+    const [startTimeError, setStartTimeError] = useState('')
+    const [endTimeError, setEndTimeError] = useState('')
+
     useEffect(() => {
         client.get('/leave/types')
         .then(({data}) => {
@@ -31,6 +34,9 @@ const AddLeaveRequestModal = (props) => {
 
     const addLeave = e => {
         e.preventDefault()
+        setStartTimeError('')
+        setEndTimeError('')
+
         const payload = {
             "type": type,
             "start_time": start_time,
@@ -41,21 +47,26 @@ const AddLeaveRequestModal = (props) => {
         }
 
         const addRequest = client.post('/employee/leave-requests', payload)
-        .then(res => {
-            console.log(res)
-            ctx.actions.fetchRequests()
-            setReason('')
-            setStartTime('')
-            setEndTime('')
-            setType('')
-        })
         
         toast.promise(addRequest, {
             loading: 'Making leave request',
             error: e => { 
-                return `Error making leave request!\n${formatError(e)}`
+                const { data } = e.response
+                setStartTimeError(data?.start_time?.join('\n') || '')
+                setEndTimeError(data?.end_time?.join('\n') || '')
+                return `Error making leave request!\n${e.message}`
              },
-            success: 'Leave request added successfully'
+            success: (res) => {
+                // console.log(res)
+                ctx.actions.fetchRequests()
+                setReason('')
+                setStartTime('')
+                setEndTime('')
+                setType('')
+                setStartTimeError('')
+                setEndTimeError('')
+                return `Leave request added successfully`
+            }
         })
     }
 
@@ -63,8 +74,8 @@ const AddLeaveRequestModal = (props) => {
         <Modal show={show} onClose={onClose} title={title} >
             <form method="post" onSubmit={addLeave}>
                 <DropDown name="type" options={options.map(o => ({value:o.id, label:o.name}))} value={type} onChange={e => setType(e.target.value)} />
-                <InputField name="start_time" label="Start date" type="datetime-local" value={start_time} onChange={e => {setStartTime(e.target.value)}} />
-                <InputField name="end_time" label="End date" type="datetime-local" value={end_time} onChange={e =>setEndTime(e.target.value)} />
+                <InputField name="start_time" label="Start date" type="datetime-local" value={start_time} onChange={e => {setStartTime(e.target.value)}} error={startTimeError} />
+                <InputField name="end_time" label="End date" type="datetime-local" value={end_time} onChange={e =>setEndTime(e.target.value)} error={endTimeError} />
                 <TextField name="reason" label="Reason" placeholder="Enter a reason..." value={reason} onChange={e => setReason(e.target.value)} />
                 <div className="mt-6">
                     <button className="rounded-md bg-blue-400 px-6 py-1.5 text-xl text-white cursor-pointer hover:bg-blue-500">Request for leave</button>

@@ -124,6 +124,11 @@ class LeaveDeleteAPIView(APIView):
         if leave.requested_by != user:
             return Response({'detail':'Not allowed'}, status=status.HTTP_403_FORBIDDEN)
         
+        # Already taken
+        now = timezone.now()
+        if leave.end_time <= now and leave.status == 'APPR':
+            return Response({ 'detail': 'Not allowed. Leave already past' }, status=status.HTTP_400_BAD_REQUEST)
+        
         if (leave.closed):
             return Response({'detail': 'Leave already closed'}, status=status.HTTP_400_BAD_REQUEST)
         

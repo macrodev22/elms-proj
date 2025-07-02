@@ -27,7 +27,7 @@ const Stats = () => {
     useEffect(() => {
         client.get('/employee/reports/summary')
         .then(({data}) => {
-            console.log(data)
+            // console.log(data)
             setApprovedCount(data.approved_leave.length)
             setApprovedDays(data.approved_leave.reduce((p,c) => p+c.duration, 0))
             setPendingCount(data.pending_leave.length)

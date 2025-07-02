@@ -14,6 +14,7 @@ from company.models import Company
 from company.serializers import CompanySerializer
 from .serializers import LeaveRequestSerializer
 from .utils import send_leave_notification
+from core.utils import leave_action_email_html,hr_leave_action_email_html,created_user_email_html
 
 # Create Employee View
 class CreateEmployeeAPIView(APIView):
@@ -30,8 +31,10 @@ class CreateEmployeeAPIView(APIView):
 
         if employee_serializer.is_valid(raise_exception=True):
             created_user:User = employee_serializer.save()
+            subject = f"Your {'Employee' if created_user.role == 'EM' else 'HR' } Account at {user.company.name} has been created"
             message = f"Hello {created_user.first_name},\n\nYour employee account at {created_user.company.name} has been created successfully\n\nLogin with the credentials below:\nEmail: {created_user.email}\nPassword: {data['password']}\n{request.scheme}://{request.get_host()}/login\n\nRegards..."
-            send_leave_notification(created_user.email, f"Your Employee Account at {user.company.name} has been created", message)
+            html_message = created_user_email_html(request, created_user, data)
+            send_leave_notification(created_user.email, subject, message, html_message=html_message)
             return Response({'detail': 'success', "data": UserSerializer(created_user).data}, status=status.HTTP_201_CREATED)
 
 # Leave list view
@@ -219,13 +222,15 @@ class LeaveActionAPIView(APIView):
             leave.status = action_code
             leave.save()
             # Send email of notification of new leave status  
-            subject = f"Your {leave.type.name} request has been {action}d" 
+            subject = f"Your {leave.type.name} request starting on {leave.start_time} has been {action}d" 
             message = f"Dear {leave.requested_by.first_name},\n\nYour request for {leave.type.name} starting on {leave.start_time.date()} to {leave.end_time.date()} has been {action}d by {user.first_name}.\n\nRemarks: {remarks}.\n\nRegards,\n{leave.company.name} HR"
-            send_leave_notification(leave.requested_by.email, subject=subject, message=message) 
+            html_message = leave_action_email_html(leave, remarks, action, user)
+            send_leave_notification(leave.requested_by.email, subject=subject, message=message, html_message=html_message) 
 
             hr_subject = f"You have {action}d a leave request for {leave.requested_by.email}"
             hr_message = f"Dear {user.first_name},\n\nYou have {action}d the request for {leave.type.name} requested by {leave.requested_by.first_name} ({leave.requested_by.email}). Remarks: {remarks} \n\n{user.company.name}"
-            send_leave_notification(user.email, hr_subject, hr_message)
+            hr_html_message = hr_leave_action_email_html(leave, remarks, action, user)
+            send_leave_notification(user.email, hr_subject, hr_message, html_message=hr_html_message)
 
 
         # Add Supervisor Query for SEND

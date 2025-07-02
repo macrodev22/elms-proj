@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework.serializers import ModelSerializer 
 from rest_framework import serializers
 from core.serializers import UserMinimalSerializer
@@ -30,8 +31,16 @@ class LeaveRequestCreateSerializer(ModelSerializer):
     def validate(self, attrs):
         start_time = attrs.get('start_time')
         end_time = attrs.get('end_time')
-        if start_time and end_time and start_time >= end_time:
-            raise serializers.ValidationError('Start date and time must be before end date and time')
+        errors = { }
+        if start_time >= end_time:
+            errors['start_time'] = 'Start date and time must be before end date and time'
+            errors['end_time'] = 'End date and time must be after start date and time'
+        
+        now = timezone.now()
+        if start_time < now:
+            errors['start_time'] = 'Start date and time can not be in the past'
+        if errors:
+            raise serializers.ValidationError(errors)
         return attrs
 
     class Meta:
