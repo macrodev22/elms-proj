@@ -19,18 +19,18 @@ const ProfileDetails = ({ show, onClose, ignoreRefs = [] }) => {
                 const clickedEl = event.target 
     
                 const clickedOutside = !rootRef.current?.contains(clickedEl)
-                console.log('clicked outside', clickedOutside)
+                // console.log('clicked outside', clickedOutside)
 
                 const clickedIgnoredEl = ignoreRefs.some(elRef => {
                     const ignoredEl = elRef.current
                     return (ignoredEl && ignoredEl.contains(clickedEl))
                 })
-                console.log('clicked ignored', clickedIgnoredEl)
+                // console.log('clicked ignored', clickedIgnoredEl)
+                if (clickedOutside && !clickedIgnoredEl) onClose()
             }
     
             document.addEventListener('click', listener)
             document.addEventListener('touchstart', listener)
-            console.log('ignored el refs', ignoreRefs)
             
             // Cleanup
             return () => {
@@ -38,7 +38,7 @@ const ProfileDetails = ({ show, onClose, ignoreRefs = [] }) => {
                 document.removeEventListener('touchstart', listener)
             }
         }
-    }, [show])
+    }, [show, ignoreRefs])
 
     const logout = () => {
         client.post('/auth/logout')
@@ -103,16 +103,15 @@ function ProfilePicture() {
     const [showDetails, setShowDetails] = useState(false)
     const {showUpdate, setShowUpdate } = ctx
 
-    const upChev = useRef(null)
-    const downChev = useRef(null)
     const dropDownBtn = useRef(null)
 
     return (
         <div className="bg-gray-100 rounded-full relative max-w-[250px] p-[4px] flex gap-2 justify-between items-center my-1">
-            <ProfileDetails show={showDetails} onClose={() => setShowDetails(false)} ignoreRefs={[dropDownBtn, upChev, downChev]} />
+            <ProfileDetails show={showDetails} onClose={() => setShowDetails(false)} ignoreRefs={[dropDownBtn]} />
             <EmployeeUpdateForm show={showUpdate} onClose={() => setShowUpdate(false)}  />
             <button ref={dropDownBtn} className="cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
-                {showDetails ? <ChevronUpIcon ref={upChev} className="size-6" /> : <ChevronDownIcon ref={downChev} className="size-6" />}
+                <ChevronUpIcon className={`size-6 ${showDetails ? '' : 'hidden'}`} /> 
+                <ChevronDownIcon className={`size-6 ${showDetails ? 'hidden': ''}`} />
             </button>
             <div className="flex flex-col flex-1 overflow-hidden">
                 <p className="font-bold text-md truncate">{formatName(ctx.auth.user)}</p>
