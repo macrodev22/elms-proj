@@ -46,7 +46,7 @@ const announcements = [
         date: "2025-06-05"
     },
     {
-        text: "Maternity leave entitlement is 90 calendar days with full pay.",
+        text: "Maternity leave entitlement is 60 calendar days with full pay.",
         author: "HR Department",
         date: "2025-06-06"
     },
@@ -59,6 +59,11 @@ const announcements = [
         text: "Compassionate leave may be granted upon approval by your supervisor.",
         author: "Leave Policy v2.1",
         date: "2025-06-08"
+    },
+    {
+        text: 'https://justicecentres.go.ug/the-right-of-an-employee-to-take-leave/',
+        author: 'Justice Centres Uganda (JCU)',
+        date: '2024-09-26'
     }
 ]
 

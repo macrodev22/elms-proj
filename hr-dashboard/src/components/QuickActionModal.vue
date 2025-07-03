@@ -7,6 +7,7 @@ import Modal from './Modal.vue';
 
 const store = useStore()
 const remark = ref('')
+const isLoading = ref(false)
 
 const emit = defineEmits(['close-modal'])
 
@@ -29,21 +30,27 @@ const vClear = {
 const takeAction = (leaveAction) => {
     if (!leaveAction) {
         console.error('null action aborting...')
+        toast.error('No action specified')
         return
     }
     const payload = {
         remarks: remark.value,
         action: leaveAction
     }
-
+    isLoading.value = true
+    const actionToast = toast.loading('Actioning leave requesting', { position: toast.POSITION.TOP_CENTER, theme: toast.THEME.COLORED })
     client.post(`/hr/leave-action/${action.id}`, payload)
         .then(({ data }) => {
             store.setLeaveHistory()
-            toast.success(data.detail, { position: toast.POSITION.TOP_CENTER, theme: toast.THEME.COLORED })
+            remark.value = ''
+            toast.update(actionToast, { type: 'success', render: data.detail, isLoading: false, autoClose: 2000 })
         })
         .catch(e => {
             console.error('action leave', e)
-            toast.error(`${e.response?.data[0] || e.message}`, { position: toast.POSITION.TOP_CENTER, theme: toast.THEME.COLORED })
+            toast.update(actionToast, { type: 'error', render: `${e.response?.data[0] || e.message}`, isLoading: false, autoClose: 2000 })
+        })
+        .finally(() => {
+            isLoading.value = false
         })
 }
 
@@ -56,12 +63,12 @@ const takeAction = (leaveAction) => {
                 placeholder="Why choose this action?..."></textarea>
         </div>
         <div class="flex gap-4 flex-3 justify-center text-lg mt-6">
-            <button @click="takeAction('Approve')" v-if="action.action == 'Approve'"
+            <button @click="takeAction('Approve')" v-if="action.action == 'Approve'" :disabled="isLoading"
                 class="bg-green-500 hover:bg-green-600 rounded-md py-2 px-2.5 text-white cursor-pointer disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed disabled:border-green-500 disabled:border-1">Aprrove</button>
-            <button @click="takeAction('Ask Supervisor')" v-if="action.action == 'Ask Supervisor'"
+            <button @click="takeAction('Ask Supervisor')" v-if="action.action == 'Ask Supervisor'" :disabled="isLoading"
                 class="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">Ask
                 Supervisor</button>
-            <button @click="takeAction('Decline')" v-if="action.action == 'Decline'"
+            <button @click="takeAction('Decline')" v-if="action.action == 'Decline'" :disabled="isLoading"
                 class="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">Decline
             </button>
         </div>

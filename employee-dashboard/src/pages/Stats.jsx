@@ -17,9 +17,10 @@ const Stats = () => {
     const [pendingCount, setPendingCount] = useState(0)
     const [pendingDays, setPendingDays] = useState(0)
     const [leaveTypesStats, setLeaveTypesStats] = useState([{
-            "id": 15,
-            "name": "Time Off In Lieu (TOIL)",
-            "description": "Paid time off in exchange for overtime worked",
+            "id": 18,
+            "name": "Maternity Leave",
+            "description": "Leave for new mothers, often including both prenatal and postnatal periods",
+            "annual_entitlement": 60,
             "days_used": 0
         }])
    
@@ -49,7 +50,7 @@ const Stats = () => {
                 <LeaveDaysOverview total={total_leave_days} remaining={total_leave_days - days_used} used={days_used} />
             </div>
             <div className="flex gap-4 w-full overflow-x-scroll ">
-                {leaveTypesStats && leaveTypesStats.sort((a,b) => b.days_used - a.days_used).map(t => <LeaveTypeStat used={t.days_used} strokeColor={getLeaveColors(t.name).highlightColor} key={t.id} type={t.name} />)}
+                {leaveTypesStats && leaveTypesStats.sort((a,b) => b.days_used - a.days_used).map(t => <LeaveTypeStat used={t.days_used} total={t.annual_entitlement || 21 } strokeColor={getLeaveColors(t.name).highlightColor} key={t.id} type={t.name} />)}
                 
             </div>
         </Card>

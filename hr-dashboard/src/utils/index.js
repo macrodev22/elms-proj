@@ -110,6 +110,7 @@ export const getColor = type => {
         "Annual Leave (Holiday Entitlement)": "#AD7EE9",
         "Sick Leave": "#EAA750",
         "Maternity Leave": "#FF6F61",
+        "Paternity Leave": "#4A90E2",
         "Personal Leave": "#E76CC1",
         "Emergency Leave": "#6B5B95",
         "Bereavement Leave": "#88B04B",
