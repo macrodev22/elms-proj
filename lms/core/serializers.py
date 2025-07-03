@@ -17,6 +17,7 @@ class UserSerializer(ModelSerializer):
     gender_display = serializers.CharField(source='get_gender_display', read_only=True)
     supervisor = serializers.SerializerMethodField()
     department = DepartmentSerializer(read_only=True)
+    used_annual_leave = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -48,6 +49,10 @@ class UserSerializer(ModelSerializer):
         if supervisor:
             return UserMinimalSerializer(supervisor).data 
         return None
+    
+    def get_used_annual_leave(self, obj:User):
+        used_annual_leave = obj.used_annual_leave
+        return used_annual_leave
     
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)

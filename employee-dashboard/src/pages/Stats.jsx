@@ -26,6 +26,7 @@ const Stats = () => {
    
 
     useEffect(() => {
+        ctx.actions.fetchStats()
         client.get('/employee/reports/summary')
         .then(({data}) => {
             // console.log(data)

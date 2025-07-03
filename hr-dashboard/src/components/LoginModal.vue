@@ -17,6 +17,7 @@ const email = ref('')
 const password = ref('')
 
 const login = () => {
+    const loginToast = toast.loading('Logging in...', { theme: toast.THEME.COLORED, position: toast.POSITION.TOP_CENTER, transition: toast.TRANSITIONS.FLIP })
     client.post('/auth/login', {
         email: email.value,
         password: password.value
@@ -32,17 +33,18 @@ const login = () => {
             //Other resources
             store.setResources()
 
-            // toast.success(`User logged in`)
+            password.value = ''
+            toast.update(loginToast, { type: 'success', autoClose: 2000, isLoading: false, render: 'Logged in successfully' })
             emit('close-modal')
         })
         .catch(e => {
             console.error(e)
-            toast.error(`Error logging in! \n${e.response.data.detail}`, {
-                position: toast.POSITION.TOP_CENTER,
-                theme: toast.THEME.COLORED,
-                transition: toast.TRANSITIONS.FLIP
+            toast.update(loginToast, {
+                type: 'error', autoClose: 2000, isLoading: false,
+                render: `Error logging in\n${e.response?.data?.detail || e.message}`
             })
         })
+        .finally()
 }
 
 </script>

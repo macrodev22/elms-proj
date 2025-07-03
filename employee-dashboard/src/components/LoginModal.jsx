@@ -31,7 +31,7 @@ const LoginModal = ({show, onLoggedIn}) => {
             },
             error: e => {
                 console.error('login error', e)
-                return `Error logging in user!\n${e.response.data.detail || e.message}`
+                return `Error logging in user!\n${e.response?.data?.detail || e.message}`
             }
         })
     }

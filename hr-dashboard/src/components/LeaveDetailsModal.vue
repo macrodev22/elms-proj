@@ -25,6 +25,10 @@ const vFocus = {
     mounted: (el) => el.focus()
 }
 
+const vScrollIntoView = {
+    mounted: (el, binding) => el.scrollIntoView({ behavior: binding.behavior || 'smooth', block: binding.block || 'start' })
+}
+
 const vClear = {
     mounted: el => {
         el.value = ""
@@ -111,8 +115,8 @@ const action = (action) => {
         </div>
 
         <div v-if="showRemarkField">
-            <textarea v-focus v-clear v-model="remark" name="remarks" id="remarks"
-                placeholder="Enter remarks for decided action"
+            <textarea v-focus v-clear v-scroll-into-view="{ block: 'start', }" v-model="remark" name="remarks"
+                id="remarks" placeholder="Enter remarks for decided action"
                 class="w-full border-1 border-gray-200 rounded-md shadow-sm p-2 mt-6 focus:outline-1 focus:outline-blue-600"></textarea>
         </div>
 

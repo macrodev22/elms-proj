@@ -6,7 +6,7 @@ import TextField from "./TextField"
 import toast from "react-hot-toast"
 import { client } from "../services/client"
 import StoreContext from "../store/StoreContext"
-import { formatError } from "../utils"
+
 
 
 
@@ -28,7 +28,7 @@ const AddLeaveRequestModal = (props) => {
     useEffect(() => {
         client.get('/leave/types')
         .then(({data}) => {
-            setOptions(data)
+            setOptions(data.filter(t => t.name != 'Annual Leave (Holiday Entitlement)'))
         })
     }, [])
 
@@ -56,7 +56,7 @@ const AddLeaveRequestModal = (props) => {
                 setEndTimeError(data?.end_time?.join('\n') || '')
                 return `Error making leave request!\n${e.message}`
              },
-            success: (res) => {
+            success: () => {
                 // console.log(res)
                 ctx.actions.fetchRequests()
                 setReason('')

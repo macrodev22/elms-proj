@@ -19,7 +19,7 @@ const LeaveRequestDetails = ({ leave, show, onClose, onRespond, isQuery=false, h
             <p>Duration:</p>
             <p>{ duration(leave) }</p>
             <p>Dates:</p>
-            <p>{ `${formatDate(leave.start_time)} to ${formatDate(leave.end_time)}` }</p>
+            <p>{ `${formatDate(leave.start_time, true, true)} to ${formatDate(leave.end_time, true, true)}` }</p>
             <p>Reason:</p>
             <p>{ leave.reason }</p>
         </div>

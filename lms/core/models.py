@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from company.models import Company,Department
@@ -60,6 +61,43 @@ class User(AbstractUser):
             return self.supervised_by 
         else:
             return self.department.head if self.department is not None else None
+        
+    @property
+    def used_annual_leave(self):
+        days_used = 0
+
+        now = timezone.now()
+        year_start = timezone.datetime(now.year, 1, 1)
+        leave_requests = self.leave_requests
+
+        annual_leaves = leave_requests.filter(
+            closed=False,
+            status="APPR", 
+            start_time__gte=year_start,
+            end_time__lte=now,
+            type__name="Annual Leave (Holiday Entitlement)"
+            )
+
+        other_leaves = leave_requests.filter(
+                    closed=False,
+                    status="APPR", 
+                    start_time__gte=year_start,
+                    end_time__lte=now,
+                    type__annual_entitlement__isnull=True
+                    ).exclude(
+                        type__name__in = [
+                        "Time Off In Lieu (TOIL)",
+                        "Unpaid Leave",
+                        "Public Holidays"
+                    ]
+                    )
+        
+        for l in annual_leaves:
+            days_used += l.duration
+        for ol in other_leaves:
+            days_used += ol.duration
+
+        return days_used
 
     def __str__(self):
         company_name = self.company.name if self.company else "(No company)"

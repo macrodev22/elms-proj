@@ -2,7 +2,7 @@ import malePhoto from '../assets/male_profile_pic.jpg'
 import femalePhoto from '../assets/female_profile_pic.jpg'
 import personPhoto from '../assets/person_image.jpg'
 
-export const formatDate = (dateString, addDay=false) => {
+export const formatDate = (dateString, addDay=false, addTime=false) => {
     const date = new Date(dateString)
 
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -11,6 +11,10 @@ export const formatDate = (dateString, addDay=false) => {
     const weekDay = date.getDay()
     const month = date.getMonth()
     const year = date.getFullYear()
+    const hours = date.getHours()
+    const min = date.getMinutes()
+
+    const time = ` at ${hours.toString().padStart(2,'0')}:${min.toString().padStart(2, '0')} hrs`
 
     const suffix = (day) => {
         if (day >3 && day < 21) return 'th'
@@ -22,7 +26,7 @@ export const formatDate = (dateString, addDay=false) => {
         }
     }
 
-    return `${addDay ? days[weekDay] + ', ': ''} ${day}${suffix(day)} ${months[month]} ${year}`.trim()
+    return `${addDay ? days[weekDay] + ', ': ''} ${day}${suffix(day)} ${months[month]} ${year} ${addTime ? time : ''}`.trim()
 }
 
 export const formatName = user => {
@@ -50,7 +54,11 @@ export const duration = (request) => {
     const dTinMs = end - start 
 
     const days = dTinMs / (1000*60*60*24)
-    return `${Math.ceil(days)} days`
+    const roundedDays = days + 0.5 >= Math.ceil(days) ?
+    Math.ceil(days):
+    Math.floor(days);
+
+    return `${roundedDays || 1 } days`
 }
 
 export const greeting = () => {

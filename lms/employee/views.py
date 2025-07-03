@@ -63,19 +63,16 @@ class LeaveStatsAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user 
+        user:User = request.user 
         total_leave_days = 21
 
         leave_requests = user.leave_requests
         now = timezone.now()
 
-        used_leave = leave_requests.filter(end_time__lte=now, closed=False, status="APPR")
+        days_used = user.used_annual_leave
         pending_leave = leave_requests.filter(start_time__gte=now, closed=False, status="PNDG")
-        days_used = 0
         days_pending_approval = 0
 
-        for u_l in used_leave:
-            days_used += u_l.duration
         for p_l in pending_leave:
             days_pending_approval += p_l.duration
         
@@ -150,32 +147,13 @@ class LeaveReportSummaryAPIView(APIView):
         leave_types = LeaveType.objects.all()
         for l_type in leave_types:
             t = LeaveTypeSerializer(l_type).data
-            finished_leaves_t = leave_requests.filter(closed=False, type=l_type, status="APPR", end_time__lte=now)
             days_used = 0
-            for f_l in finished_leaves_t:
-                days_used += f_l.duration
-
-            # For Annual leave, Add all appropriate leave types - Unpaid, TOIL, Maternity, Paternity, Sick
             if l_type.name == 'Annual Leave (Holiday Entitlement)':
-                finished_leaves_not_annual = leave_requests.filter(
-                    closed=False,
-                    status="APPR", 
-                    end_time__lte=now,
-                    type__annual_entitlement__isnull=True
-                    ).exclude(
-                        type__name__in = [
-                        "Annual Leave (Holiday Entitlement)",
-                        "Time Off In Lieu (TOIL)",
-                        "Unpaid Leave",
-                        "Public Holidays"
-                    ]
-                    )
-                additional_days = 0
-
-                for a_l in finished_leaves_not_annual:
-                    additional_days += a_l.duration
-
-                days_used += additional_days
+                days_used = user.used_annual_leave
+            else:
+                finished_leaves_t = leave_requests.filter(closed=False, type=l_type, status="APPR", end_time__lte=now)
+                for f_l in finished_leaves_t:
+                    days_used += f_l.duration
 
             t["days_used"] = days_used
             types.append(t)

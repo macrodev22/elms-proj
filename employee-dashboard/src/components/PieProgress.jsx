@@ -1,4 +1,4 @@
-const PieProgress = ({ total=21, used=0,title='Allowance', size=128 }) => {
+const PieProgress = ({ total=21, used=0,title='Annual Leave', size=128 }) => {
 
     const strokeWidth = 6
     const radius = Math.floor((size/2)-(1*strokeWidth))
