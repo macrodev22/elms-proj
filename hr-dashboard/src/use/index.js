@@ -15,13 +15,13 @@ export const useOnClickOutside = (
 
             const clickedIgnoredRefs = options.ignore.some(ignoredRef => {
                 const ignoredEl = toValue(ignoredRef)
-                console.log('ignored element', ignoredEl, 'clicked', event.target, 'equal', ignoredEl.contains(event.target))
+                // console.log('ignored element', ignoredEl, 'clicked', event.target, 'equal', ignoredEl.contains(event.target))
                 return (ignoredEl && ignoredEl.contains(event.target)) 
             })
 
             if (clickedIgnoredRefs) return 
-            console.log('clicked ignored', clickedIgnoredRefs)
-            console.log('clicked outside', !clickedInsideTarget)
+            // console.log('clicked ignored', clickedIgnoredRefs)
+            // console.log('clicked outside', !clickedInsideTarget)
             if (!clickedInsideTarget) {
                 // setInterval(() => callback(event), 10)
                 callback(event)

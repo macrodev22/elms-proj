@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useRef, useEffect } from "react"
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
 import StoreContext from "../store/StoreContext"
 import { formatName, formatPhoto } from "../utils"
@@ -7,9 +7,38 @@ import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import EmployeeUpdateForm from "./EmployeeUpdateForm"
 
-const ProfileDetails = ({ show, onClose }) => {
+const ProfileDetails = ({ show, onClose, ignoreRefs = [] }) => {
     const ctx = useContext(StoreContext)
     const navigate = useNavigate()
+
+    // click outside
+    const rootRef = useRef(null)
+    useEffect(() => {
+        if (show) {
+            const listener = event => {
+                const clickedEl = event.target 
+    
+                const clickedOutside = !rootRef.current?.contains(clickedEl)
+                console.log('clicked outside', clickedOutside)
+
+                const clickedIgnoredEl = ignoreRefs.some(elRef => {
+                    const ignoredEl = elRef.current
+                    return (ignoredEl && ignoredEl.contains(clickedEl))
+                })
+                console.log('clicked ignored', clickedIgnoredEl)
+            }
+    
+            document.addEventListener('click', listener)
+            document.addEventListener('touchstart', listener)
+            console.log('ignored el refs', ignoreRefs)
+            
+            // Cleanup
+            return () => {
+                document.removeEventListener('click', listener)
+                document.removeEventListener('touchstart', listener)
+            }
+        }
+    }, [show])
 
     const logout = () => {
         client.post('/auth/logout')
@@ -35,7 +64,7 @@ const ProfileDetails = ({ show, onClose }) => {
     }
 
     return (
-         show && (<div className="rounded-md bg-gray-50 flex flex-col items-center p-4 absolute z-100 min-w-[100%] w-[max-content] right-[50%] translate-x-[50%] md:right-0 md:translate-x-0 top-[100%]">
+         show && (<div ref={rootRef} className="rounded-md bg-gray-50 flex flex-col items-center p-4 absolute z-100 min-w-[100%] w-[max-content] right-[50%] translate-x-[50%] md:right-0 md:translate-x-0 top-[100%]">
             <h4 className="font-semibold text-lg">Profile</h4>
             <div className="mt-4 grid gap-x-2 grid-cols-[1fr_2fr] [&>div:nth-child(odd)]:font-semibold">
                 <div>Company:</div>
@@ -74,12 +103,16 @@ function ProfilePicture() {
     const [showDetails, setShowDetails] = useState(false)
     const {showUpdate, setShowUpdate } = ctx
 
+    const upChev = useRef(null)
+    const downChev = useRef(null)
+    const dropDownBtn = useRef(null)
+
     return (
         <div className="bg-gray-100 rounded-full relative max-w-[250px] p-[4px] flex gap-2 justify-between items-center my-1">
-            <ProfileDetails show={showDetails} onClose={() => setShowDetails(false)} />
+            <ProfileDetails show={showDetails} onClose={() => setShowDetails(false)} ignoreRefs={[dropDownBtn, upChev, downChev]} />
             <EmployeeUpdateForm show={showUpdate} onClose={() => setShowUpdate(false)}  />
-            <button className="cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
-                {showDetails ? <ChevronUpIcon className="size-6" /> : <ChevronDownIcon className="size-6" />}
+            <button ref={dropDownBtn} className="cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
+                {showDetails ? <ChevronUpIcon ref={upChev} className="size-6" /> : <ChevronDownIcon ref={downChev} className="size-6" />}
             </button>
             <div className="flex flex-col flex-1 overflow-hidden">
                 <p className="font-bold text-md truncate">{formatName(ctx.auth.user)}</p>

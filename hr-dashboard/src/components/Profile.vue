@@ -14,9 +14,9 @@ const showDropDown = ref(false)
 const profileDropDownRef = ref(null)
 const dropDownBtnRef = ref(null)
 
-// useOnClickOutside(profileDropDownRef, () => showDropDown.value = false, {
-//     ignore: [dropDownBtnRef]
-// })
+useOnClickOutside(profileDropDownRef, () => showDropDown.value = false, {
+    ignore: [dropDownBtnRef]
+})
 
 </script>
 
@@ -26,8 +26,8 @@ const dropDownBtnRef = ref(null)
             ref="profileDropDownRef" />
         <div class="flex items-center gap-1">
             <div class="p-1 ml-1 cursor-pointer" @click="showDropDown = !showDropDown" ref="dropDownBtnRef">
-                <ChevronDownIcon class="size-6" v-if="!showDropDown" />
-                <ChevronUpIcon class="size-6" v-if="showDropDown" />
+                <ChevronDownIcon class="size-6" v-show="!showDropDown" />
+                <ChevronUpIcon class="size-6" v-show="showDropDown" />
             </div>
             <div class="flex flex-col">
                 <p class="font-bold text-sm">{{ formatName(user) }}</p>
