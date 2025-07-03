@@ -48,11 +48,12 @@ const action = (action) => {
     client.post(`/hr/leave-action/${leave.id}`, payload)
         .then(({ data }) => {
             store.setLeaveHistory()
+            remark.value = ''
             toast.update(loadingToatId, { type: 'success', isLoading: false, autoClose: 2000, render: data.detail })
         })
         .catch(e => {
             console.error('action leave', e)
-            toast.update(loadingToatId, { type: 'error', isLoading: false, autoClose: 2000, render: `${e.response?.data?.detail | e.message}` })
+            toast.update(loadingToatId, { type: 'error', isLoading: false, autoClose: 2000, render: `${e.response?.data[0] || e.message}` })
             // toast.error(`${e.response?.data[0] || e.message}`)
         })
         .finally(() => {
@@ -117,12 +118,12 @@ const action = (action) => {
 
 
         <div class="flex gap-4 flex-3 justify-center text-lg mt-6">
-            <button :disabled="leave.closed" @click="action('Approve')"
+            <button :disabled="leave.closed || isLoading" @click="action('Approve')"
                 class="bg-green-500 hover:bg-green-600 rounded-md py-2 px-2.5 text-white cursor-pointer disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed disabled:border-green-500 disabled:border-1">Aprrove</button>
-            <button :disabled="leave.closed" @click="action('Ask Supervisor')"
+            <button :disabled="leave.closed || isLoading" @click="action('Ask Supervisor')"
                 class="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">Ask
                 Supervisor</button>
-            <button :disabled="leave.closed ? true : false" @click="action('Decline')"
+            <button :disabled="leave.closed || isLoading" @click="action('Decline')"
                 class="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">Decline
             </button>
         </div>

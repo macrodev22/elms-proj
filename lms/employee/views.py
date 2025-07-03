@@ -154,8 +154,30 @@ class LeaveReportSummaryAPIView(APIView):
             days_used = 0
             for f_l in finished_leaves_t:
                 days_used += f_l.duration
-            t["days_used"] = days_used
 
+            # For Annual leave, Add all appropriate leave types - Unpaid, TOIL, Maternity, Paternity, Sick
+            if l_type.name == 'Annual Leave (Holiday Entitlement)':
+                finished_leaves_not_annual = leave_requests.filter(
+                    closed=False,
+                    status="APPR", 
+                    end_time__lte=now,
+                    type__annual_entitlement__isnull=True
+                    ).exclude(
+                        type__name__in = [
+                        "Annual Leave (Holiday Entitlement)",
+                        "Time Off In Lieu (TOIL)",
+                        "Unpaid Leave",
+                        "Public Holidays"
+                    ]
+                    )
+                additional_days = 0
+
+                for a_l in finished_leaves_not_annual:
+                    additional_days += a_l.duration
+
+                days_used += additional_days
+
+            t["days_used"] = days_used
             types.append(t)
 
         result = {
