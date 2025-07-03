@@ -11,6 +11,7 @@ LEAVE_PROCESS_ACTION_CHOICES = (('SEND', 'Sent to Supervisor'), ('CLSD', 'Closed
 class LeaveType(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
+    annual_entitlement = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
