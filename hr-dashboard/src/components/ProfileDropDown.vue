@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, defineExpose } from 'vue';
 import { client } from '../services/client';
 import { toast } from 'vue3-toastify';
 import UpdateUserProfileModal from './UpdateUserProfileModal.vue';
@@ -8,6 +8,9 @@ const { show, user } = defineProps({
     show: { type: Boolean, default: false },
     user: Object
 })
+
+const rootElRef = ref(null)
+defineExpose({ rootElRef })
 
 const emit = defineEmits(['close-dropdown'])
 
@@ -31,7 +34,7 @@ const logout = () => {
 
 <template>
     <div class="absolute z-50 right-[50%] translate-x-[50%] md:right-0 md:translate-x-0 top-[100%] min-w-[100%] w-2xs p-4 rounded-md bg-gray-50 shadow-xl"
-        v-show="show">
+        v-show="show" ref="rootElRef">
         <p class="font-semibold text-center mb-4 text-xl">Profile</p>
         <div class="grid grid-cols-[1fr_2fr] mb-3 gap-x-2.5">
             <p class="font-semibold">Company:</p>
