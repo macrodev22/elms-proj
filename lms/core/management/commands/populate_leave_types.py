@@ -6,6 +6,7 @@ leave_types = [
     ('Annual Leave (Holiday Entitlement)', 'A set amount of time off that employees are legally entitled to for vacations or personal relaxation', 21),
     ('Sick Leave', 'Time off for employees to recover from illness, often paid to ensure they don\'t come to work while unwell', 30),
     ('Maternity Leave', 'Leave for new mothers, often including both prenatal and postnatal periods', 60),
+    ('Paternity Leave', 'Leave for male employees immediately after the delivery or miscarriage of a wife, typically fully paid', 4),
     ('Personal Leave', 'Used for personal reasons such as family events or appointments', None),
     ('Emergency Leave', 'For unexpected personal emergencies, such as family crises', None),
     ('Bereavement Leave', 'Time off following the death of a family member or close friend', None),
