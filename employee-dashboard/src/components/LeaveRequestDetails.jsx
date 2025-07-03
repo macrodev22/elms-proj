@@ -46,11 +46,11 @@ const LeaveRequestDetails = ({ leave, show, onClose, onRespond, isQuery=false, h
         <div className="flex gap-4 flex-3 justify-center text-lg mt-6">
 
             { isQuery && <button onClick={onRespond}
-                className="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-2.5 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">
+                className="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-6 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">
                     Respond
             </button>}
             <button onClick={onClose}
-                className="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-2.5 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">
+                className="border-1 border-red-500 hover:bg-red-500 hover:text-white rounded-md py-2 px-6 text-red-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-red-500">
                     Close
             </button>
         </div>

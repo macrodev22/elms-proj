@@ -142,7 +142,7 @@ class LeaveReportSummaryAPIView(APIView):
         now = timezone.now()
         year_start = timezone.datetime(now.year, 1, 1)
         # year_end = timezone.datetime(now.year, 12, 31, 23,59,59)
-        leave_requests = user.leave_requests.filter(start_time__gte=year_start)
+        leave_requests = user.leave_requests.filter(start_time__gte=year_start, closed=False)
         types = []
         leave_types = LeaveType.objects.all()
         for l_type in leave_types:
