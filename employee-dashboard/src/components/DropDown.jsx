@@ -1,5 +1,5 @@
 
-const DropDown = ({ name, options, required=true, value='', onChange, label='Leave type' }) => {
+const DropDown = ({ name, options, required=true, value='', onChange, label='Leave type', error=null }) => {
 
 
     return (
@@ -9,6 +9,7 @@ const DropDown = ({ name, options, required=true, value='', onChange, label='Lea
                         <option value="" disabled>--Select</option>
                         { options && options.map(o => <option value={o.value} key={o.value}>{o.label}</option>) }
                     </select>
+                    {error && <span className="text-red-500">{ error }</span>}
                 </div>
     )
 }

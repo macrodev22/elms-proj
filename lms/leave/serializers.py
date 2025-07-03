@@ -2,6 +2,7 @@ from django.utils import timezone
 from rest_framework.serializers import ModelSerializer 
 from rest_framework import serializers
 from core.serializers import UserMinimalSerializer
+from core.models import User
 from .models import LeaveRequest,LeaveProcess,LeaveType,SupervisorQuery
 
 
@@ -39,6 +40,22 @@ class LeaveRequestCreateSerializer(ModelSerializer):
         now = timezone.now()
         if start_time < now:
             errors['start_time'] = 'Start date and time can not be in the past'
+
+        # Maternity and paternity leaves
+        leave_type:LeaveType = attrs.get('type')
+        user:User = attrs.get('requested_by')
+
+        if leave_type.name == 'Maternity Leave':
+            if user.gender != 'F':
+                errors.setdefault('type', [])
+                errors['type'].append('Only a woman can take maternity leave')
+
+        if leave_type.name == 'Paternity Leave':
+            if user.gender != 'M':
+                errors.setdefault('type', [])
+                errors['type'].append('Only a man can take paternity leave')
+            
+        
         if errors:
             raise serializers.ValidationError(errors)
         return attrs

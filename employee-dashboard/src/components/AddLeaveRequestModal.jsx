@@ -24,6 +24,8 @@ const AddLeaveRequestModal = (props) => {
 
     const [startTimeError, setStartTimeError] = useState('')
     const [endTimeError, setEndTimeError] = useState('')
+    const [otherErrors, setOtherErrors] = useState([])
+    const [typeError, setTypeError] = useState('')
 
     useEffect(() => {
         client.get('/leave/types')
@@ -54,6 +56,8 @@ const AddLeaveRequestModal = (props) => {
                 const { data } = e.response
                 setStartTimeError(data?.start_time?.join('\n') || '')
                 setEndTimeError(data?.end_time?.join('\n') || '')
+                setOtherErrors(data?.non_key_attrs || [])
+                setTypeError(data?.type?.join('\n') || '')
                 return `Error making leave request!\n${e.message}`
              },
             success: () => {
@@ -73,10 +77,13 @@ const AddLeaveRequestModal = (props) => {
     return (
         <Modal show={show} onClose={onClose} title={title} >
             <form method="post" onSubmit={addLeave}>
-                <DropDown name="type" options={options.map(o => ({value:o.id, label:o.name}))} value={type} onChange={e => setType(e.target.value)} />
+                <DropDown name="type" options={options.map(o => ({value:o.id, label:o.name}))} value={type} onChange={e => setType(e.target.value)} error={typeError} />
                 <InputField name="start_time" label="Start date" type="datetime-local" value={start_time} onChange={e => {setStartTime(e.target.value)}} error={startTimeError} />
                 <InputField name="end_time" label="End date" type="datetime-local" value={end_time} onChange={e =>setEndTime(e.target.value)} error={endTimeError} />
                 <TextField name="reason" label="Reason" placeholder="Enter a reason..." value={reason} onChange={e => setReason(e.target.value)} />
+                {otherErrors.length ? <ul className="mt-2 text-red-500">
+                    { otherErrors.map(e => <li key={e}>{e}</li>) }
+                </ul> : <div></div>}
                 <div className="mt-6">
                     <button className="rounded-md bg-blue-400 px-6 py-1.5 text-xl text-white cursor-pointer hover:bg-blue-500">Request for leave</button>
                 </div>
