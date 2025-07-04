@@ -69,6 +69,7 @@ const AddLeaveRequestModal = (props) => {
                 setType('')
                 setStartTimeError('')
                 setEndTimeError('')
+                setType('')
                 return `Leave request added successfully`
             }
         })
