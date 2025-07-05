@@ -100,7 +100,7 @@ const action = (action) => {
             <p>Reason:</p>
             <p>{{ leave.reason }}</p>
             <p>Usage:</p>
-            <p>{{ leaveBalance.used }} of {{ leaveBalance.total }} days
+            <p>{{ leaveBalance.used }} of {{ leaveBalance.total }} days - {{ 0 }} days upcoming
                 <span class="px-2 py-1 rounded-md text-white"
                     :class="(leaveBalance.total - leaveBalance.used - leave.duration) <= 0 ? 'bg-red-400 text-white' : 'bg-green-400'">({{
                         leaveBalance.total -

@@ -240,7 +240,7 @@ class LeaveActionAPIView(APIView):
             supervisor_query.save()
             # Notify supervisor by mail
             subject = f"{user.first_name} has sent you a query on {leave.requested_by.first_name}'s leave request"
-            message = f"Dear {supervisor.first_name},\n\nYou have a leave request query from {user.first_name} on a {leave.type.name} request made by {leave.requested_by.first_name}.\nLeave is requested from {leave.start_time} to {leave.end_time}.\n\nRegards\nELMS on behalf of {user.company.name} HR"
+            message = f"Dear {supervisor.first_name},\n\nYou have a leave request query from {user.first_name} on a {leave.type.name} request made by {leave.requested_by.first_name}.\nLeave is requested from {leave.start_time.date()} to {leave.end_time.date()}.\n\nRegards\nELMS on behalf of {user.company.name} HR"
             send_leave_notification(supervisor.email, subject, message)
 
         serializer = LeaveProcessSerializer(leave_process)
