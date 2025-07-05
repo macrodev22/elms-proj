@@ -99,7 +99,7 @@ const action = (action) => {
             <p v-html="`${formatDate(leave.start_time, true)} to ${formatDate(leave.end_time, true)}`"></p>
             <p>Reason:</p>
             <p>{{ leave.reason }}</p>
-            <p>Usage</p>
+            <p>Usage:</p>
             <p>{{ leaveBalance.used }} of {{ leaveBalance.total }} days
                 <span class="px-2 py-1 rounded-md text-white"
                     :class="(leaveBalance.total - leaveBalance.used - leave.duration) <= 0 ? 'bg-red-400 text-white' : 'bg-green-400'">({{

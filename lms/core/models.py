@@ -51,7 +51,7 @@ class User(AbstractUser):
     designation = models.CharField(max_length=255, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['date_of_birth', 'role', 'gender']
+    REQUIRED_FIELDS = ['date_of_birth', 'role', 'gender', 'company']
 
     objects = UserManager()
 
