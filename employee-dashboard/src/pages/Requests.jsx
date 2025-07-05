@@ -32,10 +32,15 @@ const Requests = () => {
     const [supervisorRemarks, setSupervisorRemarks] = useState("")
     const [hrRemarks, setHrRemarks] = useState("")
     const [hrRemarksDate, setHrRemarksDate] = useState("")
+    const [respondBtnDisbabled, setRespondBtnDisabled] = useState(false) 
 
     useEffect(() => {
         ctx.actions.fetchRequests()    
     }, [])
+
+    useEffect(() => {
+        if(showDetails) setRespondBtnDisabled(false)
+    }, [showDetails])
 
     const {requests, queries} = ctx 
     const onRespond = () => {
@@ -44,6 +49,7 @@ const Requests = () => {
         }
         ctx.actions.updateSupervisorQuery(selectedQueryId, supervisorRemarks)
         setSupervisorRemarks('')
+        setRespondBtnDisabled(true)
     }
     const onSelectLeave = (leave, isQuery,queryId, hrRemarks, hrRemarksDate, hrUser) => {
         setSelectedRequest(leave)
@@ -62,6 +68,7 @@ const Requests = () => {
         onClose={() => setShowDetails(false)} 
         isQuery={selectedIsQuery} 
         onRespond={onRespond} 
+        btnDisabled={respondBtnDisbabled}
         supervisorRemarks={supervisorRemarks}
         onSetSupervisorRemarks={setSupervisorRemarks}
         hrRemarks={hrRemarks}

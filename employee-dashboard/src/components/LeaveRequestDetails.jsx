@@ -2,7 +2,7 @@ import Modal from "./Modal";
 import StatusChip from "./StatusChip";
 import { formatName, duration, formatDate } from "../utils";
 
-const LeaveRequestDetails = ({ leave, show, onClose, onRespond, isQuery=false, hrUser=null, hrRemarks='', hrRemarksDate='',supervisorRemarks = '', onSetSupervisorRemarks=()=>{}, }) => {
+const LeaveRequestDetails = ({ leave, show, onClose, onRespond, btnDisabled=false, isQuery=false, hrUser=null, hrRemarks='', hrRemarksDate='',supervisorRemarks = '', onSetSupervisorRemarks=()=>{}, }) => {
 
     return (
         <Modal show={show} onClose={onClose} title="Leave details">
@@ -45,7 +45,7 @@ const LeaveRequestDetails = ({ leave, show, onClose, onRespond, isQuery=false, h
 
         <div className="flex gap-4 flex-3 justify-center text-lg mt-6">
 
-            { isQuery && <button onClick={onRespond}
+            { isQuery && <button onClick={onRespond} disabled={btnDisabled}
                 className="border-1 border-amber-500 hover:bg-amber-500 hover:text-white rounded-md py-2 px-6 text-amber-500 cursor-pointer disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-amber-500">
                     Respond
             </button>}
