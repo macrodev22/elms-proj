@@ -252,10 +252,10 @@ class LeaveTypeBalanceAPIView(APIView):
         leave_request = LeaveRequest.objects.get(pk=pk)
         leave_type = leave_request.type
         employee = leave_request.requested_by
-        (used, total) = employee.leave_type_balance(leave_type)
+        (used, total, upcoming) = employee.leave_type_balance(leave_type)
         return Response({ 
             'detail': 'success', 
             'leave_request': pk,
-            'leave_balance': { 'used': used, 'total': total }, 
+            'leave_balance': { 'used': used, 'total': total, 'upcoming': upcoming, }, 
             'type': LeaveTypeSerializer(leave_type).data
                          })

@@ -99,9 +99,40 @@ class User(AbstractUser):
 
         return days_used
     
+    @property
+    def upcoming_annual_leave(self):
+        upcoming = 0
+        now = timezone.now()
+
+        annual_leave_requests = self.leave_requests.filter(
+            closed=False,
+            status='APPR',
+            type__name="Annual Leave (Holiday Entitlement)",
+            start_time__gt=now,
+        )
+
+        other_leave_requests = self.leave_requests.filter(
+            closed=False,
+            start_time__gt=now,
+            status='APPR',
+            type__annual_entitlement__isnull=True,
+        ).exclude(
+            type__name__in = [
+                "Time Off In Lieu (TOIL)",
+                "Unpaid Leave",
+                "Public Holidays"
+            ]
+        )
+        for l in annual_leave_requests:
+            upcoming += l.duration
+        for l in other_leave_requests:
+            upcoming =+ l.duration
+
+        return upcoming
+    
     def leave_type_balance(self, leave_type) -> tuple:
         """
-        Returns leave balance of a given leave type in 2 tuple (2,21)
+        Returns leave balance of a given leave type in 3 tuple (2,21,3) used,total,upcoming
         """
         now = timezone.now()
         year_start = timezone.datetime(now.year, 1, 1)
@@ -119,7 +150,20 @@ class User(AbstractUser):
         
         used_days = specific_used_days if leave_type.annual_entitlement else self.used_annual_leave
 
-        return (used_days,leave_type.annual_entitlement or 21)
+        # Upcoming days
+        upcoming_approved_leave_requests = self.leave_requests.filter(
+            closed=False,
+            status='APPR',
+            type=leave_type,
+            start_time__gt=now,
+        )
+        specific_upcoming = 0
+        for l in upcoming_approved_leave_requests:
+            specific_upcoming += l.duration
+
+        upcoming = specific_upcoming if leave_type.annual_entitlement is None else self.upcoming_annual_leave
+
+        return (used_days,leave_type.annual_entitlement or 21, upcoming)
 
     def __str__(self):
         company_name = self.company.name if self.company else "(No company)"
