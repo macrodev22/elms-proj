@@ -112,9 +112,12 @@ class User(AbstractUser):
             start_time__gte=year_start,
             end_time__lte=now,
             )
-        used_days = 0
+        
+        specific_used_days = 0
         for l in leave_requests:
-            used_days += l.duration
+            specific_used_days += l.duration
+        
+        used_days = specific_used_days if leave_type.annual_entitlement else self.used_annual_leave
 
         return (used_days,leave_type.annual_entitlement or 21)
 
