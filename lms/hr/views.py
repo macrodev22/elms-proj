@@ -12,7 +12,7 @@ from leave.models import LeaveRequest,LeaveType,LeaveProcess,SupervisorQuery
 from leave.serializers import LeaveProcessSerializer
 from company.models import Company
 from company.serializers import CompanySerializer
-from .serializers import LeaveRequestSerializer
+from .serializers import LeaveRequestSerializer,LeaveTypeSerializer
 from .utils import send_leave_notification
 from core.utils import leave_action_email_html,hr_leave_action_email_html,created_user_email_html
 
@@ -246,3 +246,16 @@ class LeaveActionAPIView(APIView):
         serializer = LeaveProcessSerializer(leave_process)
 
         return Response({'detail': f"{action} successful", "leave_process": serializer.data}, status=status.HTTP_201_CREATED)
+
+class LeaveTypeBalanceAPIView(APIView):
+    def get(self, request, pk):
+        leave_request = LeaveRequest.objects.get(pk=pk)
+        leave_type = leave_request.type
+        employee = leave_request.requested_by
+        (used, total) = employee.leave_type_balance(leave_type)
+        return Response({ 
+            'detail': 'success', 
+            'leave_request': pk,
+            'leave_balance': { 'used': used, 'total': total }, 
+            'type': LeaveTypeSerializer(leave_type).data
+                         })

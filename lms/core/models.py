@@ -51,7 +51,7 @@ class User(AbstractUser):
     designation = models.CharField(max_length=255, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['date_of_birth', 'role', 'company']
+    REQUIRED_FIELDS = ['date_of_birth', 'role', 'gender']
 
     objects = UserManager()
 
@@ -98,6 +98,25 @@ class User(AbstractUser):
             days_used += ol.duration
 
         return days_used
+    
+    def leave_type_balance(self, leave_type) -> tuple:
+        """
+        Returns leave balance of a given leave type in 2 tuple (2,21)
+        """
+        now = timezone.now()
+        year_start = timezone.datetime(now.year, 1, 1)
+        leave_requests = self.leave_requests.filter(
+            type=leave_type, 
+            closed=False,
+            status='APPR',
+            start_time__gte=year_start,
+            end_time__lte=now,
+            )
+        used_days = 0
+        for l in leave_requests:
+            used_days += l.duration
+
+        return (used_days,leave_type.annual_entitlement or 21)
 
     def __str__(self):
         company_name = self.company.name if self.company else "(No company)"

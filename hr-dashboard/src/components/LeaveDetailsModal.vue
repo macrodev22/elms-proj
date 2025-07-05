@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import { getDurationLabel, formatDate, formatName } from '../utils';
 import { toast } from 'vue3-toastify';
 import { useStore } from '../store';
@@ -15,6 +15,10 @@ const emit = defineEmits(['close-modal'])
 
 const showRemarkField = ref(false)
 const remark = ref('')
+const leaveBalance = reactive({
+    used: 0,
+    total: 0
+})
 
 const { show, leave } = defineProps({
     show: { type: Boolean, default: false },
@@ -35,6 +39,17 @@ const vClear = {
         el.dispatchEvent(new Event('input'))
     }
 }
+
+watch(() => show, () => {
+    if (show) {
+        client.get(`/hr/leave-balance/${leave.id}`)
+            .then(({ data }) => {
+                leaveBalance.used = data.leave_balance?.used
+                leaveBalance.total = data.leave_balance?.total
+            })
+            .catch(e => console.error('leave type balance', e))
+    }
+})
 
 const action = (action) => {
     if (!showRemarkField.value) {
@@ -84,6 +99,13 @@ const action = (action) => {
             <p v-html="`${formatDate(leave.start_time, true)} to ${formatDate(leave.end_time, true)}`"></p>
             <p>Reason:</p>
             <p>{{ leave.reason }}</p>
+            <p>Usage</p>
+            <p>{{ leaveBalance.used }} of {{ leaveBalance.total }} days
+                <span class="px-2 py-1 rounded-md text-white"
+                    :class="(leaveBalance.total - leaveBalance.used - leave.duration) <= 0 ? 'bg-red-400 text-white' : 'bg-green-400'">({{
+                        leaveBalance.total -
+                        leaveBalance.used }} days left)</span>
+            </p>
         </div>
 
         <div class="mt-4">

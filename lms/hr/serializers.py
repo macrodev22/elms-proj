@@ -16,6 +16,7 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
     supervisor_remarks = serializers.SerializerMethodField()
     hr_remarks = serializers.SerializerMethodField()
     supervisor = serializers.SerializerMethodField()
+    duration = serializers.SerializerMethodField()
 
     class Meta:
         model = LeaveRequest 
@@ -43,3 +44,6 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
                 user_supervisor = user.department.head
         serializer = UserSerializer(user_supervisor)
         return serializer.data
+    
+    def get_duration(self, obj:LeaveRequest):
+        return obj.duration

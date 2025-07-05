@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineExpose } from 'vue';
+import { ref } from 'vue';
 import { client } from '../services/client';
 import { toast } from 'vue3-toastify';
 import UpdateUserProfileModal from './UpdateUserProfileModal.vue';

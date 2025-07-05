@@ -10,4 +10,5 @@ urlpatterns = [
     path('report/team-availability', views.TeamAvailabilityAPIView.as_view()),
     path('report/full-employee-report', views.FullEmployeeReportAPIView.as_view()),
     path('leave-action/<int:pk>', views.LeaveActionAPIView.as_view()),
+    path('leave-balance/<int:pk>', views.LeaveTypeBalanceAPIView.as_view()),
 ]
