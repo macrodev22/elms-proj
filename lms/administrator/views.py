@@ -7,6 +7,7 @@ from company.models import Company,Department
 from company.serializers import DepartmentSerializer
 from core.models import User
 from hr.utils import send_leave_notification
+from core.utils import hr_created_html
 from .serializers import UserSerializerHRAdmin
 
 
@@ -22,7 +23,12 @@ class HRCreateAPIView(APIView):
         serializer = UserSerializerHRAdmin(data=data)
         if(serializer.is_valid(raise_exception=True)):
             user:User = serializer.save()
-            send_leave_notification(user.email, f"Your HR Account at {user.company.name} has been created", f"Dear {user.first_name,}\nYour HR account at {user.company.name} has been created successfully.\n\nLog in with the credential below:\nEmail: {user.email}\nPassword: {data['password']}\nLink: {request.scheme}://{request.get_host()}/login\n\nRegards,...\nELMS on behalf of {user.company.name}")
+            send_leave_notification(
+                user.email, 
+                f"Your HR Account at {user.company.name} has been created", 
+                f"Dear {user.first_name,}\nYour HR account at {user.company.name} has been created successfully.\n\nLog in with the credential below:\nEmail: {user.email}\nPassword: {data['password']}\nLink: {request.scheme}://{request.get_host()}/login\n\nRegards,...\nELMS on behalf of {user.company.name}",
+                html_message=hr_created_html(user, data, request)
+                )
         return Response(serializer.data)
     
 class CompanyDepartments(APIView):

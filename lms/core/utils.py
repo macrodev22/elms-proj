@@ -128,3 +128,63 @@ def created_user_email_html(request, created_user, data):
 </html>
 """
     return message_html
+
+def hr_created_html(user, data, request):
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>HR Account Created</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #f7f8fa; margin: 0; padding: 0;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f7f8fa; padding: 40px 0;">
+        <tr>
+          <td align="center">
+            <table width="480" cellpadding="0" cellspacing="0" style="background: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 32px;">
+              <tr>
+                <td align="center" style="padding-bottom: 24px;">
+                  <h2 style="color: #324e7b; margin: 0;">Welcome to <span style="color: #4a90e2;">{user.company.name}</span>!</h2>
+                </td>
+              </tr>
+              <tr>
+                <td style="color: #333333; font-size: 16px; line-height: 1.6;">
+                  <p>Dear <strong>{user.first_name}</strong>,</p>
+                  <p>Your HR account at <strong>{user.company.name}</strong> has been created successfully.</p>
+                  <p style="margin-bottom: 20px;">Log in with the credentials below:</p>
+                  <table cellpadding="0" cellspacing="0" style="background: #f0f4fa; border-radius: 6px; padding: 16px; margin-bottom: 24px; width: 100%;">
+                    <tr>
+                      <td style="padding: 8px 0;"><strong>Email:</strong></td>
+                      <td style="padding: 8px 0;">{user.email}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0;"><strong>Password:</strong></td>
+                      <td style="padding: 8px 0; color: #d35400;">{data['password']}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0;"><strong>Login Link:</strong></td>
+                      <td style="padding: 8px 0;">
+                        <a href="{request.scheme}://{request.get_host()}/login" style="color: #4a90e2; text-decoration: underline;">
+                          {request.scheme}://{request.get_host()}/login
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="color: #888888;">Please change your password after your first login for security purposes.</p>
+                  <p>Regards,<br>
+                  <span style="color: #4a90e2;">ELMS</span> on behalf of <strong>{user.company.name}</strong></p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding-top: 24px; font-size: 12px; color: #bbbbbb;">
+                  &copy; {user.company.name} | Powered by ELMS
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+    """
+    return html
