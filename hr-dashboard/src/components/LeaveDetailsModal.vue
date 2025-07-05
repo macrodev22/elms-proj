@@ -17,7 +17,8 @@ const showRemarkField = ref(false)
 const remark = ref('')
 const leaveBalance = reactive({
     used: 0,
-    total: 0
+    total: 0,
+    upcoming: 0,
 })
 
 const { show, leave } = defineProps({
@@ -46,6 +47,7 @@ watch(() => show, () => {
             .then(({ data }) => {
                 leaveBalance.used = data.leave_balance?.used
                 leaveBalance.total = data.leave_balance?.total
+                leaveBalance.upcoming = data.leave_balance?.upcoming
             })
             .catch(e => console.error('leave type balance', e))
     }
@@ -100,9 +102,9 @@ const action = (action) => {
             <p>Reason:</p>
             <p>{{ leave.reason }}</p>
             <p>Usage:</p>
-            <p>{{ leaveBalance.used }} of {{ leaveBalance.total }} days - {{ 0 }} days upcoming
+            <p>{{ leaveBalance.used }} of {{ leaveBalance.total }} days - {{ leaveBalance.upcoming }} days upcoming
                 <span class="px-2 py-1 rounded-md text-white"
-                    :class="(leaveBalance.total - leaveBalance.used - leave.duration) <= 0 ? 'bg-red-400 text-white' : 'bg-green-400'">({{
+                    :class="(leaveBalance.total - leaveBalance.used - leaveBalance.upcoming - leave.duration) < 0 ? 'bg-red-400 text-white' : 'bg-green-400'">({{
                         leaveBalance.total -
                         leaveBalance.used }} days left)</span>
             </p>

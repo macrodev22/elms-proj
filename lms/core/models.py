@@ -161,7 +161,7 @@ class User(AbstractUser):
         for l in upcoming_approved_leave_requests:
             specific_upcoming += l.duration
 
-        upcoming = specific_upcoming if leave_type.annual_entitlement is None else self.upcoming_annual_leave
+        upcoming = specific_upcoming if leave_type.annual_entitlement else self.upcoming_annual_leave
 
         return (used_days,leave_type.annual_entitlement or 21, upcoming)
 
