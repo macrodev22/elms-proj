@@ -37,6 +37,9 @@ class LoginAPIView(APIView):
           if not user.check_password(password):
               raise exceptions.AuthenticationFailed("Invalid username or password", code=status.HTTP_400_BAD_REQUEST)
           
+          if not user.is_active:
+              raise exceptions.AuthenticationFailed("User is not active", code=status.HTTP_403_FORBIDDEN)
+          
           token = JWTAuth.generate_token(user.id)
           response = Response()
           response.data = {
