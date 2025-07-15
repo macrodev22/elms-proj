@@ -74,7 +74,7 @@ class EmployeeLeaveRequests(APITestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
+        
         self.assertIn("requests", response.data, "Leave requests must be returned in response")
         self.assertIn("queries", response.data, "Employee queries must be returned")
         self.assertIn("user", response.data, "User details must be returned")
