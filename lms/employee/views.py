@@ -33,7 +33,7 @@ class LeaveRequestsAPIView(APIView):
     
     def post(self, request):
         user:User = request.user
-        data = request.data 
+        data = request.data.copy()
         data['requested_by'] = user.id
         data['company'] = user.company.id
         leave_request = LeaveRequestCreateSerializer(data=data)
