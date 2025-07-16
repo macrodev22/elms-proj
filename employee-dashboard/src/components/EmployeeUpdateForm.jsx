@@ -181,7 +181,7 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
                 <InputField name="department" label="Department" value={department?.name} disabled={true}
                      />
                 <InputField label="Role" name="role" disabled={true} value={role_display}  />
-                <DropDown label="Gender" name="gender" options={[{value:'M', label:'Male'}, {value:'F', label: 'Female'}]} value={newGender} onChange={e => setNewGender(e.target.value)} />
+                <DropDown disabled label="Gender" name="gender" options={[{value:'M', label:'Male'}, {value:'F', label: 'Female'}]} value={newGender} onChange={e => setNewGender(e.target.value)} />
             </div>
             <div className="flex mb-6 mt-6">
                 <button className="rounded-md bg-blue-400 px-6 py-2 text-lg hover:bg-blue-500 text-white">Update</button>
