@@ -226,7 +226,8 @@ const updatePassword = () => {
                 <DropDownField name="department" label="Department" v-model="formFields.department.id"
                     :options="departments.map(d => ({ value: d.id, label: d.name }))" />
                 <DropDownField label="Role" name="role" :options="roles" v-model="formFields.role" />
-                <DropDownField label="Gender" name="gender" :options="genders" v-model="formFields.gender" />
+                <DropDownField label="Gender" name="gender" :disabled="true" :options="genders"
+                    v-model="formFields.gender" />
             </div>
             <div class="flex mb-6 mt-2">
                 <SpinnerButton label="Update" :isLoading="isLoading" />
