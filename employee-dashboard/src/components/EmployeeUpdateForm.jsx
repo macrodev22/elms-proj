@@ -115,7 +115,7 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
         formData.append('designation', newDesignation)
         formData.append('contact', JSON.stringify(newContact))
         formData.append('date_of_birth', dateOfBirth)
-        formData.append('gender', newGender)
+        // formData.append('gender', newGender)
         const pic = photoInput.current.files[0]
         if(pic) formData.append('profile_picture', photoInput.current.files[0])
         // console.log('logging', Object.fromEntries(formData.entries()))
@@ -181,7 +181,7 @@ const EmployeeUpdateForm = ({ show, onClose }) => {
                 <InputField name="department" label="Department" value={department?.name} disabled={true}
                      />
                 <InputField label="Role" name="role" disabled={true} value={role_display}  />
-                <DropDown label="Gender" name="gender" options={[{value:'M', label:'Male'}, {value:'F', label: 'Female'}]} value={newGender} onChange={e => setNewGender(e.target.value)} />
+                <DropDown label="Gender" name="gender" disabled={true} options={[{value:'M', label:'Male'}, {value:'F', label: 'Female'}]} value={newGender} onChange={e => setNewGender(e.target.value)} />
             </div>
             <div className="flex mb-6 mt-6">
                 <button className="rounded-md bg-blue-400 px-6 py-2 text-lg hover:bg-blue-500 text-white">Update</button>
